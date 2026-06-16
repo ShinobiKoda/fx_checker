@@ -5,8 +5,8 @@ export interface RateMap {
 }
 
 export interface LatestRatesResponse {
+  amount: number
   base: CurrencyCode
   date: string
-  quote: string
-  rate: RateMap
+  rates: RateMap
 }

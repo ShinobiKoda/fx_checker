@@ -1,34 +1,44 @@
+'use client'
 
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { useRates } from "@/hooks/useRates";
+import { InfiniteSlider } from "./motion";
 
 const LiveMarkets = () => {
+  const { data, isLoading, isError } = useRates('USD');
+
   return (
-    <div className="w-full overflow-x-scroll flex items-stretch">
-      <div className="px-2 py-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900">
+    <div className="w-full flex items-stretch overflow-hidden bg-neutral-700">
+      <div className="px-2 py-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900 z-10 relative">
         • LIVE MARKETS
       </div>
-      <div className="flex items-stretch">
-        <div className="border px-2 py-3 border-r-neutral-500 bg-neutral-700 flex items-center">
-          <IoMdArrowDropdown className="mr-0.5" color="#ff4141" />
-          <span className="text-red-500 text-preset flex items-center">
-            1.4%
-          </span>
+      
+      {isLoading && (
+        <div className="flex-1 flex items-center px-4 text-preset text-neutral-200">
+          Loading rates...
         </div>
-        <div className="border px-2 py-3 border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2">
-          <span className="text-neutral-200">USD/JPY</span>
-          <span className="text-neutral-50">157.91</span>
-          <span className="flex items-center text-green-500">
-            <IoMdArrowDropup /> +0.04%
-          </span>
+      )}
+      
+      {isError && (
+        <div className="flex-1 flex items-center px-4 text-preset text-red-500">
+          Failed to load rates
         </div>
-         <div className="border px-2 py-3 border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2">
-          <span className="text-neutral-200">USD/JPY</span>
-          <span className="text-neutral-50">157.91</span>
-          <span className="flex items-center text-green-500">
-            <IoMdArrowDropup /> +0.04%
-          </span>
-        </div>
-      </div>
+      )}
+      
+      {!isLoading && !isError && data?.rates && (
+        <InfiniteSlider speed={40}>
+          <div className="flex items-stretch h-full">
+            {Object.entries(data.rates).map(([currency, rate]) => (
+              <div 
+                key={currency} 
+                className="border px-4 py-3 border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2 h-full whitespace-nowrap"
+              >
+                <span className="text-neutral-200">USD/{currency}</span>
+                <span className="text-neutral-50">{rate.toFixed(4)}</span>
+              </div>
+            ))}
+          </div>
+        </InfiniteSlider>
+      )}
     </div>
   );
 };
