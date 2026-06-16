@@ -28,3 +28,7 @@
     rgba(23, 23, 25, 0) 100%
   );
 }
+
+@utility text-preset {
+  @apply font-normal text-[10px];
+}
