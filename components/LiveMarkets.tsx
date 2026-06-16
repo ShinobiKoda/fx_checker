@@ -1,11 +1,10 @@
-import React from "react";
-import { BsArrowDown } from "react-icons/bs";
+
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 
 const LiveMarkets = () => {
   return (
     <div className="w-full overflow-x-scroll flex items-stretch">
-      <div className="px-2 py-3 bg-lime-500 flex items-center whitespace-nowrap text-preset color-neutral-900">
+      <div className="px-2 py-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900">
         • LIVE MARKETS
       </div>
       <div className="flex items-stretch">
