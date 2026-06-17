@@ -1,39 +1,59 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { FaStar } from "react-icons/fa";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
 import { AnimatePresence } from "framer-motion";
-import { SlideUp, ShimmerBlock, SwapButton, ErrorBanner, Spinner, StaggerContainer, StaggerItem } from "@/components/motion";
+import {
+  SlideUp,
+  ShimmerBlock,
+  SwapButton,
+  ErrorBanner,
+  Spinner,
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/Motion";
 
 const getFlagEmoji = (currencyCode: string) => {
-  if (currencyCode === 'EUR') return '🇪🇺';
+  if (currencyCode === "EUR") return "🇪🇺";
   const countryCode = currencyCode.substring(0, 2);
   const codePoints = countryCode
     .toUpperCase()
-    .split('')
-    .map(char => 127397 + char.charCodeAt(0));
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
   return String.fromCodePoint(...codePoints);
 };
 
 const formatWithCommas = (value: string) => {
-  const parts = value.split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
+  const parts = value.split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
 };
 
-const parseCommas = (value: string) => value.replace(/,/g, '');
+const parseCommas = (value: string) => value.replace(/,/g, "");
 
 const Converter = () => {
   const [amount, setAmount] = useState<string>("1000");
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<string>("EUR");
-  const [dropdownOpen, setDropdownOpen] = useState<'from' | 'to' | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
 
-  const { data: currencies, isLoading: currenciesLoading, isError: currenciesError, refetch: refetchCurrencies } = useCurrencies();
-  const { data: rates, isLoading: ratesLoading, isError: ratesError, isFetching: ratesFetching, refetch: refetchRates } = useRates([fromCurrency]);
+  const {
+    data: currencies,
+    isLoading: currenciesLoading,
+    isError: currenciesError,
+    refetch: refetchCurrencies,
+  } = useCurrencies();
+  const {
+    data: rates,
+    isLoading: ratesLoading,
+    isError: ratesError,
+    isFetching: ratesFetching,
+    refetch: refetchRates,
+  } = useRates([fromCurrency]);
 
   const handleSwap = () => {
     setFromCurrency(toCurrency);
@@ -42,37 +62,57 @@ const Converter = () => {
 
   const getConvertedAmount = () => {
     if (!amount || isNaN(Number(amount))) return "0.00";
-    if (fromCurrency === toCurrency) return Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    
-    const rateItem = rates?.find(r => r.base === fromCurrency && r.quote === toCurrency);
+    if (fromCurrency === toCurrency)
+      return Number(amount).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+    const rateItem = rates?.find(
+      (r) => r.base === fromCurrency && r.quote === toCurrency,
+    );
     if (!rateItem) return "---";
 
-    return (Number(amount) * rateItem.rate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (Number(amount) * rateItem.rate).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
-  const CurrencyDropdown = ({ type }: { type: 'from' | 'to' }) => {
+  const CurrencyDropdown = ({ type }: { type: "from" | "to" }) => {
     if (dropdownOpen !== type || !currencies) return null;
 
     return (
       <>
-        <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(null)} />
-        <div className="absolute top-full right-0 mt-2 w-64 max-h-64 overflow-y-auto bg-neutral-600 border border-neutral-500 rounded-xl z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar">
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setDropdownOpen(null)}
+        />
+        <div className="absolute top-full right-0 mt-2 w-full max-w-[376px] max-h-64 overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar">
           <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
             {Object.entries(currencies).map(([code, name]) => (
               <StaggerItem key={code}>
                 <button
                   onClick={() => {
-                    if (type === 'from') setFromCurrency(code);
+                    if (type === "from") setFromCurrency(code);
                     else setToCurrency(code);
                     setDropdownOpen(null);
                   }}
                   className={`flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-500 transition-colors text-left w-full ${
-                    (type === 'from' ? fromCurrency : toCurrency) === code ? 'bg-neutral-500' : ''
+                    (type === "from" ? fromCurrency : toCurrency) === code
+                      ? "bg-neutral-500"
+                      : ""
                   }`}
                 >
-                  <span className="text-2xl leading-none">{getFlagEmoji(code)}</span>
-                  <span className="font-bold text-neutral-50 min-w-[3ch]">{code}</span>
-                  <span className="text-sm text-neutral-300 truncate">{name}</span>
+                  <span className="text-2xl leading-none">
+                    {getFlagEmoji(code)}
+                  </span>
+                  <span className="font-bold text-neutral-50 min-w-[3ch]">
+                    {code}
+                  </span>
+                  <span className="text-sm text-neutral-300 truncate">
+                    {name}
+                  </span>
                 </button>
               </StaggerItem>
             ))}
@@ -87,7 +127,7 @@ const Converter = () => {
   if (currenciesLoading || ratesLoading) {
     return (
       <SlideUp delay={0.4} duration={0.6}>
-        <div className="space-y-4">
+        <div className="space-y-4 px-4 mt-8">
           <ShimmerBlock width="160px" height="24px" rounded="6px" />
           <div className="bg-neutral-700 rounded-[20px] p-4 space-y-4 flex flex-col items-center justify-center w-full">
             <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
@@ -118,13 +158,17 @@ const Converter = () => {
   if (currenciesError || ratesError) {
     return (
       <SlideUp delay={0.4} duration={0.6}>
-        <div className="space-y-4">
+        <div className="space-y-4 px-4 mt-8">
           <h2 className="text-[20px] font-normal text-neutral-50">
             CHECK THE RATE
           </h2>
           <AnimatePresence>
-            <ErrorBanner 
-              message={currenciesError ? "Failed to load currencies" : "Failed to load exchange rates"}
+            <ErrorBanner
+              message={
+                currenciesError
+                  ? "Failed to load currencies"
+                  : "Failed to load exchange rates"
+              }
               onRetry={() => {
                 if (currenciesError) refetchCurrencies();
                 if (ratesError) refetchRates();
@@ -140,65 +184,91 @@ const Converter = () => {
 
   return (
     <SlideUp delay={0.4} duration={0.6}>
-      <div className="space-y-4">
+      <div className="space-y-4 px-4 mt-8">
         <h2 className="text-[20px] font-normal text-neutral-50">
           CHECK THE RATE
         </h2>
-        <div className="bg-neutral-700 rounded-[20px] p-4 space-y-4 flex flex-col items-center justify-center w-full">
-          <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
-            <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
-            <div className="flex items-center justify-between">
-              <input 
-                type="text" 
-                value={displayAmount}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const rawValue = parseCommas(val);
-                  if (/^\d*\.?\d*$/.test(rawValue)) {
-                    setDisplayAmount(formatWithCommas(rawValue));
-                    setAmount(rawValue);
-                  }
-                }}
-                className="font-bold text-[32px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
-                placeholder="0.00"
-              />
-              <div className="relative">
-                <button 
-                  onClick={() => setDropdownOpen(dropdownOpen === 'from' ? null : 'from')}
-                  className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors"
-                >
-                  <div className="text-xl leading-none">{getFlagEmoji(fromCurrency)}</div>
-                  <span className="font-normal text-sm text-neutral-50">{fromCurrency}</span>
-                  <IoMdArrowDropdown className="text-neutral-50" />
-                </button>
-                <CurrencyDropdown type="from" />
+        <div className="bg-neutral-700 rounded-[20px]">
+          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
+              <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
+              <div className="flex items-center justify-between">
+                <input
+                  type="text"
+                  value={displayAmount}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const rawValue = parseCommas(val);
+                    if (/^\d*\.?\d*$/.test(rawValue)) {
+                      setDisplayAmount(formatWithCommas(rawValue));
+                      setAmount(rawValue);
+                    }
+                  }}
+                  className="font-bold text-[32px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
+                  placeholder="0.00"
+                />
+                <div className="relative">
+                  <button
+                    onClick={() =>
+                      setDropdownOpen(dropdownOpen === "from" ? null : "from")
+                    }
+                    className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                  >
+                    <div className="text-xl leading-none">
+                      {getFlagEmoji(fromCurrency)}
+                    </div>
+                    <span className="font-normal text-sm text-neutral-50">
+                      {fromCurrency}
+                    </span>
+                    <IoMdArrowDropdown className="text-neutral-50" />
+                  </button>
+                  <CurrencyDropdown type="from" />
+                </div>
+              </div>
+            </div>
+
+            <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
+
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
+              <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
+              <div className="flex items-center justify-between">
+                {ratesFetching ? (
+                  <ShimmerBlock width="150px" height="36px" rounded="6px" />
+                ) : (
+                  <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
+                    {getConvertedAmount()}
+                  </span>
+                )}
+                <div className="relative">
+                  <button
+                    onClick={() =>
+                      setDropdownOpen(dropdownOpen === "to" ? null : "to")
+                    }
+                    className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                  >
+                    <div className="text-xl leading-none">
+                      {getFlagEmoji(toCurrency)}
+                    </div>
+                    <span className="font-normal text-sm text-neutral-50">
+                      {toCurrency}
+                    </span>
+                    <IoMdArrowDropdown className="text-neutral-50" />
+                  </button>
+                  <CurrencyDropdown type="to" />
+                </div>
               </div>
             </div>
           </div>
-          
-          <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
-          
-          <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
-            <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
-            <div className="flex items-center justify-between">
-              {ratesFetching ? (
-                <ShimmerBlock width="150px" height="36px" rounded="6px" />
-              ) : (
-                <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
-                  {getConvertedAmount()}
-                </span>
-              )}
-              <div className="relative">
-                <button 
-                  onClick={() => setDropdownOpen(dropdownOpen === 'to' ? null : 'to')}
-                  className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors"
-                >
-                  <div className="text-xl leading-none">{getFlagEmoji(toCurrency)}</div>
-                  <span className="font-normal text-sm text-neutral-50">{toCurrency}</span>
-                  <IoMdArrowDropdown className="text-neutral-50" />
-                </button>
-                <CurrencyDropdown type="to" />
-              </div>
+          <div className="w-full border border-neutral-500 border-dashed h-px"></div>
+          <div className="p-4 text-center flex flex-col items-center justify-center gap-4">
+            <p className="text-neutral-50 text-preset">1 USD = 0.8530 EUR</p>
+            <div className="flex items-center gap-2 *:cursor-pointer">
+              <button className="font-medium text-[12px] px-3 py-2 rounded-[8px] bg-lime-500 flex items-center text-neutral-900 gap-2">
+                <FaStar /> FAVORITED
+              </button>
+              <button className="font-medium text-[12px] px-3 py-2 rounded-[8px] border border-lime-500">
+                LOG CONVERSION
+              </button>
             </div>
           </div>
         </div>

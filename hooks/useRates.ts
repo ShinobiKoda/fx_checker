@@ -22,10 +22,8 @@ async function fetchRates(base: string): Promise<LatestRatesResponse> {
   if (!latestRes.ok) throw new Error('Failed to fetch latest rates');
 
   const latestData: RateItem[] = await latestRes.json();
-  // If prev fetch failed (e.g. weekend), fallback gracefully
   const prevData: RateItem[] = prevRes.ok ? await prevRes.json() : [];
 
-  // Build a lookup map of previous rates by quote currency
   const prevMap: Record<string, number> = {};
   for (const item of prevData) {
     prevMap[item.quote] = item.rate;
