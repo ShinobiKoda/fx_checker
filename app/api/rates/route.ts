@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data, {
       headers: { 'Cache-Control': 'public, s-maxage=3600' }
     })
-  } catch {
+  } catch (error) {
+    console.error('API Error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch rates. Try again later.' },
       { status: 502 }

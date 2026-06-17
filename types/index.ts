@@ -4,9 +4,11 @@ export interface RateMap {
   [currency: CurrencyCode]: number
 }
 
-export interface LatestRatesResponse {
-  amount: number
-  base: CurrencyCode
+export interface RateItem {
   date: string
-  rates: RateMap
+  base: CurrencyCode
+  quote: CurrencyCode
+  rate: number
 }
+
+export type LatestRatesResponse = RateItem[]
