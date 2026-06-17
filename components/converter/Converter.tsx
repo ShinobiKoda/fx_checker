@@ -16,8 +16,17 @@ const getFlagEmoji = (currencyCode: string) => {
   return String.fromCodePoint(...codePoints);
 };
 
+const formatWithCommas = (value: string) => {
+  const parts = value.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
+
+const parseCommas = (value: string) => value.replace(/,/g, '');
+
 const Converter = () => {
   const [amount, setAmount] = useState<string>("1000");
+  const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<string>("EUR");
   const [dropdownOpen, setDropdownOpen] = useState<'from' | 'to' | null>(null);
@@ -34,7 +43,6 @@ const Converter = () => {
     if (!amount || isNaN(Number(amount))) return "0.00";
     if (fromCurrency === toCurrency) return Number(amount).toFixed(2);
     
-    // Find the rate where base is fromCurrency and quote is toCurrency
     const rateItem = rates?.find(r => r.base === fromCurrency && r.quote === toCurrency);
     if (!rateItem) return "---";
 
@@ -79,11 +87,14 @@ const Converter = () => {
           <div className="flex items-center justify-between">
             <input 
               type="text" 
-              value={amount}
+              value={displayAmount}
               onChange={(e) => {
-                // Allow only numbers and decimals
                 const val = e.target.value;
-                if (/^\d*\.?\d*$/.test(val)) setAmount(val);
+                const rawValue = parseCommas(val);
+                if (/^\d*\.?\d*$/.test(rawValue)) {
+                  setDisplayAmount(formatWithCommas(rawValue));
+                  setAmount(rawValue);
+                }
               }}
               className="font-bold text-[32px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
               placeholder="0.00"
