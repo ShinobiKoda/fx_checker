@@ -1,54 +1,55 @@
 import { useQuery } from '@tanstack/react-query'
-import { LatestRatesResponse } from '@/types'
+import { LatestRatesResponse, RateItem } from '@/types'
 
 function formatDate(date: Date) {
   return date.toISOString().split('T')[0];
 }
 
 async function fetchRates(base: string): Promise<LatestRatesResponse> {
-  const endDateObj = new Date();
-  const startDateObj = new Date();
-  startDateObj.setDate(endDateObj.getDate() - 4);
+  const todayObj = new Date();
+  const prevObj = new Date();
+  prevObj.setDate(todayObj.getDate() - 4);
 
-  const endDate = formatDate(endDateObj);
-  const startDate = formatDate(startDateObj);
+  const today = formatDate(todayObj);
+  const prev = formatDate(prevObj);
 
-  const res = await fetch(`https://api.frankfurter.app/${startDate}..${endDate}?from=${base}`);
-  if (!res.ok) throw new Error('Failed to fetch rates');
-  const data = await res.json();
+  // Fetch both dates in parallel
+  const [latestRes, prevRes] = await Promise.all([
+    fetch(`https://api.frankfurter.dev/v2/rates/${today}?base=${base}`),
+    fetch(`https://api.frankfurter.dev/v2/rates/${prev}?base=${base}`),
+  ]);
 
-  const dates = Object.keys(data.rates || {}).sort();
-  if (dates.length === 0) return [];
+  if (!latestRes.ok) throw new Error('Failed to fetch latest rates');
 
-  const latestDate = dates[dates.length - 1];
-  const previousDate = dates.length > 1 ? dates[dates.length - 2] : null;
+  const latestData: RateItem[] = await latestRes.json();
+  // If prev fetch failed (e.g. weekend), fallback gracefully
+  const prevData: RateItem[] = prevRes.ok ? await prevRes.json() : [];
 
-  const latestRates = data.rates[latestDate];
-  const previousRates = previousDate ? data.rates[previousDate] : {};
+  // Build a lookup map of previous rates by quote currency
+  const prevMap: Record<string, number> = {};
+  for (const item of prevData) {
+    prevMap[item.quote] = item.rate;
+  }
 
-  return Object.entries(latestRates).map(([quote, rate]) => {
-    const latestRate = rate as number;
+  return latestData.map((item) => {
+    const prevRate = prevMap[item.quote];
     let change = 0;
     let direction: 'up' | 'down' | 'flat' = 'flat';
 
-    if (previousDate && previousRates[quote]) {
-      const prevRate = previousRates[quote] as number;
-      change = ((latestRate - prevRate) / prevRate) * 100;
-      
-      if (change > 0) direction = 'up';
-      else if (change < 0) direction = 'down';
+    if (prevRate !== undefined && prevRate !== 0) {
+      change = ((item.rate - prevRate) / prevRate) * 100;
+      if (change > 0.001) direction = 'up';
+      else if (change < -0.001) direction = 'down';
     }
 
     return {
-      date: latestDate,
-      base,
-      quote,
-      rate: latestRate,
+      ...item,
       change: parseFloat(change.toFixed(2)),
-      direction
+      direction,
     };
   });
 }
+
 
 export function useRates(bases: string | string[]) {
   const baseArray = Array.isArray(bases) ? bases : [bases];
