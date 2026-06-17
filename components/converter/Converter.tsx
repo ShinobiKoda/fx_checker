@@ -3,7 +3,6 @@
 import React from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { HiArrowsUpDown } from "react-icons/hi2";
-import { useRates } from "@/hooks/useRates";
 
 const Converter = () => {
 

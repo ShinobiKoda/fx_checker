@@ -2,9 +2,10 @@
 
 import { useRates } from "@/hooks/useRates";
 import { InfiniteSlider } from "./motion";
+import { IoMdArrowDropdown, IoMdArrowUp } from "react-icons/io";
 
 const LiveMarkets = () => {
-  const { data, isLoading, isError } = useRates('USD');
+  const { data, isLoading, isError } = useRates(['USD', 'EUR', 'GBP']);
 
   return (
     <div className="w-full flex items-stretch overflow-hidden bg-neutral-700 h-12">
@@ -25,14 +26,26 @@ const LiveMarkets = () => {
       )}
       
       {!isLoading && !isError && data && Array.isArray(data) && data.length > 0 && (
-        <InfiniteSlider speed={6}>
+        <InfiniteSlider speed={40}>
           {data.map((item) => (
             <div 
-              key={item.quote} 
+              key={`${item.base}-${item.quote}`} 
               className="px-6 border-r border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2 h-full whitespace-nowrap"
             >
-              <span className="text-neutral-200">USD/{item.quote}</span>
+              <span className="text-neutral-200">{item.base}/{item.quote}</span>
               <span className="text-neutral-50 font-mono">{item.rate.toFixed(4)}</span>
+              {item.direction === 'up' && (
+                <div className="flex items-center text-green-500 gap-0.5">
+                  <IoMdArrowUp size={16} />
+                  <span className="font-mono text-xs">{item.change}%</span>
+                </div>
+              )}
+              {item.direction === 'down' && (
+                <div className="flex items-center text-red-500 gap-0.5">
+                  <IoMdArrowDropdown size={16} />
+                  <span className="font-mono text-xs">{Math.abs(item.change)}%</span>
+                </div>
+              )}
             </div>
           ))}
         </InfiniteSlider>

@@ -5,10 +5,12 @@ export interface RateMap {
 }
 
 export interface RateItem {
-  date: string
-  base: CurrencyCode
-  quote: CurrencyCode
+  date?: string
+  base: string
+  quote: string
   rate: number
+  change: number
+  direction: 'up' | 'down' | 'flat'
 }
 
 export type LatestRatesResponse = RateItem[]
