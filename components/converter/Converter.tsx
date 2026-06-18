@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropdown, IoIosSearch } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
 import { AnimatePresence } from "framer-motion";
+import { FaCheck } from "react-icons/fa6";
 import {
   SlideUp,
   ShimmerBlock,
@@ -34,12 +35,15 @@ const formatWithCommas = (value: string) => {
 
 const parseCommas = (value: string) => value.replace(/,/g, "");
 
+const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
+
 const Converter = () => {
   const [amount, setAmount] = useState<string>("1000");
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<string>("EUR");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     data: currencies,
@@ -79,44 +83,93 @@ const Converter = () => {
     });
   };
 
-  const CurrencyDropdown = ({ type }: { type: "from" | "to" }) => {
+  const renderCurrencyDropdown = (type: "from" | "to") => {
     if (dropdownOpen !== type || !currencies) return null;
+
+    const filteredCurrencies = Object.entries(currencies).filter(
+      ([code, name]) =>
+        code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
+    const popularCurrenciesList = filteredCurrencies.filter(([code]) =>
+      POPULAR_CURRENCIES.includes(code),
+    );
+    const otherCurrenciesList = filteredCurrencies.filter(
+      ([code]) => !POPULAR_CURRENCIES.includes(code),
+    );
+
+    const renderCurrencyItem = ([code, name]: [string, string]) => {
+      const isSelected = (type === "from" ? fromCurrency : toCurrency) === code;
+      return (
+        <StaggerItem key={code}>
+          <div className="flex items-center justify-between hover:bg-neutral-500 transition-colors px-2 py-3 rounded-lg">
+            <button
+              onClick={() => {
+                if (type === "from") setFromCurrency(code);
+                else setToCurrency(code);
+                setDropdownOpen(null);
+                setSearchQuery("");
+              }}
+              className={`flex items-center gap-3 text-left w-full`}
+            >
+              <span className="text-xl leading-none">{getFlagEmoji(code)}</span>
+              <span className="font-normal text-neutral-50 text-sm">{code}</span>
+              <span className="text-[12px] text-neutral-200 truncate">{name}</span>
+            </button>
+            {isSelected && <FaCheck className="text-lime-500" />}
+          </div>
+        </StaggerItem>
+      );
+    };
 
     return (
       <>
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setDropdownOpen(null)}
+          onClick={() => {
+            setDropdownOpen(null);
+            setSearchQuery("");
+          }}
         />
-        <div className="absolute top-full right-0 mt-2 w-full max-w-[376px] max-h-64 overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar">
-          <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
-            {Object.entries(currencies).map(([code, name]) => (
-              <StaggerItem key={code}>
-                <button
-                  onClick={() => {
-                    if (type === "from") setFromCurrency(code);
-                    else setToCurrency(code);
-                    setDropdownOpen(null);
-                  }}
-                  className={`flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-500 transition-colors text-left w-full ${
-                    (type === "from" ? fromCurrency : toCurrency) === code
-                      ? "bg-neutral-500"
-                      : ""
-                  }`}
-                >
-                  <span className="text-2xl leading-none">
-                    {getFlagEmoji(code)}
-                  </span>
-                  <span className="font-bold text-neutral-50 min-w-[3ch]">
-                    {code}
-                  </span>
-                  <span className="text-sm text-neutral-300 truncate">
-                    {name}
-                  </span>
-                </button>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+        <div
+          className="absolute top-full right-0 mt-2 w-full max-w-[376px] max-h-64 overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="w-full p-3 border border-neutral-200 rounded-[6px] flex items-center gap-2 mb-2.5">
+            <IoIosSearch size={20} className="text-neutral-50" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border-none bg-transparent outline-none w-full placeholder:text-neutral-200 text-neutral-50"
+              placeholder="Search currencies..."
+            />
+          </div>
+
+          {popularCurrenciesList.length > 0 && (
+            <>
+              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-200">
+                <span>POPULAR</span>
+                <span>{popularCurrenciesList.length}</span>
+              </p>
+              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
+                {popularCurrenciesList.map(renderCurrencyItem)}
+              </StaggerContainer>
+            </>
+          )}
+
+          {otherCurrenciesList.length > 0 && (
+            <>
+              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-200">
+                <span>OTHER CURRENCIES</span>
+                <span>{otherCurrenciesList.length}</span>
+              </p>
+              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
+                {otherCurrenciesList.map(renderCurrencyItem)}
+              </StaggerContainer>
+            </>
+          )}
         </div>
       </>
     );
@@ -128,10 +181,12 @@ const Converter = () => {
     return (
       <SlideUp delay={0.4} duration={0.6}>
         <div className="space-y-4 px-4 mt-8">
-          <ShimmerBlock width="160px" height="24px" rounded="6px" />
+          <h2 className="text-[20px] font-normal text-neutral-50">
+            CHECK THE RATE
+          </h2>
           <div className="bg-neutral-700 rounded-[20px] p-4 space-y-4 flex flex-col items-center justify-center w-full">
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
-              <ShimmerBlock width="40px" height="14px" rounded="4px" />
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
+              <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
               <div className="flex items-center justify-between">
                 <ShimmerBlock width="120px" height="36px" rounded="6px" />
                 <ShimmerBlock width="90px" height="40px" rounded="8px" />
@@ -140,8 +195,8 @@ const Converter = () => {
             <div className="w-[48px] h-[48px] rounded-[8px] bg-neutral-600 border border-neutral-500 flex items-center justify-center">
               <Spinner size={20} color="text-neutral-400" />
             </div>
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
-              <ShimmerBlock width="60px" height="14px" rounded="4px" />
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
+              <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
               <div className="flex items-center justify-between">
                 <ShimmerBlock width="140px" height="36px" rounded="6px" />
                 <ShimmerBlock width="90px" height="40px" rounded="8px" />
@@ -190,7 +245,7 @@ const Converter = () => {
         </h2>
         <div className="bg-neutral-700 rounded-[20px]">
           <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full">
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
               <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
               <div className="flex items-center justify-between">
                 <input
@@ -207,7 +262,7 @@ const Converter = () => {
                   className="font-bold text-[32px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
                   placeholder="0.00"
                 />
-                <div className="relative">
+                <div className="">
                   <button
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "from" ? null : "from")
@@ -222,24 +277,20 @@ const Converter = () => {
                     </span>
                     <IoMdArrowDropdown className="text-neutral-50" />
                   </button>
-                  <CurrencyDropdown type="from" />
+                  {renderCurrencyDropdown("from")}
                 </div>
               </div>
             </div>
 
             <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
 
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
               <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
               <div className="flex items-center justify-between">
-                {ratesFetching ? (
-                  <ShimmerBlock width="150px" height="36px" rounded="6px" />
-                ) : (
-                  <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
-                    {getConvertedAmount()}
-                  </span>
-                )}
-                <div className="relative">
+                <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
+                  {getConvertedAmount()}
+                </span>
+                <div className="">
                   <button
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "to" ? null : "to")
@@ -254,7 +305,7 @@ const Converter = () => {
                     </span>
                     <IoMdArrowDropdown className="text-neutral-50" />
                   </button>
-                  <CurrencyDropdown type="to" />
+                  {renderCurrencyDropdown("to")}
                 </div>
               </div>
             </div>
