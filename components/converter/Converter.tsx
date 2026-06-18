@@ -133,7 +133,7 @@ const Converter = () => {
           }}
         />
         <div
-          className="absolute top-full right-0 mt-2 w-full max-w-[376px] max-h-64 overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
+          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="w-full p-3 border border-neutral-200 rounded-[6px] flex items-center gap-2 mb-2.5">
@@ -244,8 +244,8 @@ const Converter = () => {
           CHECK THE RATE
         </h2>
         <div className="bg-neutral-700 rounded-[20px]">
-          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full">
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
+          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full md:flex-row  md:justify-between md:items-center">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full md:max-w-[292px] relative">
               <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
               <div className="flex items-center justify-between">
                 <input
@@ -284,7 +284,7 @@ const Converter = () => {
 
             <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
 
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px]">
               <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
               <div className="flex items-center justify-between">
                 <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
@@ -311,7 +311,7 @@ const Converter = () => {
             </div>
           </div>
           <div className="w-full border border-neutral-500 border-dashed h-px"></div>
-          <div className="p-4 text-center flex flex-col items-center justify-center gap-4">
+          <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
             <p className="text-neutral-50 text-preset">1 USD = 0.8530 EUR</p>
             <div className="flex items-center gap-2 *:cursor-pointer">
               <button className="font-medium text-[12px] px-3 py-2 rounded-[8px] bg-lime-500 flex items-center text-neutral-900 gap-2">
