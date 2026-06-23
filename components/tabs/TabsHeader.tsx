@@ -3,8 +3,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
-const TabsHeader = () => {
-  const [currentTab, setCurrentTab] = useState("HISTORY");
+interface TabsHeaderProps {
+  currentTab: string;
+  setCurrentTab: (tab: string) => void;
+}
+
+const TabsHeader: React.FC<TabsHeaderProps> = ({ currentTab, setCurrentTab }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

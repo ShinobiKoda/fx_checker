@@ -1,8 +1,7 @@
-import React from "react";
 import Header from "@/components/Header";
 import LiveMarkets from "@/components/LiveMarkets";
 import Converter from "@/components/converter/Converter";
-import TabsHeader from "@/components/tabs/TabsHeader";
+import TabsContainer from "@/components/tabs/TabsContainer";
 
 function page() {
   return (
@@ -10,7 +9,7 @@ function page() {
       <Header />
       <LiveMarkets />
         <Converter />
-      <TabsHeader />
+      <TabsContainer />
     </div>
   );
 }
