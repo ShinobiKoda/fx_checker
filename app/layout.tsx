@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains_mono",
@@ -19,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jetBrainsMono.variable} h-full antialiased`}>
+    <html lang="en" className={cn("h-full", "antialiased", jetBrainsMono.variable, "font-sans", geist.variable)}>
       <body className="h-full bg-neutral-900 text-neutral-50">
         <Providers>
           {children}

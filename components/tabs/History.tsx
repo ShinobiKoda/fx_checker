@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RiArrowDropUpFill } from "react-icons/ri";
+import HistoryChart from "../HistoryChart";
 
 const History = () => {
   const [activeDate, setActiveDate] = useState("1M");
@@ -41,7 +42,7 @@ const History = () => {
             className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4"
             key={index}
           >
-            <p className="font-normal text-sm text-neutral-50">{data.title}</p>
+            <p className="font-normal text-sm text-neutral-50 opacity-70">{data.title}</p>
             <div
               className={`font-normal text-xl flex items-center ${data.change ? "text-green-500" : "text-neutral-50"}`}
             >
@@ -59,13 +60,26 @@ const History = () => {
         <div className="bg-neutral-700 border-sm flex items-center w-fit">
           {datePicker.map((date, index) => (
             <button
-              className={` border-sm px-4 py-3 ${activeDate === date ? "bg-neutral-500" : ""}`} 
+              className={` border-sm px-4 py-3 ${activeDate === date ? "bg-neutral-500" : ""}`}
               onClick={() => setActiveDate(date)}
               key={index}
             >
               {date}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div className="px-4 mt-4 pb-20">
+        <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
+          <div className="w-full flex items-center justify-between">
+            <p className="text-neutral-50 font-medium text-base">USD/EUR</p>
+            <div className="font-normal text-[12px] opacity-70">
+              <span>0.8530 • </span>
+              <span>MAY 14 16:00 CET</span>
+            </div>
+          </div>
+          <HistoryChart />
         </div>
       </div>
     </div>
