@@ -1,72 +1,91 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { useMemo } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-07", desktop: 245, mobile: 180 },
-];
-// 2. Map your data keys to labels and theme colors
+} from "@/components/ui/chart";
+import type { HistoryDataPoint } from "@/hooks/useHistory";
+
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-    color: "#d9f99d",
-  },
-  mobile: {
-    label: "Mobile",
+  rate: {
+    label: "Rate",
     color: "#d9f99d",
   },
 } satisfies ChartConfig;
 
-const HistoryChart = () => {
+interface HistoryChartProps {
+  data: HistoryDataPoint[];
+}
+
+const HistoryChart = ({ data }: HistoryChartProps) => {
+  // Calculate evenly spaced tick indices (~3-4 ticks)
+  const xTickIndices = useMemo(() => {
+    const count = data.length;
+    if (count <= 4) return data.map((_, i) => i);
+    const tickCount = 4;
+    const step = (count - 1) / (tickCount - 1);
+    return Array.from({ length: tickCount }, (_, i) =>
+      Math.round(i * step)
+    );
+  }, [data]);
+
+  // Calculate Y axis domain with some padding
+  const yDomain = useMemo(() => {
+    if (data.length === 0) return [0, 1];
+    const rates = data.map((d) => d.rate);
+    const min = Math.min(...rates);
+    const max = Math.max(...rates);
+    const padding = (max - min) * 0.1 || 0.001;
+    return [
+      parseFloat((min - padding).toFixed(4)),
+      parseFloat((max + padding).toFixed(4)),
+    ];
+  }, [data]);
+
   return (
-    // ChartContainer handles the responsive sizing and applies the config variables
     <ChartContainer config={chartConfig} className="h-[300px] w-full">
       <AreaChart
-        data={chartData}
-        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+        data={data}
+        margin={{ top: 10, right: 10, left: 5, bottom: 0 }}
       >
         <defs>
-          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#d9f99d" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#d9f99d" stopOpacity={0.05} />
-          </linearGradient>
-          <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="fillRate" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#d9f99d" stopOpacity={0.8} />
             <stop offset="95%" stopColor="#d9f99d" stopOpacity={0.05} />
           </linearGradient>
         </defs>
 
-        {/* Subtle horizontal grid layout */}
         <CartesianGrid
           vertical={false}
           className="stroke-neutral-200 dark:stroke-neutral-800"
         />
 
-        {/* Clean, minimalist X Axis */}
         <XAxis
           dataKey="date"
           tickLine={false}
           axisLine={false}
           tickMargin={10}
+          ticks={xTickIndices.map((i) => data[i]?.date).filter(Boolean)}
           tickFormatter={(value) =>
-            new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+            new Date(value).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })
           }
+          className="fill-neutral-500 text-xs"
+        />
+
+        <YAxis
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          domain={yDomain}
+          tickCount={5}
+          tickFormatter={(value: number) => value.toFixed(4)}
           className="fill-neutral-500 text-xs"
         />
 
@@ -78,6 +97,7 @@ const HistoryChart = () => {
                 return new Date(value).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
+                  year: "numeric",
                 });
               }}
               indicator="dot"
@@ -85,21 +105,12 @@ const HistoryChart = () => {
           }
         />
         <Area
-          dataKey="mobile"
+          dataKey="rate"
           type="linear"
-          fill="url(#fillMobile)"
+          fill="url(#fillRate)"
           stroke="#d9f99d"
           strokeWidth={2.5}
         />
-        <Area
-          dataKey="desktop"
-          type="linear"
-          fill="url(#fillDesktop)"
-          stroke="#d9f99d"
-          strokeWidth={2.5}
-          stackId="a"
-        />
-        <ChartLegend content={<ChartLegendContent />} />
       </AreaChart>
     </ChartContainer>
   );
