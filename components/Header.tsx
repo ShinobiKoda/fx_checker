@@ -21,7 +21,7 @@ const Header = () => {
             style={{ width: "auto", height: "auto" }}
           />
         </div>
-        <div className="text-neutral-200 font-normal text-[10px] flex items-center gap-2">
+        <div className="text-neutral-200 font-normal text-[10px] md:text-sm flex items-center gap-2">
           {isLoading ? (
             <ShimmerBlock width="120px" height="14px" rounded="4px" />
           ) : (

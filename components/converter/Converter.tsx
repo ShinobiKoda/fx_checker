@@ -133,7 +133,7 @@ const Converter = () => {
           }}
         />
         <div
-          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 rounded-[8px] z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
+          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 border-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="w-full p-3 border border-neutral-200 rounded-[6px] flex items-center gap-2 mb-2.5">
@@ -192,7 +192,7 @@ const Converter = () => {
                 <ShimmerBlock width="90px" height="40px" rounded="8px" />
               </div>
             </div>
-            <div className="w-[48px] h-[48px] rounded-[8px] bg-neutral-600 border border-neutral-500 flex items-center justify-center">
+            <div className="w-[48px] h-[48px] border-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center">
               <Spinner size={20} color="text-neutral-400" />
             </div>
             <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
@@ -267,7 +267,7 @@ const Converter = () => {
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "from" ? null : "from")
                     }
-                    className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                    className="p-[10px] border-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
                   >
                     <div className="text-xl leading-none">
                       {getFlagEmoji(fromCurrency)}
@@ -295,7 +295,7 @@ const Converter = () => {
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "to" ? null : "to")
                     }
-                    className="p-[10px] rounded-[8px] bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                    className="p-[10px] border-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
                   >
                     <div className="text-xl leading-none">
                       {getFlagEmoji(toCurrency)}
@@ -314,10 +314,10 @@ const Converter = () => {
           <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
             <p className="text-neutral-50 text-preset">1 USD = 0.8530 EUR</p>
             <div className="flex items-center gap-2 *:cursor-pointer">
-              <button className="font-medium text-[12px] px-3 py-2 rounded-[8px] bg-lime-500 flex items-center text-neutral-900 gap-2">
+              <button className="font-medium text-[12px] px-3 py-2 border-sm bg-lime-500 flex items-center text-neutral-900 gap-2">
                 <FaStar /> FAVORITED
               </button>
-              <button className="font-medium text-[12px] px-3 py-2 rounded-[8px] border border-lime-500">
+              <button className="font-medium text-[12px] px-3 py-2 border-sm border border-lime-500">
                 LOG CONVERSION
               </button>
             </div>
