@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { RiArrowDropUpFill, RiArrowDropDownFill } from "react-icons/ri";
+import { AnimatePresence } from "framer-motion";
 import HistoryChart from "../HistoryChart";
 import { useHistory } from "@/hooks/useHistory";
-import { Spinner, ShimmerBlock } from "@/components/Motion";
+import {
+  Spinner,
+  ShimmerBlock,
+  SlideUp,
+  FadeSlideIn,
+  ActivePill,
+  ChartReveal,
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/Motion";
 
 const History = () => {
   const [activeDate, setActiveDate] = useState("1M");
@@ -60,100 +70,120 @@ const History = () => {
       <div className="w-full grid grid-cols-2 gap-2.5 mt-4 px-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div
-                className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4"
-                key={i}
-              >
-                <ShimmerBlock width="60px" height="14px" rounded="4px" />
-                <div className="mt-2">
-                  <ShimmerBlock width="100px" height="24px" rounded="4px" />
+              <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>
+                <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
+                  <ShimmerBlock width="60px" height="14px" rounded="4px" />
+                  <div className="mt-2">
+                    <ShimmerBlock width="100px" height="24px" rounded="4px" />
+                  </div>
                 </div>
-              </div>
+              </SlideUp>
             ))
-          : historyCards.map((data, index) => (
-              <div
-                className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4"
-                key={index}
-              >
-                <p className="font-normal text-sm text-neutral-50 opacity-70">
-                  {data.title}
-                </p>
-                <div
-                  className={`font-normal text-xl flex items-center ${
-                    data.change
-                      ? summary?.direction === "up"
-                        ? "text-green-500"
-                        : summary?.direction === "down"
-                          ? "text-red-500"
-                          : "text-neutral-50"
-                      : "text-neutral-50"
-                  }`}
+          : (
+              <AnimatePresence mode="wait">
+                <StaggerContainer
+                  key={activeDate}
+                  staggerDelay={0.06}
+                  className="col-span-2 grid grid-cols-2 gap-2.5"
                 >
-                  {data.percentageChange &&
-                    summary?.direction === "up" && (
-                      <RiArrowDropUpFill size={28} />
-                    )}
-                  {data.percentageChange &&
-                    summary?.direction === "down" && (
-                      <RiArrowDropDownFill size={28} />
-                    )}
-                  <p>
-                    {data.change && data.value > 0 ? <span>+</span> : ""}
-                    {data.percentageChange
-                      ? `${data.value}%`
-                      : data.value}
-                  </p>
-                </div>
-              </div>
-            ))}
+                  {historyCards.map((data, index) => (
+                    <StaggerItem key={index}>
+                      <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
+                        <p className="font-normal text-sm text-neutral-50 opacity-70">
+                          {data.title}
+                        </p>
+                        <div
+                          className={`font-normal text-xl flex items-center ${
+                            data.change
+                              ? summary?.direction === "up"
+                                ? "text-green-500"
+                                : summary?.direction === "down"
+                                  ? "text-red-500"
+                                  : "text-neutral-50"
+                              : "text-neutral-50"
+                          }`}
+                        >
+                          {data.percentageChange &&
+                            summary?.direction === "up" && (
+                              <RiArrowDropUpFill size={28} />
+                            )}
+                          {data.percentageChange &&
+                            summary?.direction === "down" && (
+                              <RiArrowDropDownFill size={28} />
+                            )}
+                          <p>
+                            {data.change && data.value > 0 ? <span>+</span> : ""}
+                            {data.percentageChange
+                              ? `${data.value}%`
+                              : data.value}
+                          </p>
+                        </div>
+                      </div>
+                    </StaggerItem>
+                  ))}
+                </StaggerContainer>
+              </AnimatePresence>
+            )}
       </div>
 
       {/* Date Picker */}
-      <div className="px-4 mt-[22px]">
-        <div className="bg-neutral-700 border-sm flex items-center w-fit">
-          {datePicker.map((date, index) => (
-            <button
-              className={` border-sm px-4 py-3 ${activeDate === date ? "bg-neutral-500" : ""}`}
-              onClick={() => setActiveDate(date)}
-              key={index}
-            >
-              {date}
-            </button>
-          ))}
+      <SlideUp delay={0.2} distance={15}>
+        <div className="px-4 mt-[22px]">
+          <div className="bg-neutral-700 border-sm flex items-center w-fit relative">
+            {datePicker.map((date) => (
+              <button
+                className="border-sm px-4 py-3 relative z-10"
+                onClick={() => setActiveDate(date)}
+                key={date}
+              >
+                {activeDate === date && (
+                  <ActivePill layoutId="datePicker" />
+                )}
+                <span className="relative z-10">{date}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </SlideUp>
 
       {/* Chart */}
-      <div className="px-4 mt-4 pb-8">
-        <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
-          <div className="w-full flex items-center justify-between">
-            <p className="text-neutral-50 font-medium text-base">
-              {base}/{quote}
-            </p>
-            <div className="font-normal text-[12px] opacity-70">
+      <SlideUp delay={0.3} distance={20}>
+        <div className="px-4 mt-4 pb-8">
+          <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
+            <div className="w-full flex items-center justify-between">
+              <p className="text-neutral-50 font-medium text-base">
+                {base}/{quote}
+              </p>
+              <div className="font-normal text-[12px] opacity-70">
+                {isLoading ? (
+                  <ShimmerBlock width="120px" height="14px" rounded="4px" />
+                ) : (
+                  <FadeSlideIn keyProp={`meta-${activeDate}`} direction="right">
+                    <span>{summary?.last} • </span>
+                    <span>{lastDate.toUpperCase()}</span>
+                  </FadeSlideIn>
+                )}
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
               {isLoading ? (
-                <ShimmerBlock width="120px" height="14px" rounded="4px" />
+                <FadeSlideIn keyProp="loading" className="h-[300px] w-full flex items-center justify-center">
+                  <Spinner size={28} color="text-neutral-400" />
+                </FadeSlideIn>
+              ) : isError ? (
+                <FadeSlideIn keyProp="error" className="h-[300px] w-full flex items-center justify-center">
+                  <p className="text-red-500 text-sm">Failed to load chart data</p>
+                </FadeSlideIn>
               ) : (
-                <>
-                  <span>{summary?.last} • </span>
-                  <span>{lastDate.toUpperCase()}</span>
-                </>
+                <ChartReveal key={`chart-${activeDate}`} delay={0.1} duration={0.7}>
+                  <HistoryChart data={history?.data ?? []} />
+                </ChartReveal>
               )}
-            </div>
+            </AnimatePresence>
           </div>
-          {isLoading ? (
-            <div className="h-[300px] w-full flex items-center justify-center">
-              <Spinner size={28} color="text-neutral-400" />
-            </div>
-          ) : isError ? (
-            <div className="h-[300px] w-full flex items-center justify-center">
-              <p className="text-red-500 text-sm">Failed to load chart data</p>
-            </div>
-          ) : (
-            <HistoryChart data={history?.data ?? []} />
-          )}
         </div>
-      </div>
+      </SlideUp>
     </div>
   );
 };

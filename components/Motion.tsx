@@ -264,7 +264,7 @@ export const SwapButton = ({
   <motion.button
     onClick={onClick}
     disabled={isLoading}
-    className={`w-[48px] h-[48px] rounded-[8px] bg-neutral-600 border border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
+    className={`w-[48px] h-[48px] border-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9, rotate: 180 }}
     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -352,4 +352,83 @@ export const PulseDot = ({
     />
     <span className={`relative inline-flex rounded-full ${color}`} style={{ width: size * 0.6, height: size * 0.6 }} />
   </span>
+)
+
+// ─── Fade Slide In (for data transitions with AnimatePresence) ──────────────
+
+export const FadeSlideIn = ({
+  children,
+  keyProp,
+  delay = 0,
+  duration = 0.4,
+  className = '',
+  direction = 'up',
+}: {
+  children: React.ReactNode
+  keyProp?: string | number
+  delay?: number
+  duration?: number
+  className?: string
+  direction?: 'up' | 'down' | 'left' | 'right'
+}) => {
+  const offsets = {
+    up: { x: 0, y: 16 },
+    down: { x: 0, y: -16 },
+    left: { x: 16, y: 0 },
+    right: { x: -16, y: 0 },
+  }
+  const offset = offsets[direction]
+
+  return (
+    <motion.div
+      key={keyProp}
+      initial={{ opacity: 0, x: offset.x, y: offset.y }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      exit={{ opacity: 0, x: -offset.x, y: -offset.y }}
+      transition={{ delay, duration, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// ─── Active Pill (animated background for selected tabs/pills) ──────────────
+
+export const ActivePill = ({
+  layoutId,
+  className = '',
+}: {
+  layoutId: string
+  className?: string
+}) => (
+  <motion.div
+    layoutId={layoutId}
+    className={`absolute inset-0 bg-neutral-500 ${className}`}
+    style={{ borderRadius: 8 }}
+    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+  />
+)
+
+// ─── Chart Reveal (wipe-in animation for chart content) ─────────────────────
+
+export const ChartReveal = ({
+  children,
+  duration = 0.8,
+  delay = 0.2,
+  className = '',
+}: {
+  children: React.ReactNode
+  duration?: number
+  delay?: number
+  className?: string
+}) => (
+  <motion.div
+    initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
+    animate={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
+    transition={{ delay, duration, ease: [0.25, 0.46, 0.45, 0.94] }}
+    className={className}
+  >
+    {children}
+  </motion.div>
 )
