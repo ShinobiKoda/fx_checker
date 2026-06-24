@@ -4,7 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains_mono",
@@ -22,11 +22,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", "antialiased", jetBrainsMono.variable, "font-sans", geist.variable)}>
+    <html
+      lang="en"
+      className={cn(
+        "h-full",
+        "antialiased",
+        jetBrainsMono.variable,
+        geist.variable,
+      )}
+    >
       <body className="h-full bg-neutral-900 text-neutral-50">
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
