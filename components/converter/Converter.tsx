@@ -312,7 +312,7 @@ const Converter = () => {
           </div>
           <div className="w-full border border-neutral-500 border-dashed h-px"></div>
           <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-            <p className="text-neutral-50 text-preset">1 USD = 0.8530 EUR</p>
+            <p className="text-neutral-50 text-preset md:text-[12px]">1 USD = 0.8530 EUR</p>
             <div className="flex items-center gap-2 *:cursor-pointer">
               <button className="font-medium text-[12px] px-3 py-2 border-sm bg-lime-500 flex items-center text-neutral-900 gap-2">
                 <FaStar /> FAVORITED
