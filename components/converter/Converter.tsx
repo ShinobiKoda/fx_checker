@@ -5,7 +5,7 @@ import { IoMdArrowDropdown, IoIosSearch } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
 import {
   SlideUp,
@@ -54,6 +54,7 @@ const Converter = ({
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFullAmount, setShowFullAmount] = useState(false);
 
   const {
     data: currencies,
@@ -75,7 +76,7 @@ const Converter = ({
   };
 
   const getConvertedAmount = () => {
-    if (!amount || isNaN(Number(amount))) return "0.00";
+    if (!amount || isNaN(Number(amount))) return "0.0000";
     if (fromCurrency === toCurrency)
       return Number(amount).toLocaleString(undefined, {
         minimumFractionDigits: 2,
@@ -88,8 +89,8 @@ const Converter = ({
     if (!rateItem) return "---";
 
     return (Number(amount) * rateItem.rate).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
     });
   };
 
@@ -296,9 +297,21 @@ const Converter = ({
 
             <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px]lg:max-w-[450px]">
               <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-[32px] lg:text-[40px] text-lime-500 truncate w-1/2 min-w-0">
+              <div className={`flex ${showFullAmount ? 'flex-col gap-1 items-start' : 'items-center justify-between'}`}>
+                <motion.span
+                  layout
+                  onClick={() => setShowFullAmount((v) => !v)}
+                  className={`font-bold text-[32px] lg:text-[40px] text-lime-500 cursor-pointer select-all ${
+                    showFullAmount ? 'break-all w-full' : 'truncate w-1/2 min-w-0'
+                  }`}
+                  title={showFullAmount ? 'Tap to collapse' : 'Tap to expand'}
+                >
                   {getConvertedAmount()}
+                </motion.span>
+                <span className={`text-[10px] text-neutral-400 md:hidden transition-opacity ${
+                  showFullAmount ? 'opacity-100' : 'opacity-50'
+                }`}>
+                  {showFullAmount ? 'tap to collapse' : 'tap to expand'}
                 </span>
                 <div className="">
                   <button
