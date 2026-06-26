@@ -244,8 +244,8 @@ const Converter = () => {
           CHECK THE RATE
         </h2>
         <div className="bg-neutral-700 rounded-[20px]">
-          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full md:flex-row  md:justify-between md:items-center">
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full md:max-w-[292px] relative">
+          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full md:flex-row md:gap-6  md:justify-between md:items-center">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full md:max-w-[292px] lg:max-w-[450px] relative">
               <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
               <div className="flex items-center justify-between">
                 <input
@@ -259,7 +259,7 @@ const Converter = () => {
                       setAmount(rawValue);
                     }
                   }}
-                  className="font-bold text-[32px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
+                  className="font-bold text-[32px] lg:text-[40px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
                   placeholder="0.00"
                 />
                 <div className="">
@@ -284,10 +284,10 @@ const Converter = () => {
 
             <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
 
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px]">
+            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px]lg:max-w-[450px]">
               <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[32px] text-lime-500 truncate w-1/2 min-w-0">
+                <span className="font-bold text-[32px] lg:text-[40px] text-lime-500 truncate w-1/2 min-w-0">
                   {getConvertedAmount()}
                 </span>
                 <div className="">

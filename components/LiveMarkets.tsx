@@ -10,7 +10,7 @@ const LiveMarkets = () => {
   return (
     <FadeIn delay={0.2} duration={0.5}>
       <div className="w-full flex items-stretch overflow-hidden backdrop-blur-[2px] bg-neutral-700/60 border-b border-white/5 h-12 fixed top-14 left-0 z-50">
-        <div className="px-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900 z-10 relative font-bold md:text-[12px]">
+        <div className="px-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900 z-10 relative font-medium md:text-[12px]">
           • LIVE MARKETS
         </div>
 
@@ -56,7 +56,7 @@ const LiveMarkets = () => {
               {data.map((item) => (
                 <div
                   key={`${item.base}-${item.quote}`}
-                  className="px-6 border-r border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2 h-full whitespace-nowrap"
+                  className="px-6 border-r border-r-neutral-500 bg-neutral-700 flex items-center text-preset gap-2 h-full whitespace-nowrap md:text-[12px]"
                 >
                   <span className="text-neutral-200">
                     {item.base}/{item.quote}
