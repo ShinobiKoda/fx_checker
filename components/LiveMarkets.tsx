@@ -9,7 +9,7 @@ const LiveMarkets = () => {
 
   return (
     <FadeIn delay={0.2} duration={0.5}>
-      <div className="w-full flex items-stretch overflow-hidden backdrop-blur-md bg-neutral-700/60 border-b border-white/5 h-12 fixed top-14 left-0 z-50">
+      <div className="w-full flex items-stretch overflow-hidden backdrop-blur-[2px] bg-neutral-700/60 border-b border-white/5 h-12 fixed top-14 left-0 z-50">
         <div className="px-3 bg-lime-500 flex items-center whitespace-nowrap text-preset text-neutral-900 z-10 relative font-bold md:text-[12px]">
           • LIVE MARKETS
         </div>

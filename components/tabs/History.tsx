@@ -72,7 +72,7 @@ const History = () => {
     <div className="w-full max-w-[1036px] mx-auto">
       {/* Summary Cards */}
       <div className="w-full lg:flex lg:items-center lg:justify-between">
-        <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[700px]">
+        <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[600px]">
           {isLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>

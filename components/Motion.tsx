@@ -432,3 +432,61 @@ export const ChartReveal = ({
     {children}
   </motion.div>
 )
+
+// ─── Dropdown Menu (animated open/close panel) ───────────────────────────────
+
+export const DropdownMenu = ({
+  children,
+  isOpen,
+  className = '',
+}: {
+  children: React.ReactNode
+  isOpen: boolean
+  className?: string
+}) => (
+  <AnimatePresence>
+    {isOpen && (
+      <motion.div
+        initial={{ opacity: 0, y: -6, scaleY: 0.92 }}
+        animate={{ opacity: 1, y: 0, scaleY: 1 }}
+        exit={{ opacity: 0, y: -6, scaleY: 0.92 }}
+        transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+        style={{ originY: 0 }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    )}
+  </AnimatePresence>
+)
+
+// ─── Tab Item (animated desktop tab with hover/active states) ────────────────
+
+export const AnimatedTabItem = ({
+  children,
+  isActive,
+  onClick,
+  className = '',
+}: {
+  children: React.ReactNode
+  isActive: boolean
+  onClick: () => void
+  className?: string
+}) => (
+  <motion.li
+    onClick={onClick}
+    className={`relative px-4 py-[10.5px] flex items-center gap-1 cursor-pointer font-normal text-base select-none ${className}`}
+    animate={{ color: isActive ? '#f5f5f5' : '#737373' }}
+    whileHover={{ color: isActive ? '#f5f5f5' : '#d4d4d4' }}
+    transition={{ duration: 0.2 }}
+  >
+    {isActive && (
+      <motion.span
+        layoutId="tab-underline"
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-lime-500"
+        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+      />
+    )}
+    {children}
+  </motion.li>
+)

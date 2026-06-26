@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { DropdownMenu, AnimatedTabItem, SlideUp } from "@/components/Motion";
+import { motion } from "framer-motion";
 
 interface TabsHeaderProps {
   currentTab: string;
@@ -14,11 +16,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [tabletTab, setTabletTab] = useState('HISTORY');
 
   const tabs = ["HISTORY", "COMPARE", "FAVORITES", "LOGS"];
-
-  
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -35,50 +34,70 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   }, []);
 
   return (
-    <div className="mt-10 px-4 max-w-[1036px] mx-auto">
-      <div className="relative w-full" ref={dropdownRef}>
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="bg-neutral-700 border border-neutral-400 px-3 py-2 border-sm w-full cursor-pointer hover:opacity-90 flex items-center justify-between md:hidden"
-        >
-          <div className="text-neutral-50 font-normal text-base">
-            {currentTab}
-          </div>
-          <RiArrowDropDownLine
-            size={24}
-            className={`text-neutral-50 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-          />
-        </div>
+    <SlideUp delay={0.5} duration={0.6}>
+      <div className="mt-10 px-4 max-w-[1036px] mx-auto">
+        <div className="relative w-full" ref={dropdownRef}>
 
-        <ul className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600">
-          {tabs.map((tab, index) => (
-            <li className={`px-4 py-[10.5px] flex items-center gap-1 cursor-pointer font-normal text-base text-neutral-50 ${tabletTab == tab ? "border-b border-b-lime-500": ""}`} key={index} onClick={()=> setTabletTab(tab)}>
-              <span>{tab}</span>
-              <span className="w-5 h-5 rounded-full bg-lime-800 text-preset text-lime-500 text-center flex items-center justify-center">10</span>
-            </li>
-          ))}
-        </ul>
+          {/* ── Mobile trigger ───────────────────────────────── */}
+          <motion.div
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-neutral-700 border border-neutral-400 px-3 py-2 border-sm w-full cursor-pointer flex items-center justify-between md:hidden"
+            whileHover={{ backgroundColor: "rgba(82,82,82,0.9)" }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.15 }}
+          >
+            <div className="text-neutral-50 font-normal text-base">
+              {currentTab}
+            </div>
+            <motion.span
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            >
+              <RiArrowDropDownLine size={24} className="text-neutral-50" />
+            </motion.span>
+          </motion.div>
 
-        {isOpen && (
-          <div className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 border-sm overflow-hidden z-10 shadow-lg">
+          {/* ── Mobile dropdown ──────────────────────────────── */}
+          <DropdownMenu
+            isOpen={isOpen}
+            className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 border-sm overflow-hidden z-10 shadow-xl"
+          >
             {tabs.map((tab, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`text-neutral-50 font-normal text-base px-3 py-2 cursor-pointer hover:bg-neutral-600 transition-colors ${
+                className={`text-neutral-50 font-normal text-base px-3 py-2 cursor-pointer transition-colors ${
                   currentTab === tab ? "bg-neutral-600" : ""
                 }`}
+                whileHover={{ backgroundColor: "rgba(82,82,82,1)" }}
                 onClick={() => {
                   setCurrentTab(tab);
                   setIsOpen(false);
                 }}
               >
                 {tab}
-              </div>
+              </motion.div>
             ))}
-          </div>
-        )}
+          </DropdownMenu>
+
+          {/* ── Desktop tab bar ──────────────────────────────── */}
+          <ul className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600">
+            {tabs.map((tab, index) => (
+              <AnimatedTabItem
+                key={index}
+                isActive={currentTab === tab}
+                onClick={() => setCurrentTab(tab)}
+              >
+                <span>{tab}</span>
+                <span className="w-5 h-5 rounded-full bg-lime-800 text-preset text-lime-500 text-center flex items-center justify-center">
+                  10
+                </span>
+              </AnimatedTabItem>
+            ))}
+          </ul>
+
+        </div>
       </div>
-    </div>
+    </SlideUp>
   );
 };
 
