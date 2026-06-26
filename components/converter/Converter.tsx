@@ -239,7 +239,7 @@ const Converter = () => {
 
   return (
     <SlideUp delay={0.4} duration={0.6}>
-      <div className="space-y-4 px-4 mt-8">
+      <div className="space-y-4 px-4 mt-8 max-w-[1036px] mx-auto pt-24">
         <h2 className="text-[20px] font-normal text-neutral-50">
           CHECK THE RATE
         </h2>

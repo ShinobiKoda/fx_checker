@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <FadeIn duration={0.6}>
-      <div className="w-full overflow-x-hidden p-4 flex items-center justify-between">
+      <div className="w-full overflow-x-hidden p-4 flex items-center justify-between fixed top-0 left-0 z-50 backdrop-blur-md bg-neutral-900/70 border-b border-white/5">
         <div>
           <Image
             src="/images/logo.svg"

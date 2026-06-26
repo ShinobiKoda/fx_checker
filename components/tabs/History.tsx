@@ -19,7 +19,11 @@ const History = () => {
   const base = "USD";
   const quote = "EUR";
 
-  const { data: history, isLoading, isError } = useHistory(base, quote, activeDate);
+  const {
+    data: history,
+    isLoading,
+    isError,
+  } = useHistory(base, quote, activeDate);
 
   const datePicker = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
 
@@ -65,11 +69,12 @@ const History = () => {
     : "";
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[1036px] mx-auto">
       {/* Summary Cards */}
-      <div className="w-full grid grid-cols-2 gap-2.5 mt-4 px-4">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => (
+      <div className="w-full lg:flex lg:items-center lg:justify-between">
+        <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[700px]">
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
               <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>
                 <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
                   <ShimmerBlock width="60px" height="14px" rounded="4px" />
@@ -79,72 +84,71 @@ const History = () => {
                 </div>
               </SlideUp>
             ))
-          : (
-              <AnimatePresence mode="wait">
-                <StaggerContainer
-                  key={activeDate}
-                  staggerDelay={0.06}
-                  className="col-span-2 grid grid-cols-2 gap-2.5"
-                >
-                  {historyCards.map((data, index) => (
-                    <StaggerItem key={index}>
-                      <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
-                        <p className="font-normal text-sm text-neutral-50 opacity-70">
-                          {data.title}
-                        </p>
-                        <div
-                          className={`font-normal text-xl flex items-center ${
-                            data.change
-                              ? summary?.direction === "up"
-                                ? "text-green-500"
-                                : summary?.direction === "down"
-                                  ? "text-red-500"
-                                  : "text-neutral-50"
-                              : "text-neutral-50"
-                          }`}
-                        >
-                          {data.percentageChange &&
-                            summary?.direction === "up" && (
-                              <RiArrowDropUpFill size={28} />
-                            )}
-                          {data.percentageChange &&
-                            summary?.direction === "down" && (
-                              <RiArrowDropDownFill size={28} />
-                            )}
-                          <p>
-                            {data.change && data.value > 0 ? <span>+</span> : ""}
-                            {data.percentageChange
-                              ? `${data.value}%`
-                              : data.value}
-                          </p>
-                        </div>
-                      </div>
-                    </StaggerItem>
-                  ))}
-                </StaggerContainer>
-              </AnimatePresence>
-            )}
-      </div>
-
-      {/* Date Picker */}
-      <SlideUp delay={0.2} distance={15}>
-        <div className="px-4 mt-[22px]">
-          <div className="bg-neutral-700 border-sm flex items-center w-fit relative">
-            {datePicker.map((date) => (
-              <button
-                className="border-sm px-4 py-3 relative z-10"
-                onClick={() => setActiveDate(date)}
-                key={date}
+          ) : (
+            <AnimatePresence mode="wait">
+              <StaggerContainer
+                key={activeDate}
+                staggerDelay={0.06}
+                className=" grid grid-cols-2 gap-2.5 md:grid-cols-4"
               >
-                {activeDate === date && (
-                  <ActivePill layoutId="datePicker" />
-                )}
-                <span className="relative z-10">{date}</span>
-              </button>
-            ))}
-          </div>
+                {historyCards.map((data, index) => (
+                  <StaggerItem key={index}>
+                    <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
+                      <p className="font-normal text-sm text-neutral-50 opacity-70">
+                        {data.title}
+                      </p>
+                      <div
+                        className={`font-normal text-xl flex items-center ${
+                          data.change
+                            ? summary?.direction === "up"
+                              ? "text-green-500"
+                              : summary?.direction === "down"
+                                ? "text-red-500"
+                                : "text-neutral-50"
+                            : "text-neutral-50"
+                        }`}
+                      >
+                        {data.percentageChange &&
+                          summary?.direction === "up" && (
+                            <RiArrowDropUpFill size={28} />
+                          )}
+                        {data.percentageChange &&
+                          summary?.direction === "down" && (
+                            <RiArrowDropDownFill size={28} />
+                          )}
+                        <p>
+                          {data.change && data.value > 0 ? <span>+</span> : ""}
+                          {data.percentageChange
+                            ? `${data.value}%`
+                            : data.value}
+                        </p>
+                      </div>
+                    </div>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </AnimatePresence>
+          )}
         </div>
-      </SlideUp>
+
+        {/* Date Picker */}
+        <SlideUp delay={0.2} distance={15}>
+          <div className="px-4 mt-5.5">
+            <div className="bg-neutral-700 border-sm flex items-center w-fit relative">
+              {datePicker.map((date) => (
+                <button
+                  className="border-sm px-4 py-3 relative z-10"
+                  onClick={() => setActiveDate(date)}
+                  key={date}
+                >
+                  {activeDate === date && <ActivePill layoutId="datePicker" />}
+                  <span className="relative z-10">{date}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </SlideUp>
+      </div>
 
       {/* Chart */}
       <SlideUp delay={0.3} distance={20}>
@@ -168,15 +172,27 @@ const History = () => {
 
             <AnimatePresence mode="wait">
               {isLoading ? (
-                <FadeSlideIn keyProp="loading" className="h-[300px] w-full flex items-center justify-center">
+                <FadeSlideIn
+                  keyProp="loading"
+                  className="h-75 w-full flex items-center justify-center"
+                >
                   <Spinner size={28} color="text-neutral-400" />
                 </FadeSlideIn>
               ) : isError ? (
-                <FadeSlideIn keyProp="error" className="h-[300px] w-full flex items-center justify-center">
-                  <p className="text-red-500 text-sm">Failed to load chart data</p>
+                <FadeSlideIn
+                  keyProp="error"
+                  className="h-75 w-full flex items-center justify-center"
+                >
+                  <p className="text-red-500 text-sm">
+                    Failed to load chart data
+                  </p>
                 </FadeSlideIn>
               ) : (
-                <ChartReveal key={`chart-${activeDate}`} delay={0.1} duration={0.7}>
+                <ChartReveal
+                  key={`chart-${activeDate}`}
+                  delay={0.1}
+                  duration={0.7}
+                >
                   <HistoryChart data={history?.data ?? []} />
                 </ChartReveal>
               )}

@@ -35,7 +35,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   }, []);
 
   return (
-    <div className="mt-10 px-4">
+    <div className="mt-10 px-4 max-w-[1036px] mx-auto">
       <div className="relative w-full" ref={dropdownRef}>
         <div
           onClick={() => setIsOpen(!isOpen)}
