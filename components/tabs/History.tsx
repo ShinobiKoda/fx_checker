@@ -14,10 +14,13 @@ import {
   StaggerItem,
 } from "@/components/Motion";
 
-const History = () => {
+interface HistoryProps {
+  base: string;
+  quote: string;
+}
+
+const History = ({ base, quote }: HistoryProps) => {
   const [activeDate, setActiveDate] = useState("1M");
-  const base = "USD";
-  const quote = "EUR";
 
   const {
     data: history,
@@ -74,16 +77,16 @@ const History = () => {
       <div className="w-full lg:flex lg:items-center lg:justify-between">
         <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[600px]">
           {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>
-                <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 gap-4">
-                  <ShimmerBlock width="60px" height="14px" rounded="4px" />
-                  <div className="mt-2">
+            <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>
+                  <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 flex flex-col gap-2">
+                    <ShimmerBlock width="60px" height="14px" rounded="4px" />
                     <ShimmerBlock width="100px" height="24px" rounded="4px" />
                   </div>
-                </div>
-              </SlideUp>
-            ))
+                </SlideUp>
+              ))}
+            </div>
           ) : (
             <AnimatePresence mode="wait">
               <StaggerContainer

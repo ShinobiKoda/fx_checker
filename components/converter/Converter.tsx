@@ -37,11 +37,21 @@ const parseCommas = (value: string) => value.replace(/,/g, "");
 
 const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
 
-const Converter = () => {
+interface ConverterProps {
+  fromCurrency: string;
+  toCurrency: string;
+  setFromCurrency: (c: string) => void;
+  setToCurrency: (c: string) => void;
+}
+
+const Converter = ({
+  fromCurrency,
+  toCurrency,
+  setFromCurrency,
+  setToCurrency,
+}: ConverterProps) => {
   const [amount, setAmount] = useState<string>("1000");
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
-  const [fromCurrency, setFromCurrency] = useState<string>("USD");
-  const [toCurrency, setToCurrency] = useState<string>("EUR");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
