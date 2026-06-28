@@ -377,10 +377,10 @@ const Converter = ({
             <div className="flex items-center gap-2 *:cursor-pointer">
               <button
                 onClick={handleToggleFavorite}
-                className={`font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border ${
+                className={`font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border hover:cursor-pointer ${
                   isFavorite 
                     ? "bg-lime-500 text-neutral-900 border-lime-500" 
-                    : "bg-transparent text-lime-500 border-lime-500 hover:bg-lime-500/10"
+                    : "bg-neutral-600 text-neutral-200 border-neutral-300"
                 }`}
               >
                 <SpringPop isActive={isFavorite}>

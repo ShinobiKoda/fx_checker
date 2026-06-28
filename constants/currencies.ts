@@ -15,7 +15,10 @@ export const CURRENCY_NAMES: Record<string, string> = {
   CAD: 'Canadian Dollar',
   AUD: 'Australian Dollar',
   NGN: 'Nigerian Naira',
+  INR: 'Indian Rupee',
+  CNY: 'Chinese Yuan',
+  BDT: 'Bangledeshi Taka'
   // add the rest as you go
 }
 
-export const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
+export const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "INR", "CNY", "BDT"];

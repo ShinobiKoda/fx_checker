@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -15,6 +17,7 @@
   --color-neutral-50: #ffffff;
   --color-neutral-100: #c6c6c6;
   --color-neutral-200: #9d9d9d;
+  --color-neutral-300 : #454547;
   --color-neutral-400: #3d3d3d;
   --color-neutral-500: #2e2e2e;
   --color-neutral-600: #202022;
@@ -39,6 +42,10 @@
 
 @utility radius-sm {
   border-radius: 8px;
+}
+
+@utility font-space-grotesk{
+  font-family: "Space Grotesk", sans-serif;
 }
 
 @theme inline {
