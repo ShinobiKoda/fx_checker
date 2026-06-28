@@ -53,7 +53,7 @@ const AuthBanner = ({ onOpenAuth }: AuthBannerProps) => {
         <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
           <button
             onClick={onOpenAuth}
-            className="w-full md:w-auto bg-lime-500 text-neutral-900 font-medium text-sm px-5 py-2.5 radius-sm hover:bg-lime-400 transition-colors"
+            className="w-full md:w-auto bg-lime-500 text-black font-medium text-sm px-5 py-2.5 radius-sm hover:bg-lime-400 transition-colors"
           >
             Log In or Sign Up
           </button>

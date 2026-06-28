@@ -5,6 +5,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { DropdownMenu } from '@/components/Motion'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoLogOutOutline } from 'react-icons/io5'
+import { useTheme } from 'next-themes'
+import { Sun, Moon } from 'lucide-react'
 
 interface UserMenuProps {
   onOpenAuth: () => void
@@ -14,6 +16,7 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -33,7 +36,7 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
     return (
       <button
         onClick={onOpenAuth}
-        className="text-xs md:text-sm font-medium text-neutral-900 bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0"
+        className="text-xs md:text-sm font-medium text-black bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0"
       >
         Log In
       </button>
@@ -47,7 +50,7 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
     <div className="relative shrink-0" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-8 h-8 rounded-full bg-lime-500 text-neutral-900 flex items-center justify-center font-medium text-xs hover:bg-lime-400 transition-colors border border-lime-600 focus:outline-none focus:ring-2 focus:ring-lime-500/50 cursor-pointer"
+        className="w-8 h-8 rounded-full bg-lime-500 text-black flex items-center justify-center font-medium text-xs hover:bg-lime-400 transition-colors border border-lime-600 focus:outline-none focus:ring-2 focus:ring-lime-500/50 cursor-pointer"
       >
         {initials}
       </button>
@@ -57,6 +60,14 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
           <p className="font-medium text-neutral-50 text-sm truncate">{username}</p>
           <p className="text-neutral-400 text-xs truncate mt-0.5">{user.email}</p>
         </div>
+        
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-neutral-200 hover:text-neutral-50 hover:bg-neutral-600 radius-sm transition-colors text-left cursor-pointer mb-1"
+        >
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
         
         <button
           onClick={() => {

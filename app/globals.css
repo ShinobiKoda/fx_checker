@@ -14,15 +14,15 @@
     var(--font-jetbrains_mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, "Liberation Mono", "Courier New", monospace;
 
-  --color-neutral-50: #ffffff;
-  --color-neutral-100: #c6c6c6;
-  --color-neutral-200: #9d9d9d;
-  --color-neutral-300 : #454547;
-  --color-neutral-400: #3d3d3d;
-  --color-neutral-500: #2e2e2e;
-  --color-neutral-600: #202022;
-  --color-neutral-700: #171719;
-  --color-neutral-900: #0a0a0a;
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-900: var(--neutral-900);
 
   --color-lime-500: #cef739;
   --color-lime-800: #283300;
@@ -92,6 +92,17 @@
 }
 
 :root {
+  /* Light Mode Palette */
+  --neutral-50: #0a0a0a;
+  --neutral-100: #3f3f46;
+  --neutral-200: #52525b;
+  --neutral-300: #d4d4d8;
+  --neutral-400: #a1a1aa;
+  --neutral-500: #e4e4e7;
+  --neutral-600: #e4e4e7;
+  --neutral-700: #f4f4f5;
+  --neutral-900: #ffffff;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -127,6 +138,17 @@
 }
 
 .dark {
+  /* Dark Mode Palette */
+  --neutral-50: #ffffff;
+  --neutral-100: #c6c6c6;
+  --neutral-200: #9d9d9d;
+  --neutral-300: #454547;
+  --neutral-400: #3d3d3d;
+  --neutral-500: #2e2e2e;
+  --neutral-600: #202022;
+  --neutral-700: #171719;
+  --neutral-900: #0a0a0a;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -179,19 +201,19 @@
 
 @utility custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #3d3d3d #171719;
+  scrollbar-color: var(--neutral-400) var(--neutral-700);
 
   &::-webkit-scrollbar {
     width: 4px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #171719;
+    background: var(--neutral-700);
     border-radius: 999px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #3d3d3d;
+    background: var(--neutral-400);
     border-radius: 999px;
   }
 

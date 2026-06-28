@@ -396,7 +396,7 @@ const Converter = ({
                 onClick={handleToggleFavorite}
                 className={`font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border hover:cursor-pointer ${
                   isFavorite 
-                    ? "bg-lime-500 text-neutral-900 border-lime-500" 
+                    ? "bg-lime-500 text-black border-lime-500" 
                     : "bg-neutral-600 text-neutral-200 border-neutral-300"
                 }`}
               >

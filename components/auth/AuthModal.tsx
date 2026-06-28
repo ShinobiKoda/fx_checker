@@ -176,9 +176,9 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-lime-500 text-neutral-900 font-medium py-3 radius-sm hover:bg-lime-400 transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70"
+                  className="w-full bg-lime-500 text-black font-medium py-3 radius-sm hover:bg-lime-400 transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70"
                 >
-                  {isLoading && <Spinner size={16} color="text-neutral-900" />}
+                  {isLoading && <Spinner size={16} color="text-black" />}
                   {tab === 'login' ? 'Log In' : 'Sign Up'}
                 </button>
               </form>

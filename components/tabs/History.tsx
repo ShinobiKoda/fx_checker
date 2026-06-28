@@ -72,8 +72,7 @@ const History = ({ base, quote }: HistoryProps) => {
     : "";
 
   return (
-    <div className="w-full max-w-[1036px] mx-auto">
-      {/* Summary Cards */}
+    <div className="w-full max-w-[1036px] mx-auto pb-8 md:pb-[48px]">
       <div className="w-full lg:flex lg:items-center lg:justify-between">
         <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[600px]">
           {isLoading ? (

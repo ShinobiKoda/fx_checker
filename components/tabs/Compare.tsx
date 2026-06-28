@@ -57,7 +57,7 @@ const Compare = ({ base, amount }: CompareProps) => {
   );
 
   return (
-    <div className="w-full px-4 max-w-[1036px] mx-auto">
+    <div className="w-full px-4 max-w-[1036px] mx-auto pb-8 md:pb-[48px]">
       <div className="bg-neutral-700 border border-neutral-600 p-4 rounded-[16px]">
         <div className="md:flex md:items-center md:justify-between">
           <div className="w-full flex items-center justify-between mb-1 md:justify-normal md:gap-3">
