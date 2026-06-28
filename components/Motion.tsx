@@ -264,7 +264,7 @@ export const SwapButton = ({
   <motion.button
     onClick={onClick}
     disabled={isLoading}
-    className={`w-[48px] h-[48px] shrink-0 radius-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
+    className={`w-[48px] h-[48px] shrink-0 radius-sm bg-neutral-600 border cursor-pointer border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9, rotate: 180 }}
     transition={{ type: 'spring', stiffness: 300, damping: 20 }}

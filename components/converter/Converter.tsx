@@ -5,6 +5,7 @@ import { IoMdArrowDropdown, IoIosSearch } from "react-icons/io";
 import { FaStar, FaRegStar } from "react-icons/fa6";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
+import { useAuth } from "@/hooks/useAuth";
 import { useIsFavorite, useAddFavorite, useRemoveFavorite } from "@/hooks/useFavorites";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
@@ -46,6 +47,7 @@ interface ConverterProps {
   setToCurrency: (c: string) => void;
   amount: string;
   setAmount: (c: string) => void;
+  onOpenAuth: () => void;
 }
 
 const Converter = ({
@@ -55,6 +57,7 @@ const Converter = ({
   setToCurrency,
   amount,
   setAmount,
+  onOpenAuth,
 }: ConverterProps) => {
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
@@ -75,16 +78,30 @@ const Converter = ({
     refetch: refetchRates,
   } = useRates([fromCurrency]);
 
+  const { isAuthenticated } = useAuth();
   const isFavorite = useIsFavorite(fromCurrency, toCurrency);
   const { mutate: addFavorite } = useAddFavorite();
   const { mutate: removeFavorite } = useRemoveFavorite();
 
   const handleToggleFavorite = () => {
+    if (!isAuthenticated) {
+      onOpenAuth();
+      return;
+    }
+
     if (isFavorite) {
       removeFavorite({ from: fromCurrency, to: toCurrency });
     } else {
       addFavorite({ from: fromCurrency, to: toCurrency });
     }
+  };
+
+  const handleLogConversion = () => {
+    if (!isAuthenticated) {
+      onOpenAuth();
+      return;
+    }
+    // TODO: implement log conversion
   };
 
   const handleSwap = () => {
@@ -388,7 +405,10 @@ const Converter = ({
                 </SpringPop>
                 {isFavorite ? "FAVORITED" : "FAVORITE"}
               </button>
-              <button className="font-medium text-[12px] px-3 py-2 radius-sm border border-lime-500 text-lime-500 hover:bg-lime-500/10 transition-colors">
+              <button 
+                onClick={handleLogConversion}
+                className="font-medium text-[12px] px-3 py-2 radius-sm border border-lime-500 text-lime-500 hover:bg-lime-500/10 transition-colors"
+              >
                 LOG CONVERSION
               </button>
             </div>
