@@ -264,7 +264,7 @@ export const SwapButton = ({
   <motion.button
     onClick={onClick}
     disabled={isLoading}
-    className={`w-[48px] h-[48px] shrink-0 border-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
+    className={`w-[48px] h-[48px] shrink-0 radius-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center hover:bg-neutral-500 transition-colors ${className}`}
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9, rotate: 180 }}
     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -494,4 +494,48 @@ export const AnimatedTabItem = ({
     )}
     {children}
   </motion.li>
+)
+
+// ─── Spring Pop (for favorite toggles/likes) ───────────────────────────────
+
+export const SpringPop = ({
+  children,
+  isActive,
+  className = '',
+}: {
+  children: React.ReactNode
+  isActive: boolean
+  className?: string
+}) => (
+  <motion.div
+    animate={{ scale: isActive ? [1, 1.3, 1] : 1 }}
+    transition={{ duration: 0.3, times: [0, 0.5, 1] }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+)
+
+// ─── Slide In Row (for lists staggering from the side) ──────────────────────
+
+export const SlideInRow = ({
+  children,
+  delay = 0,
+  duration = 0.5,
+  className = '',
+}: {
+  children: React.ReactNode
+  delay?: number
+  duration?: number
+  className?: string
+}) => (
+  <motion.div
+    initial={{ opacity: 0, x: 20 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -20 }}
+    transition={{ delay, duration, ease: [0.25, 0.46, 0.45, 0.94] }}
+    className={className}
+  >
+    {children}
+  </motion.div>
 )

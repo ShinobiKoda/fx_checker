@@ -37,7 +37,7 @@
   @apply font-normal text-[10px];
 }
 
-@utility border-sm {
+@utility radius-sm {
   border-radius: 8px;
 }
 
@@ -165,5 +165,30 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ── Custom scrollbar ─────────────────────────────────────────────────────── */
+
+@utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3d3d3d #171719;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #171719;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #3d3d3d;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #cef739;
   }
 }

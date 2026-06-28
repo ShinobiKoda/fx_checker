@@ -10,9 +10,10 @@ import Log from "./Log";
 interface TabsContainerProps {
   base: string;
   quote: string;
+  amount: string;
 }
 
-const TabsContainer = ({ base, quote }: TabsContainerProps) => {
+const TabsContainer = ({ base, quote, amount }: TabsContainerProps) => {
   const [currentTab, setCurrentTab] = useState("HISTORY");
 
   const renderTabContent = () => {
@@ -20,9 +21,9 @@ const TabsContainer = ({ base, quote }: TabsContainerProps) => {
       case "HISTORY":
         return <History base={base} quote={quote} />;
       case "COMPARE":
-        return <Compare />;
+        return <Compare base={base} amount={amount} />;
       case "FAVORITES":
-        return <Favorites />;
+        return <Favorites amount={amount} />;
       case "LOGS":
         return <Log />;
       default:

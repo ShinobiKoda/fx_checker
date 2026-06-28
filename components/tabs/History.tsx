@@ -137,10 +137,10 @@ const History = ({ base, quote }: HistoryProps) => {
         {/* Date Picker */}
         <SlideUp delay={0.2} distance={15}>
           <div className="px-4 mt-5.5">
-            <div className="bg-neutral-700 border-sm flex items-center w-fit relative">
+            <div className="bg-neutral-700 radius-sm flex items-center w-fit relative">
               {datePicker.map((date) => (
                 <button
-                  className="border-sm px-4 py-3 relative z-10"
+                  className="radius-sm px-4 py-3 relative z-10"
                   onClick={() => setActiveDate(date)}
                   key={date}
                 >
@@ -155,9 +155,9 @@ const History = ({ base, quote }: HistoryProps) => {
 
       {/* Chart */}
       <SlideUp delay={0.3} distance={20}>
-        <div className="px-4 mt-4 pb-8">
+        <div className="px-4 mt-4 pb-8 h-[369px] md:h-[377px]">
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
-            <div className="w-full flex items-center justify-between">
+            <div className="w-full flex items-center justify-between mb-5">
               <p className="text-neutral-50 font-medium text-base">
                 {base}/{quote}
               </p>

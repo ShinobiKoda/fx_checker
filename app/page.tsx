@@ -9,6 +9,7 @@ import TabsContainer from "@/components/tabs/TabsContainer";
 function Page() {
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
+  const [amount, setAmount] = useState<string>("1000");
 
   return (
     <div className="bg-neutral-900 flex-1">
@@ -19,8 +20,10 @@ function Page() {
         toCurrency={toCurrency}
         setFromCurrency={setFromCurrency}
         setToCurrency={setToCurrency}
+        amount={amount}
+        setAmount={setAmount}
       />
-      <TabsContainer base={fromCurrency} quote={toCurrency} />
+      <TabsContainer base={fromCurrency} quote={toCurrency} amount={amount} />
     </div>
   );
 }

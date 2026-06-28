@@ -17,3 +17,5 @@ export const CURRENCY_NAMES: Record<string, string> = {
   NGN: 'Nigerian Naira',
   // add the rest as you go
 }
+
+export const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];

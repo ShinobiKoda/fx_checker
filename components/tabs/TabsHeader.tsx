@@ -41,7 +41,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           {/* ── Mobile trigger ───────────────────────────────── */}
           <motion.div
             onClick={() => setIsOpen(!isOpen)}
-            className="bg-neutral-700 border border-neutral-400 px-3 py-2 border-sm w-full cursor-pointer flex items-center justify-between md:hidden"
+            className="bg-neutral-700 border border-neutral-400 px-3 py-2 radius-sm w-full cursor-pointer flex items-center justify-between md:hidden"
             whileHover={{ backgroundColor: "rgba(82,82,82,0.9)" }}
             whileTap={{ scale: 0.99 }}
             transition={{ duration: 0.15 }}
@@ -60,7 +60,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           {/* ── Mobile dropdown ──────────────────────────────── */}
           <DropdownMenu
             isOpen={isOpen}
-            className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 border-sm overflow-hidden z-10 shadow-xl"
+            className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 radius-sm overflow-hidden z-10 shadow-xl"
           >
             {tabs.map((tab, index) => (
               <motion.div

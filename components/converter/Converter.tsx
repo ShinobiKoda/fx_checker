@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { IoMdArrowDropdown, IoIosSearch } from "react-icons/io";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa6";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
+import { useIsFavorite, useAddFavorite, useRemoveFavorite } from "@/hooks/useFavorites";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
 import {
@@ -15,6 +16,7 @@ import {
   Spinner,
   StaggerContainer,
   StaggerItem,
+  SpringPop,
 } from "@/components/Motion";
 
 const getFlagEmoji = (currencyCode: string) => {
@@ -42,6 +44,8 @@ interface ConverterProps {
   toCurrency: string;
   setFromCurrency: (c: string) => void;
   setToCurrency: (c: string) => void;
+  amount: string;
+  setAmount: (c: string) => void;
 }
 
 const Converter = ({
@@ -49,8 +53,9 @@ const Converter = ({
   toCurrency,
   setFromCurrency,
   setToCurrency,
+  amount,
+  setAmount,
 }: ConverterProps) => {
-  const [amount, setAmount] = useState<string>("1000");
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,6 +74,18 @@ const Converter = ({
     isFetching: ratesFetching,
     refetch: refetchRates,
   } = useRates([fromCurrency]);
+
+  const isFavorite = useIsFavorite(fromCurrency, toCurrency);
+  const { mutate: addFavorite } = useAddFavorite();
+  const { mutate: removeFavorite } = useRemoveFavorite();
+
+  const handleToggleFavorite = () => {
+    if (isFavorite) {
+      removeFavorite({ from: fromCurrency, to: toCurrency });
+    } else {
+      addFavorite({ from: fromCurrency, to: toCurrency });
+    }
+  };
 
   const handleSwap = () => {
     setFromCurrency(toCurrency);
@@ -92,6 +109,13 @@ const Converter = ({
       minimumFractionDigits: 4,
       maximumFractionDigits: 4,
     });
+  };
+
+  const getRateString = () => {
+    if (fromCurrency === toCurrency) return `1 ${fromCurrency} = 1.0000 ${toCurrency}`;
+    const rateItem = rates?.find(r => r.base === fromCurrency && r.quote === toCurrency);
+    if (!rateItem) return `1 ${fromCurrency} = --- ${toCurrency}`;
+    return `1 ${fromCurrency} = ${rateItem.rate.toFixed(4)} ${toCurrency}`;
   };
 
   const renderCurrencyDropdown = (type: "from" | "to") => {
@@ -144,7 +168,7 @@ const Converter = ({
           }}
         />
         <div
-          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 border-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
+          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 radius-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="w-full p-3 border border-neutral-200 rounded-[6px] flex items-center gap-2 mb-2.5">
@@ -203,7 +227,7 @@ const Converter = ({
                 <ShimmerBlock width="90px" height="40px" rounded="8px" />
               </div>
             </div>
-            <div className="w-[48px] h-[48px] border-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center">
+            <div className="w-[48px] h-[48px] radius-sm bg-neutral-600 border border-neutral-500 flex items-center justify-center">
               <Spinner size={20} color="text-neutral-400" />
             </div>
             <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative">
@@ -278,7 +302,7 @@ const Converter = ({
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "from" ? null : "from")
                     }
-                    className="p-[10px] border-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                    className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
                   >
                     <div className="text-xl leading-none">
                       {getFlagEmoji(fromCurrency)}
@@ -286,7 +310,13 @@ const Converter = ({
                     <span className="font-normal text-sm text-neutral-50">
                       {fromCurrency}
                     </span>
-                    <IoMdArrowDropdown className="text-neutral-50" />
+                    <motion.span
+                      animate={{ rotate: dropdownOpen === 'from' ? 180 : 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                      style={{ display: 'flex' }}
+                    >
+                      <IoMdArrowDropdown className="text-neutral-50" />
+                    </motion.span>
                   </button>
                   {renderCurrencyDropdown("from")}
                 </div>
@@ -320,7 +350,7 @@ const Converter = ({
                     onClick={() =>
                       setDropdownOpen(dropdownOpen === "to" ? null : "to")
                     }
-                    className="p-[10px] border-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                    className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
                   >
                     <div className="text-xl leading-none">
                       {getFlagEmoji(toCurrency)}
@@ -328,7 +358,13 @@ const Converter = ({
                     <span className="font-normal text-sm text-neutral-50">
                       {toCurrency}
                     </span>
-                    <IoMdArrowDropdown className="text-neutral-50" />
+                    <motion.span
+                      animate={{ rotate: dropdownOpen === 'to' ? 180 : 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                      style={{ display: 'flex' }}
+                    >
+                      <IoMdArrowDropdown className="text-neutral-50" />
+                    </motion.span>
                   </button>
                   {renderCurrencyDropdown("to")}
                 </div>
@@ -337,12 +373,22 @@ const Converter = ({
           </div>
           <div className="w-full border border-neutral-500 border-dashed h-px"></div>
           <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-            <p className="text-neutral-50 text-preset md:text-[12px]">1 USD = 0.8530 EUR</p>
+            <p className="text-neutral-50 text-preset md:text-[12px]">{getRateString()}</p>
             <div className="flex items-center gap-2 *:cursor-pointer">
-              <button className="font-medium text-[12px] px-3 py-2 border-sm bg-lime-500 flex items-center text-neutral-900 gap-2">
-                <FaStar /> FAVORITED
+              <button
+                onClick={handleToggleFavorite}
+                className={`font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border ${
+                  isFavorite 
+                    ? "bg-lime-500 text-neutral-900 border-lime-500" 
+                    : "bg-transparent text-lime-500 border-lime-500 hover:bg-lime-500/10"
+                }`}
+              >
+                <SpringPop isActive={isFavorite}>
+                  {isFavorite ? <FaStar /> : <FaRegStar />}
+                </SpringPop>
+                {isFavorite ? "FAVORITED" : "FAVORITE"}
               </button>
-              <button className="font-medium text-[12px] px-3 py-2 border-sm border border-lime-500">
+              <button className="font-medium text-[12px] px-3 py-2 radius-sm border border-lime-500 text-lime-500 hover:bg-lime-500/10 transition-colors">
                 LOG CONVERSION
               </button>
             </div>
