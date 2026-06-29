@@ -84,8 +84,15 @@ const Converter = ({
   const [feeValue, setFeeValue] = useState<string>("0");
   const [isFeeExpanded, setIsFeeExpanded] = useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [homeCurrency, setHomeCurrency] = useState<string | null>(null);
 
   const { recents, addRecent } = useRecentCurrencies();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHomeCurrency(localStorage.getItem("fx_home_currency"));
+    }
+  }, []);
 
   useEffect(() => {
     if (amount === "") {
@@ -141,6 +148,14 @@ const Converter = ({
       removeFavorite({ from: fromCurrency, to: toCurrency });
     } else {
       addFavorite({ from: fromCurrency, to: toCurrency });
+    }
+  };
+
+  const handleSetHomeCurrency = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("fx_home_currency", fromCurrency);
+      setHomeCurrency(fromCurrency);
+      toast.success(`${fromCurrency} set as default Home Currency!`);
     }
   };
 
@@ -482,7 +497,17 @@ const Converter = ({
         <div className="bg-neutral-700 rounded-[20px]">
           <div className={`p-4 space-y-4 flex flex-col items-center justify-center w-full ${viewMode === 'standard' ? 'md:flex-row md:gap-6 md:justify-between md:items-center' : ''}`}>
             <div className={`rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative ${viewMode === 'standard' ? 'md:max-w-[292px] lg:max-w-[450px]' : ''}`}>
-              <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
+                {homeCurrency !== fromCurrency && (
+                  <button 
+                    onClick={handleSetHomeCurrency}
+                    className="text-[10px] text-lime-500 hover:text-lime-400 font-medium transition-colors cursor-pointer bg-lime-500/10 px-2 py-1 rounded border border-lime-500/20"
+                  >
+                    Set as Default
+                  </button>
+                )}
+              </div>
               <div className="flex items-start justify-between gap-2">
                 {renderAmountBlock(!isReversed)}
                 <div className="">

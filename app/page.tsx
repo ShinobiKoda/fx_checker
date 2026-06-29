@@ -29,6 +29,15 @@ function PageContent() {
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
 
+  useEffect(() => {
+    if (!searchParams.get("from")) {
+      const saved = localStorage.getItem("fx_home_currency");
+      if (saved && saved !== fromCurrency) {
+        setFromCurrency(saved);
+      }
+    }
+  }, [searchParams, fromCurrency]);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useKeyboardShortcuts({
