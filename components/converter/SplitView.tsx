@@ -105,7 +105,7 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
               >
                 <button 
                   onClick={() => removeTarget(target.id)}
-                  className="absolute top-2 right-2 w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center text-neutral-400 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 w-6 h-6 bg-neutral-700 rounded-full flex items-center justify-center text-neutral-400 hover:text-red-400 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <IoMdClose size={14} />
                 </button>

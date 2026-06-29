@@ -24,7 +24,7 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
             width={120}
             height={24}
             priority
-            className="dark:invert-0 invert h-full w-auto"
+            className="dark:invert-0 invert w-auto"
           />
         </div>
         <div className="flex items-center gap-2 md:gap-4">
