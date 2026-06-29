@@ -240,13 +240,13 @@ const History = ({ base, quote }: HistoryProps) => {
       <SlideUp delay={0.3} distance={20}>
         <div className={`px-4 mt-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
-            <div className="w-full flex items-center justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <p className="text-neutral-50 font-medium text-base">
+            <div className="w-full flex items-start justify-between mb-5">
+              <div className="flex flex-col md:flex-row md:items-center items-start gap-1 md:gap-3">
+                <p className="text-neutral-50 font-medium text-base leading-none mt-1">
                   {base}/{quote}
                 </p>
                 {volatilityScore && (
-                  <div className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${volatilityScore.bg} ${volatilityScore.color} ${volatilityScore.border}`}>
+                  <div className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border leading-none ${volatilityScore.bg} ${volatilityScore.color} ${volatilityScore.border}`}>
                     {volatilityScore.label}
                   </div>
                 )}

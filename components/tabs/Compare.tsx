@@ -135,7 +135,7 @@ const Compare = ({ base, amount }: CompareProps) => {
                           @ {rate > 0 ? rate.toFixed(4) : "---"}
                         </span>
                         {rate > 0 && rateItem && (
-                          <div className="flex items-center justify-end gap-2 mt-1">
+                          <div className="hidden md:flex items-center justify-end gap-2 mt-1">
                             <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-sm ${
                               rateItem.direction === 'up' ? 'bg-green-500/10 text-green-500' : 
                               rateItem.direction === 'down' ? 'bg-red-500/10 text-red-500' : 

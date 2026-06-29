@@ -77,7 +77,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           {/* ── Mobile dropdown ──────────────────────────────── */}
           <DropdownMenu
             isOpen={isOpen}
-            className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 radius-sm overflow-hidden z-10 shadow-xl"
+            className="absolute top-full left-0 mt-1 w-full bg-neutral-700 border border-neutral-400 radius-sm overflow-hidden z-50 shadow-xl"
           >
             {tabs.map((tab, index) => (
               <motion.div
