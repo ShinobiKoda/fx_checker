@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { IoMdArrowDropdown, IoIosSearch, IoMdShare } from "react-icons/io";
+import { IoMdArrowDropdown, IoIosSearch, IoMdShare, IoMdCode } from "react-icons/io";
 import { FaStar, FaRegStar } from "react-icons/fa6";
 import { toast } from "sonner";
 import { useCurrencies } from "@/hooks/useCurrencies";
@@ -25,6 +25,7 @@ import {
 } from "@/components/Motion";
 import { SplitView } from "./SplitView";
 import { ConversionInsight } from "./ConversionInsight";
+import EmbedModal from "@/components/ui/EmbedModal";
 
 const getFlagEmoji = (currencyCode: string) => {
   if (currencyCode === "EUR") return "🇪🇺";
@@ -82,6 +83,7 @@ const Converter = ({
   const [feeType, setFeeType] = useState<"percent" | "flat">("percent");
   const [feeValue, setFeeValue] = useState<string>("0");
   const [isFeeExpanded, setIsFeeExpanded] = useState(false);
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
 
   const { recents, addRecent } = useRecentCurrencies();
 
@@ -627,6 +629,14 @@ const Converter = ({
                 SHARE
               </button>
               <button 
+                onClick={() => setIsEmbedModalOpen(true)}
+                className="font-medium text-[12px] px-3 py-2 radius-sm hidden md:flex items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
+                title="Embed this converter"
+              >
+                <IoMdCode size={16} />
+                EMBED
+              </button>
+              <button 
                 onClick={handleLogConversion}
                 className={`font-medium text-[12px] px-3 py-2 radius-sm border transition-colors ${
                   isLoggedFeedback 
@@ -711,6 +721,13 @@ const Converter = ({
           />
         )}
       </div>
+      <EmbedModal 
+        isOpen={isEmbedModalOpen} 
+        onClose={() => setIsEmbedModalOpen(false)} 
+        fromCurrency={fromCurrency} 
+        toCurrency={toCurrency} 
+        amount={amount || "1000"} 
+      />
     </SlideUp>
   );
 };

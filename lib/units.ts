@@ -9,13 +9,11 @@ export interface Unit {
 }
 
 export const UNITS: Unit[] = [
-  // WEIGHT (base: kg)
   { id: "kg", name: "Kilogram", symbol: "kg", category: "weight", multiplier: 1 },
   { id: "g", name: "Gram", symbol: "g", category: "weight", multiplier: 0.001 },
   { id: "lb", name: "Pound", symbol: "lb", category: "weight", multiplier: 0.45359237 },
   { id: "oz", name: "Ounce", symbol: "oz", category: "weight", multiplier: 0.02834952 },
 
-  // DISTANCE (base: m)
   { id: "m", name: "Meter", symbol: "m", category: "distance", multiplier: 1 },
   { id: "km", name: "Kilometer", symbol: "km", category: "distance", multiplier: 1000 },
   { id: "cm", name: "Centimeter", symbol: "cm", category: "distance", multiplier: 0.01 },
@@ -25,7 +23,6 @@ export const UNITS: Unit[] = [
   { id: "ft", name: "Foot", symbol: "ft", category: "distance", multiplier: 0.3048 },
   { id: "in", name: "Inch", symbol: "in", category: "distance", multiplier: 0.0254 },
 
-  // TEMPERATURE (special case, no base multiplier used directly in the generic calc function)
   { id: "C", name: "Celsius", symbol: "°C", category: "temperature" },
   { id: "F", name: "Fahrenheit", symbol: "°F", category: "temperature" },
   { id: "K", name: "Kelvin", symbol: "K", category: "temperature" },
