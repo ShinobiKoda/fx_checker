@@ -169,7 +169,7 @@ const Converter = ({
               <span className="font-normal text-neutral-50 text-sm">{code}</span>
               <span className="text-[12px] text-neutral-200 truncate">{name}</span>
             </button>
-            {isSelected && <FaCheck className="text-lime-500" />}
+            {isSelected && <FaCheck className="dark:text-lime-500 text-lime-700" />}
           </div>
         </StaggerItem>
       );
@@ -349,7 +349,7 @@ const Converter = ({
                   <motion.span
                     layout
                     onClick={() => setShowFullAmount((v) => !v)}
-                    className={`font-bold text-[32px] lg:text-[40px] text-lime-500 cursor-pointer select-none ${
+                    className={`font-bold text-[32px] lg:text-[40px] dark:text-lime-500 text-lime-700 cursor-pointer select-none ${
                       showFullAmount ? 'break-all' : 'truncate'
                     }`}
                     title={showFullAmount ? 'Click to collapse' : 'Click to expand'}
@@ -407,7 +407,7 @@ const Converter = ({
               </button>
               <button 
                 onClick={handleLogConversion}
-                className="font-medium text-[12px] px-3 py-2 radius-sm border border-lime-500 text-lime-500 hover:bg-lime-500/10 transition-colors"
+                className="font-medium text-[12px] px-3 py-2 radius-sm border dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700 hover:bg-lime-600/10 dark:hover:bg-lime-500/10 transition-colors"
               >
                 LOG CONVERSION
               </button>

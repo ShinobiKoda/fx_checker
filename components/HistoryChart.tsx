@@ -13,7 +13,7 @@ import type { HistoryDataPoint } from "@/hooks/useHistory";
 const chartConfig = {
   rate: {
     label: "Rate",
-    color: "#d9f99d",
+    color: "var(--chart-rate)",
   },
 } satisfies ChartConfig;
 
@@ -54,8 +54,8 @@ const HistoryChart = ({ data }: HistoryChartProps) => {
       >
         <defs>
           <linearGradient id="fillRate" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#d9f99d" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#d9f99d" stopOpacity={0.05} />
+            <stop offset="5%" stopColor="var(--chart-rate)" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="var(--chart-rate)" stopOpacity={0.05} />
           </linearGradient>
         </defs>
 
@@ -108,7 +108,7 @@ const HistoryChart = ({ data }: HistoryChartProps) => {
           dataKey="rate"
           type="linear"
           fill="url(#fillRate)"
-          stroke="#d9f99d"
+          stroke="var(--chart-rate)"
           strokeWidth={2.5}
         />
       </AreaChart>

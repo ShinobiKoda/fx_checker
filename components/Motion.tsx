@@ -277,7 +277,7 @@ export const SwapButton = ({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
         >
-          <Spinner size={20} color="text-lime-500" />
+          <Spinner size={20} color="dark:text-lime-500 text-lime-700" />
         </motion.div>
       ) : (
         <motion.div
@@ -481,8 +481,8 @@ export const AnimatedTabItem = ({
   <motion.li
     onClick={onClick}
     className={`relative px-4 py-[10.5px] flex items-center gap-1 cursor-pointer font-normal text-base select-none ${className}`}
-    animate={{ color: isActive ? '#f5f5f5' : '#737373' }}
-    whileHover={{ color: isActive ? '#f5f5f5' : '#d4d4d4' }}
+    animate={{ color: isActive ? 'var(--foreground)' : 'var(--neutral-400)' }}
+    whileHover={{ color: isActive ? 'var(--foreground)' : 'var(--neutral-300)' }}
     transition={{ duration: 0.2 }}
   >
     {isActive && (

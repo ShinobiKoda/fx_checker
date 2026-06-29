@@ -137,7 +137,7 @@ const Compare = ({ base, amount }: CompareProps) => {
                       <button
                         className={`p-2 h-10 w-10 radius-sm bg-neutral-700 border flex items-center justify-center transition-colors hover:bg-neutral-600 ${
                           isFav
-                            ? "border-lime-500 text-lime-500"
+                            ? "dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700"
                             : "border-neutral-500 text-neutral-400 hover:text-neutral-200"
                         }`}
                         onClick={() => handleToggleFavorite(quote)}
@@ -146,7 +146,7 @@ const Compare = ({ base, amount }: CompareProps) => {
                           {isFav ? (
                             <FaStar />
                           ) : (
-                            <FaRegStar className="text-white" />
+                            <FaRegStar className="text-neutral-400" />
                           )}
                         </SpringPop>
                       </button>

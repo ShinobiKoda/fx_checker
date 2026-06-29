@@ -3,6 +3,7 @@ import { JetBrains_Mono, Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/next";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
     >
       <body className="h-full bg-neutral-900 text-neutral-50">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

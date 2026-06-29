@@ -88,7 +88,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                 onClick={() => setCurrentTab(tab)}
               >
                 <span>{tab}</span>
-                <span className="w-5 h-5 rounded-full bg-lime-800 text-preset text-lime-500 text-center flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
                   10
                 </span>
               </AnimatedTabItem>
