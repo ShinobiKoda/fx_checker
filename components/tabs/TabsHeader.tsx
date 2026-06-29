@@ -109,7 +109,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           </DropdownMenu>
 
           {/* ── Desktop tab bar ──────────────────────────────── */}
-          <ul className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600">
+          <ul className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600 overflow-x-auto scrollbar-hide">
             {tabs.map((tab, index) => (
               <AnimatedTabItem
                 key={index}
