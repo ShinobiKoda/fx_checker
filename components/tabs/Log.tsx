@@ -5,7 +5,21 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { LuTrash } from "react-icons/lu";
 import { useConversionLogs, useClearConversionLogs, useRemoveConversionLog } from "@/hooks/useConversionLog";
 import { SlideInRow, StaggerContainer, ShimmerBlock, ErrorBanner } from "@/components/Motion";
-import { formatDistanceToNow } from "date-fns";
+
+const getShortRelativeTime = (dateString: string) => {
+  const diff = Date.now() - new Date(dateString).getTime();
+  const seconds = Math.floor(diff / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}M`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}H`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}D`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}Mo`;
+  return `${Math.floor(months / 12)}Y`;
+};
 
 const Log = () => {
   const { data: logs, isLoading, isError, refetch } = useConversionLogs();
@@ -64,7 +78,7 @@ const Log = () => {
             <button 
               onClick={() => clearLogs()}
               disabled={isClearing}
-              className="px-3 py-2 radius-sm bg-neutral-600 border border-neutral-400 font-normal text-[12px] text-neutral-200 hover:bg-neutral-500 transition-colors disabled:opacity-50"
+              className="px-3 py-2 radius-sm bg-neutral-600 border dark:border-neutral-400 border-neutral-300 font-normal text-[12px] text-neutral-200 hover:bg-neutral-500 transition-colors disabled:opacity-50"
             >
               CLEAR ALL
             </button>
@@ -79,7 +93,7 @@ const Log = () => {
               >
                 <div className="flex flex-col md:flex-row md:gap-5 md:items-center">
                   <p className="text-sm font-normal text-neutral-200">
-                    {formatDistanceToNow(new Date(log.created_at), { addSuffix: true })}
+                    {getShortRelativeTime(log.created_at)}
                   </p>
                   <p className="flex items-center font-normal text-sm text-neutral-50 mt-1 md:mt-0">
                     <span>{log.from_currency}</span>
@@ -98,7 +112,7 @@ const Log = () => {
                   </p>
                   <button 
                     onClick={() => removeLog(log.id)}
-                    className="flex items-center justify-center h-8 w-8 bg-neutral-600 border border-neutral-500 cursor-pointer radius-sm text-neutral-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors md:opacity-0 group-hover:opacity-100"
+                    className="flex items-center justify-center h-8 w-8 bg-neutral-600 border dark:border-neutral-500 border-neutral-300 cursor-pointer radius-sm text-neutral-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors"
                     title="Delete log"
                   >
                     <LuTrash />
