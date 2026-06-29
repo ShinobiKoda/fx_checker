@@ -56,7 +56,7 @@ const Favorites = ({ amount }: FavoritesProps) => {
   }
 
   return (
-    <div className='w-full max-w-[1028px] mx-auto pb-8 md:pb-[48px] px-4'>
+    <div className='w-full max-w-[1036px] mx-auto pb-8 md:pb-[48px] px-4'>
       <div className='p-4 bg-neutral-700 border border-neutral-600 rounded-[16px]'>
         <h4 className='flex items-center justify-between'>
           <span className='font-medium text-base text-neutral-50'>PINNED PAIRS</span>
