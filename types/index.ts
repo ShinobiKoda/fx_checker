@@ -21,3 +21,13 @@ export interface FavoritePair {
   to_currency: string
   created_at: string
 }
+
+export interface ConversionLog {
+  id: string
+  user_id: string
+  from_currency: string
+  to_currency: string
+  amount: number
+  converted_amount: number
+  created_at: string
+}

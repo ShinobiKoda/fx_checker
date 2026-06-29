@@ -7,6 +7,7 @@ import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsFavorite, useAddFavorite, useRemoveFavorite } from "@/hooks/useFavorites";
+import { useAddConversionLog } from "@/hooks/useConversionLog";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
 import {
@@ -63,6 +64,7 @@ const Converter = ({
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFullAmount, setShowFullAmount] = useState(false);
+  const [isLoggedFeedback, setIsLoggedFeedback] = useState(false);
 
   const {
     data: currencies,
@@ -96,12 +98,31 @@ const Converter = ({
     }
   };
 
+  const { mutate: addConversionLog } = useAddConversionLog();
+
   const handleLogConversion = () => {
     if (!isAuthenticated) {
       onOpenAuth();
       return;
     }
-    // TODO: implement log conversion
+    
+    if (amount && !isNaN(Number(amount))) {
+      const rateItem = rates?.find((r) => r.base === fromCurrency && r.quote === toCurrency);
+      const rate = rateItem?.rate || 1;
+      const convertedValue = fromCurrency === toCurrency ? Number(amount) : Number(amount) * rate;
+
+      addConversionLog({
+        from: fromCurrency,
+        to: toCurrency,
+        amount: Number(amount),
+        convertedAmount: convertedValue
+      }, {
+        onSuccess: () => {
+          setIsLoggedFeedback(true);
+          setTimeout(() => setIsLoggedFeedback(false), 2000);
+        }
+      });
+    }
   };
 
   const handleSwap = () => {
@@ -407,9 +428,13 @@ const Converter = ({
               </button>
               <button 
                 onClick={handleLogConversion}
-                className="font-medium text-[12px] px-3 py-2 radius-sm border dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700 hover:bg-lime-600/10 dark:hover:bg-lime-500/10 transition-colors"
+                className={`font-medium text-[12px] px-3 py-2 radius-sm border transition-colors ${
+                  isLoggedFeedback 
+                    ? "bg-lime-500 text-black border-lime-500" 
+                    : "dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700 hover:bg-lime-600/10 dark:hover:bg-lime-500/10"
+                }`}
               >
-                LOG CONVERSION
+                {isLoggedFeedback ? "LOGGED!" : "LOG CONVERSION"}
               </button>
             </div>
           </div>

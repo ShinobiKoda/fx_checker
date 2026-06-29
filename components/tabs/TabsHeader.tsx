@@ -5,6 +5,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { DropdownMenu, AnimatedTabItem, SlideUp } from "@/components/Motion";
 import { motion } from "framer-motion";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useConversionLogs } from "@/hooks/useConversionLog";
 
 interface TabsHeaderProps {
   currentTab: string;
@@ -19,6 +20,9 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { data: favorites } = useFavorites();
   const favCount = favorites?.length || 0;
+  
+  const { data: logs } = useConversionLogs();
+  const logCount = logs?.length || 0;
 
   const tabs = ["HISTORY", "COMPARE", "FAVORITES", "LOGS"];
 
@@ -56,6 +60,11 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                   {favCount}
                 </span>
               )}
+              {currentTab === "LOGS" && logCount > 0 && (
+                <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                  {logCount}
+                </span>
+              )}
             </div>
             <motion.span
               animate={{ rotate: isOpen ? 180 : 0 }}
@@ -89,6 +98,11 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                       {favCount}
                     </span>
                   )}
+                  {tab === "LOGS" && logCount > 0 && (
+                    <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                      {logCount}
+                    </span>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -106,6 +120,11 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                 {tab === "FAVORITES" && favCount > 0 && (
                   <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
                     {favCount}
+                  </span>
+                )}
+                {tab === "LOGS" && logCount > 0 && (
+                  <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                    {logCount}
                   </span>
                 )}
               </AnimatedTabItem>
