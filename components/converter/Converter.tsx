@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { IoMdArrowDropdown, IoIosSearch } from "react-icons/io";
+import { IoMdArrowDropdown, IoIosSearch, IoMdShare } from "react-icons/io";
 import { FaStar, FaRegStar } from "react-icons/fa6";
+import { toast } from "sonner";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
 import { useAuth } from "@/hooks/useAuth";
@@ -123,6 +124,16 @@ const Converter = ({
         }
       });
     }
+  };
+
+  const handleShareLink = () => {
+    const url = new URL(window.location.origin);
+    url.searchParams.set("from", fromCurrency);
+    url.searchParams.set("to", toCurrency);
+    url.searchParams.set("amount", amount || "0");
+    
+    navigator.clipboard.writeText(url.toString());
+    toast.success("Conversion link copied to clipboard!");
   };
 
   const handleSwap = () => {
@@ -425,6 +436,14 @@ const Converter = ({
                   {isFavorite ? <FaStar /> : <FaRegStar />}
                 </SpringPop>
                 {isFavorite ? "FAVORITED" : "FAVORITE"}
+              </button>
+              <button 
+                onClick={handleShareLink}
+                className="font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
+                title="Share this conversion"
+              >
+                <IoMdShare size={14} />
+                SHARE
               </button>
               <button 
                 onClick={handleLogConversion}

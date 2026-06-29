@@ -16,15 +16,15 @@ const Header = ({ onOpenAuth }: HeaderProps) => {
 
   return (
     <FadeIn duration={0.6}>
-      <div className="w-full p-4 flex items-center justify-between fixed top-0 left-0 z-50 backdrop-blur-sm bg-neutral-900/70 border-b border-white/5">
-        <div>
+      <div className="w-full px-4 h-14 flex items-center justify-between fixed top-0 left-0 z-50 backdrop-blur-sm bg-neutral-900/70 border-b border-white/5">
+        <div className="flex items-center h-full py-2">
           <Image
             src="/images/logo.svg"
             alt="Logo"
             width={120}
-            height={100}
-            style={{ width: "auto", height: "auto" }}
-            className="dark:invert-0 invert"
+            height={24}
+            priority
+            className="dark:invert-0 invert h-full w-auto"
           />
         </div>
         <div className="flex items-center gap-2 md:gap-4">

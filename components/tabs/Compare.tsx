@@ -112,17 +112,17 @@ const Compare = ({ base, amount }: CompareProps) => {
                       <div className="w-8 h-8 flex items-center justify-center text-lg shadow-sm">
                         {getFlagEmoji(quote)}
                       </div>
-                      <p className="flex flex-col leading-tight">
+                      <div className="flex flex-col leading-tight">
                         <span className="font-normal text-sm text-neutral-50">
                           {quote}
                         </span>
                         <span className="text-[12px] text-neutral-200 font-space-grotesk">
                           {currencyName}
                         </span>
-                      </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-[10px]">
-                      <p className="flex flex-col text-right leading-tight">
+                      <div className="flex flex-col text-right leading-tight">
                         <span className="font-normal text-neutral-50 text-base">
                           {rate > 0
                             ? convertedValue.toLocaleString(undefined, {
@@ -160,7 +160,7 @@ const Compare = ({ base, amount }: CompareProps) => {
                             </span>
                           </div>
                         )}
-                      </p>
+                      </div>
                       <button
                         className={`p-2 h-10 w-10 radius-sm bg-neutral-700 border flex items-center justify-center transition-colors hover:bg-neutral-600 ${
                           isFav

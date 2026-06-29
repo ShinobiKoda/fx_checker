@@ -13,6 +13,7 @@ export interface RateItem {
   direction: 'up' | 'down' | 'flat'
   change30d?: number
   direction30d?: 'up' | 'down' | 'flat'
+  cached_at?: string
 }
 export type LatestRatesResponse = RateItem[]
 
