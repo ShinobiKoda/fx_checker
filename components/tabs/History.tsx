@@ -2,6 +2,7 @@ import { useState } from "react";
 import { RiArrowDropUpFill, RiArrowDropDownFill } from "react-icons/ri";
 import { AnimatePresence } from "framer-motion";
 import HistoryChart from "../HistoryChart";
+import { RateHeatmap } from "./RateHeatmap";
 import { useHistory } from "@/hooks/useHistory";
 import {
   Spinner,
@@ -21,6 +22,7 @@ interface HistoryProps {
 
 const History = ({ base, quote }: HistoryProps) => {
   const [activeDate, setActiveDate] = useState("1M");
+  const [viewMode, setViewMode] = useState<"chart" | "heatmap">("chart");
 
   const {
     data: history,
@@ -60,6 +62,36 @@ const History = ({ base, quote }: HistoryProps) => {
         },
       ]
     : [];
+
+  const bestDayInsight = (() => {
+    if (!history?.data || history.data.length === 0) return null;
+    
+    // Group by day of week (0 = Sunday, 1 = Monday, etc.)
+    const dayStats: Record<number, { sum: number, count: number }> = {};
+    
+    history.data.forEach(d => {
+      const dayOfWeek = new Date(d.date).getDay();
+      if (!dayStats[dayOfWeek]) {
+        dayStats[dayOfWeek] = { sum: 0, count: 0 };
+      }
+      dayStats[dayOfWeek].sum += d.rate;
+      dayStats[dayOfWeek].count += 1;
+    });
+    
+    let bestDay = -1;
+    let maxAvg = -1;
+    
+    Object.entries(dayStats).forEach(([day, stats]) => {
+      const avg = stats.sum / stats.count;
+      if (avg > maxAvg) {
+        maxAvg = avg;
+        bestDay = parseInt(day);
+      }
+    });
+    
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return bestDay >= 0 ? days[bestDay] : null;
+  })();
 
   const lastDataPoint = history?.data[history.data.length - 1];
   const lastDate = lastDataPoint
@@ -131,16 +163,30 @@ const History = ({ base, quote }: HistoryProps) => {
               </StaggerContainer>
             </AnimatePresence>
           )}
+
+          {!isLoading && bestDayInsight && activeDate !== "1D" && activeDate !== "1W" && (
+            <SlideUp delay={0.15} distance={10}>
+              <div className="mt-2.5 bg-lime-500/10 border border-lime-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+                <div className="text-xl">💡</div>
+                <div className="text-sm text-neutral-200">
+                  <span className="font-medium text-lime-500">Pro Tip: </span>
+                  Historically, <span className="font-semibold text-neutral-50">{bestDayInsight}</span> is the best day to convert {base} to {quote}.
+                </div>
+              </div>
+            </SlideUp>
+          )}
         </div>
 
-        {/* Date Picker */}
+        {/* Date Picker & View Toggle */}
         <SlideUp delay={0.2} distance={15}>
-          <div className="px-4 mt-5.5">
+          <div className="px-4 mt-5.5 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="bg-neutral-700 radius-sm flex items-center w-fit relative">
               {datePicker.map((date) => (
                 <button
                   className="radius-sm px-4 py-3 relative z-10"
-                  onClick={() => setActiveDate(date)}
+                  onClick={() => {
+                    setActiveDate(date);
+                  }}
                   key={date}
                 >
                   {activeDate === date && <ActivePill layoutId="datePicker" />}
@@ -148,13 +194,30 @@ const History = ({ base, quote }: HistoryProps) => {
                 </button>
               ))}
             </div>
+
+            <div className="flex bg-neutral-700 rounded-full p-1 max-w-[220px] border border-neutral-600">
+              <button 
+                onClick={() => setViewMode("chart")}
+                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+              >
+                Line Chart
+              </button>
+              <button 
+                onClick={() => {
+                  setViewMode("heatmap");
+                }}
+                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all ${viewMode === "heatmap" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+              >
+                Heatmap
+              </button>
+            </div>
           </div>
         </SlideUp>
       </div>
 
-      {/* Chart */}
+      {/* Chart / Heatmap */}
       <SlideUp delay={0.3} distance={20}>
-        <div className="px-4 mt-4 pb-8 h-[369px] md:h-[377px]">
+        <div className={`px-4 mt-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
             <div className="w-full flex items-center justify-between mb-5">
               <p className="text-neutral-50 font-medium text-base">
@@ -191,11 +254,15 @@ const History = ({ base, quote }: HistoryProps) => {
                 </FadeSlideIn>
               ) : (
                 <ChartReveal
-                  key={`chart-${activeDate}`}
+                  key={`chart-${activeDate}-${viewMode}`}
                   delay={0.1}
                   duration={0.7}
                 >
-                  <HistoryChart data={history?.data ?? []} />
+                  {viewMode === "heatmap" ? (
+                    <RateHeatmap data={history?.data ?? []} />
+                  ) : (
+                    <HistoryChart data={history?.data ?? []} />
+                  )}
                 </ChartReveal>
               )}
             </AnimatePresence>
