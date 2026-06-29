@@ -11,7 +11,7 @@ const StrengthIndex = () => {
 
   if (isLoading || !strengthData) {
     return (
-      <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-5 min-h-[300px]">
+      <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px]">
         <ShimmerBlock width="150px" height="24px" rounded="4px" />
         <div className="mt-6 flex flex-col gap-4">
           <ShimmerBlock width="100%" height="40px" rounded="8px" />
@@ -22,13 +22,12 @@ const StrengthIndex = () => {
     );
   }
 
-  // Filter out the base currency itself if it exists, and slice top 5 gainers and bottom 5 losers
   const filteredData = strengthData.filter(d => d.quote !== baseCurrency);
   const gainers = filteredData.slice(0, 5);
-  const losers = filteredData.slice(-5).reverse(); // Worst performers first
+  const losers = filteredData.slice(-5).reverse();
 
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-5 min-h-[300px]">
+    <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px]">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium text-neutral-50">Currency Strength</h3>
         
@@ -36,34 +35,34 @@ const StrengthIndex = () => {
           <select
             value={baseCurrency}
             onChange={(e) => setBaseCurrency(e.target.value)}
-            className="appearance-none bg-neutral-700 border border-neutral-600 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
+            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
           >
             {POPULAR_BASES.map(code => (
               <option key={code} value={code}>{code}</option>
             ))}
           </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
         </div>
       </div>
 
-      <p className="text-neutral-400 text-[13px] leading-relaxed mb-6">
+      <p className="text-neutral-200 text-[13px] leading-relaxed mb-6">
         Ranked performance of global currencies against the {baseCurrency} over the last trading period.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Gainers */}
         <div>
-          <h4 className="text-xs font-bold text-green-400 mb-3 uppercase tracking-wider">Top Gainers (Strongest)</h4>
+          <h4 className="text-xs font-bold dark:text-green-400 text-green-600 mb-3 uppercase tracking-wider">Top Gainers (Strongest)</h4>
           <div className="flex flex-col gap-2">
             {gainers.map((item, index) => (
-              <div key={item.quote} className="bg-neutral-700/50 rounded-lg p-3 flex items-center justify-between border border-neutral-600/50">
+              <div key={item.quote} className="bg-neutral-600/50 rounded-lg p-3 flex items-center justify-between border border-neutral-500/50">
                 <div className="flex items-center gap-3">
-                  <span className="text-neutral-500 font-bold w-4 text-xs">{index + 1}</span>
+                  <span className="text-neutral-200 font-bold w-4 text-xs">{index + 1}</span>
                   <span className="text-neutral-50 font-medium">{item.quote}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-green-400 font-bold text-sm">+{item.percentChange.toFixed(2)}%</div>
-                  <div className="text-neutral-400 text-[10px]">{item.last.toFixed(4)}</div>
+                  <div className="dark:text-green-400 text-green-600 font-bold text-sm">+{item.percentChange.toFixed(2)}%</div>
+                  <div className="text-neutral-200 text-[10px]">{item.last.toFixed(4)}</div>
                 </div>
               </div>
             ))}
@@ -72,17 +71,17 @@ const StrengthIndex = () => {
 
         {/* Losers */}
         <div>
-          <h4 className="text-xs font-bold text-red-400 mb-3 uppercase tracking-wider">Top Losers (Weakest)</h4>
+          <h4 className="text-xs font-bold dark:text-red-400 text-red-600 mb-3 uppercase tracking-wider">Top Losers (Weakest)</h4>
           <div className="flex flex-col gap-2">
             {losers.map((item, index) => (
-              <div key={item.quote} className="bg-neutral-700/50 rounded-lg p-3 flex items-center justify-between border border-neutral-600/50">
+              <div key={item.quote} className="bg-neutral-600/50 rounded-lg p-3 flex items-center justify-between border border-neutral-500/50">
                 <div className="flex items-center gap-3">
-                  <span className="text-neutral-500 font-bold w-4 text-xs">{index + 1}</span>
+                  <span className="text-neutral-200 font-bold w-4 text-xs">{index + 1}</span>
                   <span className="text-neutral-50 font-medium">{item.quote}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-red-400 font-bold text-sm">{item.percentChange.toFixed(2)}%</div>
-                  <div className="text-neutral-400 text-[10px]">{item.last.toFixed(4)}</div>
+                  <div className="dark:text-red-400 text-red-600 font-bold text-sm">{item.percentChange.toFixed(2)}%</div>
+                  <div className="text-neutral-200 text-[10px]">{item.last.toFixed(4)}</div>
                 </div>
               </div>
             ))}

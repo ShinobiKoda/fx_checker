@@ -22,12 +22,6 @@ const chartConfig = {
 
 const PRESET_AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
-const getFlagEmoji = (code: string) => {
-  if (code === "EUR") return "🇪🇺";
-  const cc = code.slice(0, 2);
-  return String.fromCodePoint(...[...cc].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
-};
-
 const RecurringTracker = () => {
   const [amount, setAmount] = useState(500);
   const [customAmount, setCustomAmount] = useState("");
@@ -43,7 +37,6 @@ const RecurringTracker = () => {
     effectiveAmount
   );
 
-  // Calculate stats
   const stats = useMemo(() => {
     if (!monthlyData || monthlyData.length < 2) return null;
 
@@ -58,27 +51,26 @@ const RecurringTracker = () => {
     return { max, min, avg, latest, totalChange };
   }, [monthlyData]);
 
-  // Color bars based on whether above or below average
   const getBarColor = (value: number) => {
-    if (!stats) return "#84cc16"; // lime-500
-    if (value >= stats.avg) return "#4ade80"; // green-400
-    return "#f87171"; // red-400
+    if (!stats) return "#84cc16";
+    if (value >= stats.avg) return "#4ade80";
+    return "#f87171";
   };
 
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-5 lg:col-span-2">
+    <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 lg:col-span-2">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h3 className="text-lg font-medium text-neutral-50">Recurring Conversion Tracker</h3>
-          <p className="text-neutral-400 text-[13px] leading-relaxed mt-1">
+          <p className="text-neutral-200 text-[13px] leading-relaxed mt-1">
             Track what a fixed recurring amount has been worth over the last 12 months.
           </p>
         </div>
       </div>
 
       {/* Configuration Row */}
-      <div className="flex flex-wrap items-center gap-3 mb-6 bg-neutral-700/50 rounded-xl p-4 border border-neutral-600/50">
-        <span className="text-neutral-400 text-sm shrink-0">I receive</span>
+      <div className="flex flex-wrap items-center gap-3 mb-6 bg-neutral-600/50 rounded-xl p-4 border border-neutral-500/50">
+        <span className="text-neutral-200 text-sm shrink-0">I receive</span>
 
         {/* Preset amount chips */}
         <div className="flex flex-wrap gap-1.5">
@@ -92,7 +84,7 @@ const RecurringTracker = () => {
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 effectiveAmount === preset && !customAmount
                   ? "bg-lime-500 text-black"
-                  : "bg-neutral-600 text-neutral-300 hover:bg-neutral-500 border border-neutral-500"
+                  : "bg-neutral-500/50 text-neutral-100 hover:bg-neutral-500 border border-neutral-400/50"
               }`}
             >
               {preset.toLocaleString()}
@@ -106,7 +98,7 @@ const RecurringTracker = () => {
           placeholder="Custom"
           value={customAmount}
           onChange={(e) => setCustomAmount(e.target.value)}
-          className="w-24 bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors placeholder:text-neutral-400"
+          className="w-24 bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors placeholder:text-neutral-200"
         />
 
         {/* From currency */}
@@ -123,10 +115,10 @@ const RecurringTracker = () => {
                 </option>
               ))}
           </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
         </div>
 
-        <span className="text-neutral-400 text-sm shrink-0">→ in</span>
+        <span className="text-neutral-200 text-sm shrink-0">→ in</span>
 
         {/* To currency */}
         <div className="relative">
@@ -142,10 +134,10 @@ const RecurringTracker = () => {
                 </option>
               ))}
           </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
         </div>
 
-        <span className="text-neutral-400 text-sm shrink-0">every month</span>
+        <span className="text-neutral-200 text-sm shrink-0">every month</span>
       </div>
 
       {/* Loading State */}
@@ -167,46 +159,46 @@ const RecurringTracker = () => {
           {/* Stats Strip */}
           {stats && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-              <div className="bg-neutral-700/50 rounded-xl p-3 border border-neutral-600/50">
-                <p className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">
+              <div className="bg-neutral-600/50 rounded-xl p-3 border border-neutral-500/50">
+                <p className="text-[11px] text-neutral-200 uppercase tracking-wider font-medium">
                   Latest Month
                 </p>
                 <p className="text-neutral-50 font-bold text-lg mt-1">
                   {stats.latest.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
                   })}{" "}
-                  <span className="text-xs text-neutral-400">{toCurrency}</span>
+                  <span className="text-xs text-neutral-200">{toCurrency}</span>
                 </p>
               </div>
-              <div className="bg-neutral-700/50 rounded-xl p-3 border border-neutral-600/50">
-                <p className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">
+              <div className="bg-neutral-600/50 rounded-xl p-3 border border-neutral-500/50">
+                <p className="text-[11px] text-neutral-200 uppercase tracking-wider font-medium">
                   12M Average
                 </p>
                 <p className="text-neutral-50 font-bold text-lg mt-1">
                   {stats.avg.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
                   })}{" "}
-                  <span className="text-xs text-neutral-400">{toCurrency}</span>
+                  <span className="text-xs text-neutral-200">{toCurrency}</span>
                 </p>
               </div>
-              <div className="bg-neutral-700/50 rounded-xl p-3 border border-neutral-600/50">
-                <p className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">
+              <div className="bg-neutral-600/50 rounded-xl p-3 border border-neutral-500/50">
+                <p className="text-[11px] text-neutral-200 uppercase tracking-wider font-medium">
                   Best Month
                 </p>
-                <p className="text-green-400 font-bold text-lg mt-1">
+                <p className="dark:text-green-400 text-green-600 font-bold text-lg mt-1">
                   {stats.max.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
                   })}{" "}
-                  <span className="text-xs text-neutral-400">{toCurrency}</span>
+                  <span className="text-xs text-neutral-200">{toCurrency}</span>
                 </p>
               </div>
-              <div className="bg-neutral-700/50 rounded-xl p-3 border border-neutral-600/50">
-                <p className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">
+              <div className="bg-neutral-600/50 rounded-xl p-3 border border-neutral-500/50">
+                <p className="text-[11px] text-neutral-200 uppercase tracking-wider font-medium">
                   12M Change
                 </p>
                 <p
                   className={`font-bold text-lg mt-1 ${
-                    stats.totalChange >= 0 ? "text-green-400" : "text-red-400"
+                    stats.totalChange >= 0 ? "dark:text-green-400 text-green-600" : "dark:text-red-400 text-red-600"
                   }`}
                 >
                   {stats.totalChange >= 0 ? "+" : ""}
@@ -225,14 +217,14 @@ const RecurringTracker = () => {
               >
                 <CartesianGrid
                   vertical={false}
-                  className="stroke-neutral-200 dark:stroke-neutral-700"
+                  className="stroke-neutral-500 dark:stroke-neutral-700"
                 />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
                   tickMargin={10}
-                  className="fill-neutral-500 text-xs"
+                  className="fill-neutral-200 text-xs"
                   interval={0}
                   tick={{ fontSize: 11 }}
                 />
@@ -246,7 +238,7 @@ const RecurringTracker = () => {
                       ? `${(value / 1000).toFixed(0)}k`
                       : value.toLocaleString()
                   }
-                  className="fill-neutral-500 text-xs"
+                  className="fill-neutral-200 text-xs"
                 />
                 <ChartTooltip
                   cursor={{ fill: "rgba(255,255,255,0.05)" }}
@@ -273,7 +265,7 @@ const RecurringTracker = () => {
           </SlideUp>
 
           {/* Legend hint */}
-          <div className="flex items-center justify-center gap-6 mt-4 text-xs text-neutral-500">
+          <div className="flex items-center justify-center gap-6 mt-4 text-xs text-neutral-200">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-sm bg-green-400" />
               <span>Above average</span>
@@ -288,14 +280,14 @@ const RecurringTracker = () => {
 
       {/* Empty state */}
       {!isLoading && (!monthlyData || monthlyData.length === 0) && fromCurrency !== toCurrency && (
-        <div className="text-center py-12 text-neutral-500">
+        <div className="text-center py-12 text-neutral-200">
           <p className="text-lg">No data available</p>
           <p className="text-sm mt-1">Try a different currency pair.</p>
         </div>
       )}
 
       {fromCurrency === toCurrency && (
-        <div className="text-center py-12 text-neutral-500">
+        <div className="text-center py-12 text-neutral-200">
           <p className="text-lg">Select different currencies</p>
           <p className="text-sm mt-1">The source and target currencies must be different.</p>
         </div>

@@ -7,7 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 const POPULAR_BASES = ["USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD"];
 
 interface CorrelationPair {
-  pair: string; // e.g. "EUR & GBP"
+  pair: string;
   correlation: number;
 }
 
@@ -21,7 +21,6 @@ const CorrelationTracker = () => {
     const keys = Object.keys(timeseriesData);
     const results: CorrelationPair[] = [];
 
-    // Calculate correlation between every unique pair in the basket
     for (let i = 0; i < keys.length; i++) {
       for (let j = i + 1; j < keys.length; j++) {
         const keyA = keys[i];
@@ -40,13 +39,8 @@ const CorrelationTracker = () => {
       }
     }
 
-    // Sort by absolute correlation to find strongest relationships
     const sorted = [...results].sort((a, b) => b.correlation - a.correlation);
-    
-    // Top Positive Correlations (Closer to +1)
     const highPos = sorted.filter(r => r.correlation > 0.5).slice(0, 5);
-    
-    // Top Negative Correlations (Closer to -1)
     const highNeg = [...results].sort((a, b) => a.correlation - b.correlation).filter(r => r.correlation < -0.5).slice(0, 5);
 
     return { highPos, highNeg };
@@ -54,7 +48,7 @@ const CorrelationTracker = () => {
 
   if (isLoading || !timeseriesData) {
     return (
-      <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
+      <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
         <ShimmerBlock width="200px" height="24px" rounded="4px" />
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col gap-4">
@@ -71,11 +65,11 @@ const CorrelationTracker = () => {
   }
 
   return (
-    <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
+    <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium text-neutral-50">90-Day Correlation Tracker</h3>
-          <p className="text-neutral-400 text-[13px] leading-relaxed mt-1">
+          <p className="text-neutral-200 text-[13px] leading-relaxed mt-1">
             Identifies which currency pairs tend to move together (positive) or in opposite directions (inverse) against the base.
           </p>
         </div>
@@ -84,35 +78,35 @@ const CorrelationTracker = () => {
           <select
             value={baseCurrency}
             onChange={(e) => setBaseCurrency(e.target.value)}
-            className="appearance-none bg-neutral-700 border border-neutral-600 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
+            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
           >
             {POPULAR_BASES.map(code => (
               <option key={code} value={code}>{code}</option>
             ))}
           </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
         {/* Positive Correlation */}
         <div>
-          <h4 className="text-xs font-bold text-green-400 mb-3 uppercase tracking-wider flex items-center gap-2">
+          <h4 className="text-xs font-bold dark:text-green-400 text-green-600 mb-3 uppercase tracking-wider flex items-center gap-2">
             <span>Highly Correlated</span>
-            <span className="text-neutral-500 font-normal lowercase">(Move together)</span>
+            <span className="text-neutral-200 font-normal lowercase">(Move together)</span>
           </h4>
           <div className="flex flex-col gap-2">
             {correlationResults.highPos.length === 0 ? (
-              <p className="text-sm text-neutral-500 italic">No strong positive correlations found in this window.</p>
+              <p className="text-sm text-neutral-200 italic">No strong positive correlations found in this window.</p>
             ) : (
               correlationResults.highPos.map((item, index) => (
-                <div key={item.pair} className="bg-neutral-700/50 rounded-lg p-3 flex items-center justify-between border border-neutral-600/50">
+                <div key={item.pair} className="bg-neutral-600/50 rounded-lg p-3 flex items-center justify-between border border-neutral-500/50">
                   <div className="flex items-center gap-3">
-                    <span className="text-neutral-500 font-bold w-4 text-xs">{index + 1}</span>
+                    <span className="text-neutral-200 font-bold w-4 text-xs">{index + 1}</span>
                     <span className="text-neutral-50 font-medium">{item.pair}</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-green-400 font-bold text-sm">+{item.correlation.toFixed(2)}</div>
+                    <div className="dark:text-green-400 text-green-600 font-bold text-sm">+{item.correlation.toFixed(2)}</div>
                   </div>
                 </div>
               ))
@@ -122,22 +116,22 @@ const CorrelationTracker = () => {
 
         {/* Negative Correlation */}
         <div>
-          <h4 className="text-xs font-bold text-orange-400 mb-3 uppercase tracking-wider flex items-center gap-2">
+          <h4 className="text-xs font-bold dark:text-orange-400 text-orange-600 mb-3 uppercase tracking-wider flex items-center gap-2">
             <span>Inversely Correlated</span>
-            <span className="text-neutral-500 font-normal lowercase">(Move opposite)</span>
+            <span className="text-neutral-200 font-normal lowercase">(Move opposite)</span>
           </h4>
           <div className="flex flex-col gap-2">
             {correlationResults.highNeg.length === 0 ? (
-              <p className="text-sm text-neutral-500 italic">No strong inverse correlations found in this window.</p>
+              <p className="text-sm text-neutral-200 italic">No strong inverse correlations found in this window.</p>
             ) : (
               correlationResults.highNeg.map((item, index) => (
-                <div key={item.pair} className="bg-neutral-700/50 rounded-lg p-3 flex items-center justify-between border border-neutral-600/50">
+                <div key={item.pair} className="bg-neutral-600/50 rounded-lg p-3 flex items-center justify-between border border-neutral-500/50">
                   <div className="flex items-center gap-3">
-                    <span className="text-neutral-500 font-bold w-4 text-xs">{index + 1}</span>
+                    <span className="text-neutral-200 font-bold w-4 text-xs">{index + 1}</span>
                     <span className="text-neutral-50 font-medium">{item.pair}</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-orange-400 font-bold text-sm">{item.correlation.toFixed(2)}</div>
+                    <div className="dark:text-orange-400 text-orange-600 font-bold text-sm">{item.correlation.toFixed(2)}</div>
                   </div>
                 </div>
               ))

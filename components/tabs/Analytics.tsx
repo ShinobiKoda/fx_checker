@@ -16,7 +16,7 @@ const Analytics = ({ base, quote }: AnalyticsProps) => {
       <SlideUp delay={0.1} distance={20}>
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-neutral-50 mb-2">Market Analytics</h2>
-          <p className="text-neutral-400 text-sm">Advanced institutional-grade tools to track currency momentum and purchasing power.</p>
+          <p className="text-neutral-200 text-sm">Advanced institutional-grade tools to track currency momentum and purchasing power.</p>
         </div>
       </SlideUp>
 
