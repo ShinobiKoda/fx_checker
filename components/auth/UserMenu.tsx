@@ -15,10 +15,12 @@ interface UserMenuProps {
 const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
+    setMounted(true)
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsOpen(false)
@@ -34,12 +36,23 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
 
   if (!isAuthenticated || !user) {
     return (
-      <button
-        onClick={onOpenAuth}
-        className="text-xs md:text-sm font-medium text-black bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0"
-      >
-        Log In
-      </button>
+      <div className="flex items-center gap-2 md:gap-3">
+        {mounted && (
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors shrink-0 cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+        )}
+        <button
+          onClick={onOpenAuth}
+          className="text-xs md:text-sm font-medium text-black bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0"
+        >
+          Log In
+        </button>
+      </div>
     )
   }
 
