@@ -3,6 +3,7 @@ import { SlideUp } from "@/components/Motion";
 import BigMacIndex from "@/components/analytics/BigMacIndex";
 import StrengthIndex from "@/components/analytics/StrengthIndex";
 import CorrelationTracker from "@/components/analytics/CorrelationTracker";
+import RecurringTracker from "@/components/analytics/RecurringTracker";
 
 interface AnalyticsProps {
   base: string;
@@ -23,6 +24,7 @@ const Analytics = ({ base, quote }: AnalyticsProps) => {
         <StrengthIndex />
         <BigMacIndex />
         <CorrelationTracker />
+        <RecurringTracker />
       </div>
     </div>
   );
