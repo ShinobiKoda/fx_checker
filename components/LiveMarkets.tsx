@@ -2,7 +2,7 @@
 
 import { useRates } from "@/hooks/useRates";
 import { InfiniteSlider, ShimmerBlock, FadeIn, ErrorBanner } from "./Motion";
-import { IoMdArrowDropdown, IoMdArrowUp } from "react-icons/io";
+import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 
 const LiveMarkets = () => {
   const { data, isLoading, isError, refetch } = useRates(["USD", "EUR", "GBP"]);
@@ -72,10 +72,15 @@ const LiveMarkets = () => {
                   )}
                   {item.direction === "down" && (
                     <div className="flex items-center text-red-500 gap-0.5">
-                      <IoMdArrowDropdown size={16} />
+                      <IoMdArrowDown size={16} />
                       <span className="font-mono text-xs">
                         {Math.abs(item.change)}%
                       </span>
+                    </div>
+                  )}
+                  {item.direction === "flat" && (
+                    <div className="flex items-center text-neutral-400 gap-0.5">
+                      <span className="font-mono text-xs">0.00%</span>
                     </div>
                   )}
                 </div>

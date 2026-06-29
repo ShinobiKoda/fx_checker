@@ -13,35 +13,45 @@ async function fetchRates(base: string): Promise<LatestRatesResponse> {
   const today = formatDate(todayObj);
   const prev = formatDate(prevObj);
 
-  // Fetch both dates in parallel
-  const [latestRes, prevRes] = await Promise.all([
-    fetch(`https://api.frankfurter.dev/v2/rates/${today}?base=${base}`),
-    fetch(`https://api.frankfurter.dev/v2/rates/${prev}?base=${base}`),
-  ]);
+  // Use the timeseries endpoint — the single-date endpoint always returns
+  // the latest rates regardless of the date, so we need from/to params
+  // to get actual historical data for comparison.
+  const res = await fetch(
+    `https://api.frankfurter.dev/v2/rates?base=${base}&from=${prev}&to=${today}`
+  );
 
-  if (!latestRes.ok) throw new Error('Failed to fetch latest rates');
+  if (!res.ok) throw new Error('Failed to fetch rates');
 
-  const latestData: RateItem[] = await latestRes.json();
-  const prevData: RateItem[] = prevRes.ok ? await prevRes.json() : [];
+  const rawData: Array<{ date: string; base: string; quote: string; rate: number }> =
+    await res.json();
 
-  const prevMap: Record<string, number> = {};
-  for (const item of prevData) {
-    prevMap[item.quote] = item.rate;
+  // Group by quote currency → collect all dated rates
+  const grouped: Record<string, { date: string; rate: number }[]> = {};
+  for (const item of rawData) {
+    if (!grouped[item.quote]) grouped[item.quote] = [];
+    grouped[item.quote].push({ date: item.date, rate: item.rate });
   }
 
-  return latestData.map((item) => {
-    const prevRate = prevMap[item.quote];
+  // For each quote currency, take the earliest and latest rate to compute change
+  return Object.entries(grouped).map(([quote, entries]) => {
+    entries.sort((a, b) => a.date.localeCompare(b.date));
+    const earliest = entries[0];
+    const latest = entries[entries.length - 1];
+
     let change = 0;
     let direction: 'up' | 'down' | 'flat' = 'flat';
 
-    if (prevRate !== undefined && prevRate !== 0) {
-      change = ((item.rate - prevRate) / prevRate) * 100;
+    if (earliest.rate !== 0) {
+      change = ((latest.rate - earliest.rate) / earliest.rate) * 100;
       if (change > 0.001) direction = 'up';
       else if (change < -0.001) direction = 'down';
     }
 
     return {
-      ...item,
+      date: latest.date,
+      base,
+      quote,
+      rate: latest.rate,
       change: parseFloat(change.toFixed(2)),
       direction,
     };
