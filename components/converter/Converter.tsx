@@ -9,6 +9,8 @@ import { useRates } from "@/hooks/useRates";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsFavorite, useAddFavorite, useRemoveFavorite } from "@/hooks/useFavorites";
 import { useAddConversionLog } from "@/hooks/useConversionLog";
+import { useRecentCurrencies } from "@/hooks/useRecentCurrencies";
+import { getCurrencyNote } from "@/lib/currencyNotes";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
 import {
@@ -22,6 +24,7 @@ import {
   SpringPop,
 } from "@/components/Motion";
 import { SplitView } from "./SplitView";
+import { ConversionInsight } from "./ConversionInsight";
 
 const getFlagEmoji = (currencyCode: string) => {
   if (currencyCode === "EUR") return "🇪🇺";
@@ -79,6 +82,8 @@ const Converter = ({
   const [feeType, setFeeType] = useState<"percent" | "flat">("percent");
   const [feeValue, setFeeValue] = useState<string>("0");
   const [isFeeExpanded, setIsFeeExpanded] = useState(false);
+
+  const { recents, addRecent } = useRecentCurrencies();
 
   useEffect(() => {
     if (amount === "") {
@@ -249,11 +254,15 @@ const Converter = ({
         name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
+    const recentCurrenciesList = filteredCurrencies
+      .filter(([code]) => recents.includes(code))
+      .sort((a, b) => recents.indexOf(a[0]) - recents.indexOf(b[0]));
+
     const popularCurrenciesList = filteredCurrencies.filter(([code]) =>
-      POPULAR_CURRENCIES.includes(code),
+      POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
     );
     const otherCurrenciesList = filteredCurrencies.filter(
-      ([code]) => !POPULAR_CURRENCIES.includes(code),
+      ([code]) => !POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
     );
 
     const renderCurrencyItem = ([code, name]: [string, string]) => {
@@ -265,16 +274,17 @@ const Converter = ({
               onClick={() => {
                 if (type === "from") setFromCurrency(code);
                 else setToCurrency(code);
+                addRecent(code);
                 setDropdownOpen(null);
                 setSearchQuery("");
               }}
-              className={`flex items-center gap-3 text-left w-full`}
+              className={`flex items-center gap-3 text-left w-[90%] overflow-hidden`}
             >
-              <span className="text-xl leading-none">{getFlagEmoji(code)}</span>
-              <span className="font-normal text-neutral-50 text-sm">{code}</span>
-              <span className="text-[12px] text-neutral-200 truncate">{name}</span>
+              <span className="text-xl leading-none shrink-0">{getFlagEmoji(code)}</span>
+              <span className="font-normal text-neutral-50 text-sm shrink-0">{code}</span>
+              <span className="text-[12px] text-neutral-400 truncate w-full" title={getCurrencyNote(code, name)}>{getCurrencyNote(code, name)}</span>
             </button>
-            {isSelected && <FaCheck className="dark:text-lime-500 text-lime-700" />}
+            {isSelected && <FaCheck className="dark:text-lime-500 text-lime-700 shrink-0" />}
           </div>
         </StaggerItem>
       );
@@ -304,13 +314,23 @@ const Converter = ({
             />
           </div>
 
+          {recentCurrenciesList.length > 0 && (
+            <>
+              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
+                <span>RECENTLY USED</span>
+              </p>
+              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
+                {recentCurrenciesList.map(renderCurrencyItem)}
+              </StaggerContainer>
+            </>
+          )}
+
           {popularCurrenciesList.length > 0 && (
             <>
-              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-200">
+              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
                 <span>POPULAR</span>
-                <span>{popularCurrenciesList.length}</span>
               </p>
-              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
+              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
                 {popularCurrenciesList.map(renderCurrencyItem)}
               </StaggerContainer>
             </>
@@ -318,9 +338,8 @@ const Converter = ({
 
           {otherCurrenciesList.length > 0 && (
             <>
-              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-200">
+              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
                 <span>OTHER CURRENCIES</span>
-                <span>{otherCurrenciesList.length}</span>
               </p>
               <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
                 {otherCurrenciesList.map(renderCurrencyItem)}
@@ -684,6 +703,13 @@ const Converter = ({
             </>
           )}
         </div>
+        {viewMode === "standard" && (
+          <ConversionInsight 
+            base={fromCurrency} 
+            quote={toCurrency} 
+            currentRate={rates?.find(r => r.base === fromCurrency && r.quote === toCurrency)?.rate || 1} 
+          />
+        )}
       </div>
     </SlideUp>
   );
