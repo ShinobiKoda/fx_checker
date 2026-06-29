@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa6";
+import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io";
 import { useRates } from "@/hooks/useRates";
 import { useFavorites, useAddFavorite, useRemoveFavorite } from "@/hooks/useFavorites";
 import { SlideInRow, SpringPop, StaggerContainer, ShimmerBlock, ErrorBanner } from "@/components/Motion";
@@ -192,14 +193,22 @@ const Dashboard = ({ base, amount }: DashboardProps) => {
                         direction === 'down' ? 'bg-red-500/10 text-red-500' : 
                         'bg-neutral-500/10 text-neutral-400'
                       }`}>
-                        1D: {direction === 'up' ? '+' : ''}{change}%
+                        1D: 
+                        {direction === 'up' && <IoMdArrowDropup className="text-[12px] ml-0.5" />}
+                        {direction === 'down' && <IoMdArrowDropdown className="text-[12px] ml-0.5" />}
+                        {direction === 'flat' && <span className="ml-0.5" />}
+                        {direction === 'up' ? '+' : ''}{change}%
                       </span>
                       <span className={`flex items-center text-[10px] px-2 py-1 rounded-sm font-medium ${
                         direction30d === 'up' ? 'bg-green-500/10 text-green-500' : 
                         direction30d === 'down' ? 'bg-red-500/10 text-red-500' : 
                         'bg-neutral-500/10 text-neutral-400'
                       }`}>
-                        30D: {direction30d === 'up' ? '+' : ''}{change30d}%
+                        30D: 
+                        {direction30d === 'up' && <IoMdArrowDropup className="text-[12px] ml-0.5" />}
+                        {direction30d === 'down' && <IoMdArrowDropdown className="text-[12px] ml-0.5" />}
+                        {direction30d === 'flat' && <span className="ml-0.5" />}
+                        {direction30d === 'up' ? '+' : ''}{change30d}%
                       </span>
                     </div>
                   </div>
