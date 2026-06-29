@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdArrowDropdown, IoIosSearch, IoMdShare } from "react-icons/io";
 import { FaStar, FaRegStar } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import {
   StaggerItem,
   SpringPop,
 } from "@/components/Motion";
+import { SplitView } from "./SplitView";
 
 const getFlagEmoji = (currencyCode: string) => {
   if (currencyCode === "EUR") return "🇪🇺";
@@ -50,6 +51,9 @@ interface ConverterProps {
   amount: string;
   setAmount: (c: string) => void;
   onOpenAuth: () => void;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+  isReversed?: boolean;
+  setIsReversed?: (v: boolean) => void;
 }
 
 const Converter = ({
@@ -60,12 +64,46 @@ const Converter = ({
   amount,
   setAmount,
   onOpenAuth,
+  inputRef,
+  isReversed = false,
+  setIsReversed,
 }: ConverterProps) => {
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
   const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFullAmount, setShowFullAmount] = useState(false);
   const [isLoggedFeedback, setIsLoggedFeedback] = useState(false);
+  const [viewMode, setViewMode] = useState<"standard" | "split">("standard");
+
+  // Fee Simulator state
+  const [feeType, setFeeType] = useState<"percent" | "flat">("percent");
+  const [feeValue, setFeeValue] = useState<string>("0");
+  const [isFeeExpanded, setIsFeeExpanded] = useState(false);
+
+  useEffect(() => {
+    if (amount === "") {
+      setDisplayAmount("");
+    }
+  }, [amount]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedType = localStorage.getItem("fx_fee_type");
+      const savedValue = localStorage.getItem("fx_fee_value");
+      if (savedType === "percent" || savedType === "flat") setFeeType(savedType);
+      if (savedValue) setFeeValue(savedValue);
+    }
+  }, []);
+
+  const updateFeeType = (type: "percent" | "flat") => {
+    setFeeType(type);
+    if (typeof window !== "undefined") localStorage.setItem("fx_fee_type", type);
+  };
+
+  const updateFeeValue = (val: string) => {
+    setFeeValue(val);
+    if (typeof window !== "undefined") localStorage.setItem("fx_fee_value", val);
+  };
 
   const {
     data: currencies,
@@ -141,23 +179,58 @@ const Converter = ({
     setToCurrency(fromCurrency);
   };
 
-  const getConvertedAmount = () => {
-    if (!amount || isNaN(Number(amount))) return "0.0000";
-    if (fromCurrency === toCurrency)
-      return Number(amount).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
+  const getRawCalculatedNumber = () => {
+    if (!amount || isNaN(Number(amount))) return 0;
+    if (fromCurrency === toCurrency) return Number(amount);
 
     const rateItem = rates?.find(
       (r) => r.base === fromCurrency && r.quote === toCurrency,
     );
-    if (!rateItem) return "---";
+    if (!rateItem) return 0;
 
-    return (Number(amount) * rateItem.rate).toLocaleString(undefined, {
-      minimumFractionDigits: 4,
-      maximumFractionDigits: 4,
+    if (isReversed) {
+      return Number(amount) / rateItem.rate;
+    } else {
+      return Number(amount) * rateItem.rate;
+    }
+  };
+
+  const getCalculatedString = () => {
+    const val = getRawCalculatedNumber();
+    if (val === 0) return "0.0000";
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: fromCurrency === toCurrency ? 2 : 4,
+      maximumFractionDigits: fromCurrency === toCurrency ? 2 : 4,
     });
+  };
+
+  const getFeeDetails = () => {
+    const rawVal = getRawCalculatedNumber();
+    if (rawVal === 0 || !feeValue || isNaN(Number(feeValue))) return null;
+    
+    const feeNum = Number(feeValue);
+    let feeAmount = 0;
+    
+    if (feeType === "percent") {
+      feeAmount = rawVal * (feeNum / 100);
+    } else {
+      feeAmount = feeNum;
+    }
+    
+    let finalAmount = 0;
+    if (isReversed) {
+      // Reversed: You need to send MORE to cover the fee
+      finalAmount = rawVal + feeAmount;
+    } else {
+      // Normal: You receive LESS because of the fee
+      finalAmount = rawVal - feeAmount;
+    }
+    
+    return {
+      feeAmount: feeAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }),
+      finalAmount: finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }),
+      currency: isReversed ? fromCurrency : toCurrency
+    };
   };
 
   const getRateString = () => {
@@ -319,33 +392,78 @@ const Converter = ({
     );
   }
 
+  const renderAmountBlock = (isInput: boolean) => {
+    if (isInput) {
+      return (
+        <input
+          ref={inputRef}
+          type="text"
+          value={displayAmount}
+          onChange={(e) => {
+            const val = e.target.value;
+            const rawValue = parseCommas(val);
+            if (/^\d*\.?\d*$/.test(rawValue)) {
+              setDisplayAmount(formatWithCommas(rawValue));
+              setAmount(rawValue);
+            }
+          }}
+          className="font-bold text-[32px] lg:text-[40px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
+          placeholder="0.00"
+        />
+      );
+    }
+    return (
+      <div className="flex flex-col gap-1 min-w-0 flex-1">
+        <motion.span
+          layout
+          onClick={() => setShowFullAmount((v) => !v)}
+          className={`font-bold text-[32px] lg:text-[40px] dark:text-lime-500 text-lime-700 cursor-pointer select-none ${
+            showFullAmount ? 'break-all' : 'truncate'
+          }`}
+          title={showFullAmount ? 'Click to collapse' : 'Click to expand'}
+        >
+          {getCalculatedString()}
+        </motion.span>
+        <span className={`text-[10px] text-neutral-400 transition-opacity ${
+          showFullAmount ? 'opacity-100' : 'opacity-50'
+        }`}>
+          {showFullAmount ? 'click to collapse' : 'click to expand'}
+        </span>
+      </div>
+    );
+  };
+
   // ── Loaded State ───────────────────────────────────────────────────────
+
+  const feeDetails = getFeeDetails();
 
   return (
     <SlideUp delay={0.4} duration={0.6}>
       <div className="space-y-4 px-4 mt-8 max-w-[1036px] mx-auto pt-24">
-        <h2 className="text-[20px] font-normal text-neutral-50">
+        <h2 className="text-[20px] font-normal text-neutral-50 text-center hidden">
           CHECK THE RATE
         </h2>
+        <div className="flex bg-neutral-700 rounded-full p-1 max-w-[200px] mx-auto mb-6 border border-neutral-600">
+          <button 
+            onClick={() => setViewMode("standard")}
+            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all ${viewMode === "standard" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+          >
+            Standard
+          </button>
+          <button 
+            onClick={() => setViewMode("split")}
+            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all ${viewMode === "split" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+          >
+            Split Mode
+          </button>
+        </div>
+        
         <div className="bg-neutral-700 rounded-[20px]">
-          <div className=" p-4 space-y-4 flex flex-col items-center justify-center w-full md:flex-row md:gap-6  md:justify-between md:items-center">
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full md:max-w-[292px] lg:max-w-[450px] relative">
+          <div className={`p-4 space-y-4 flex flex-col items-center justify-center w-full ${viewMode === 'standard' ? 'md:flex-row md:gap-6 md:justify-between md:items-center' : ''}`}>
+            <div className={`rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative ${viewMode === 'standard' ? 'md:max-w-[292px] lg:max-w-[450px]' : ''}`}>
               <h4 className="text-neutral-100 font-normal text-sm">SEND</h4>
-              <div className="flex items-center justify-between">
-                <input
-                  type="text"
-                  value={displayAmount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    const rawValue = parseCommas(val);
-                    if (/^\d*\.?\d*$/.test(rawValue)) {
-                      setDisplayAmount(formatWithCommas(rawValue));
-                      setAmount(rawValue);
-                    }
-                  }}
-                  className="font-bold text-[32px] lg:text-[40px] text-neutral-50 bg-transparent outline-none w-1/2 min-w-0 placeholder-neutral-400"
-                  placeholder="0.00"
-                />
+              <div className="flex items-start justify-between gap-2">
+                {renderAmountBlock(!isReversed)}
                 <div className="">
                   <button
                     onClick={() =>
@@ -372,57 +490,65 @@ const Converter = ({
               </div>
             </div>
 
-            <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
+            {viewMode === "standard" ? (
+              <>
+                <SwapButton onClick={handleSwap} isLoading={ratesFetching} />
 
-            <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px] lg:max-w-[450px]">
-              <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex flex-col gap-1 min-w-0 flex-1">
-                  <motion.span
-                    layout
-                    onClick={() => setShowFullAmount((v) => !v)}
-                    className={`font-bold text-[32px] lg:text-[40px] dark:text-lime-500 text-lime-700 cursor-pointer select-none ${
-                      showFullAmount ? 'break-all' : 'truncate'
-                    }`}
-                    title={showFullAmount ? 'Click to collapse' : 'Click to expand'}
-                  >
-                    {getConvertedAmount()}
-                  </motion.span>
-                  <span className={`text-[10px] text-neutral-400 transition-opacity ${
-                    showFullAmount ? 'opacity-100' : 'opacity-50'
-                  }`}>
-                    {showFullAmount ? 'click to collapse' : 'click to expand'}
-                  </span>
-                </div>
-                <div className="shrink-0">
-                  <button
-                    onClick={() =>
-                      setDropdownOpen(dropdownOpen === "to" ? null : "to")
-                    }
-                    className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
-                  >
-                    <div className="text-xl leading-none">
-                      {getFlagEmoji(toCurrency)}
+                <div className="rounded-2xl p-4 bg-neutral-600 border border-neutral-500 space-y-5 w-full relative md:max-w-[292px] lg:max-w-[450px]">
+                  <h4 className="text-neutral-100 font-normal text-sm">RECEIVE</h4>
+                  <div className="flex items-start justify-between gap-2">
+                    {renderAmountBlock(isReversed)}
+                    <div className="shrink-0">
+                      <button
+                        onClick={() =>
+                          setDropdownOpen(dropdownOpen === "to" ? null : "to")
+                        }
+                        className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
+                      >
+                        <div className="text-xl leading-none">
+                          {getFlagEmoji(toCurrency)}
+                        </div>
+                        <span className="font-normal text-sm text-neutral-50">
+                          {toCurrency}
+                        </span>
+                        <motion.span
+                          animate={{ rotate: dropdownOpen === 'to' ? 180 : 0 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                          style={{ display: 'flex' }}
+                        >
+                          <IoMdArrowDropdown className="text-neutral-50" />
+                        </motion.span>
+                      </button>
+                      {renderCurrencyDropdown("to")}
                     </div>
-                    <span className="font-normal text-sm text-neutral-50">
-                      {toCurrency}
-                    </span>
-                    <motion.span
-                      animate={{ rotate: dropdownOpen === 'to' ? 180 : 0 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                      style={{ display: 'flex' }}
-                    >
-                      <IoMdArrowDropdown className="text-neutral-50" />
-                    </motion.span>
-                  </button>
-                  {renderCurrencyDropdown("to")}
+                  </div>
                 </div>
+              </>
+            ) : (
+              <div className="w-full pt-4 border-t border-neutral-600 border-dashed">
+                <SplitView amount={amount} fromCurrency={fromCurrency} rates={rates || []} />
               </div>
-            </div>
+            )}
           </div>
-          <div className="w-full border border-neutral-500 border-dashed h-px"></div>
-          <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
-            <p className="text-neutral-50 text-preset md:text-[12px]">{getRateString()}</p>
+          
+          {viewMode === "standard" && (
+            <>
+              <div className="w-full border border-neutral-500 border-dashed h-px"></div>
+              <div className="p-4 text-center flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
+                <div className="flex items-center gap-3">
+              <p className="text-neutral-50 text-preset md:text-[12px]">{getRateString()}</p>
+              <button
+                onClick={() => setIsReversed?.(!isReversed)}
+                className={`text-[11px] font-medium px-2 py-1 radius-sm transition-colors border ${
+                  isReversed 
+                    ? "bg-lime-500 text-black border-lime-500" 
+                    : "bg-neutral-600 text-neutral-300 border-neutral-500 hover:text-neutral-50"
+                }`}
+                title="Toggle Reverse Mode (R)"
+              >
+                ⇄ REVERSE
+              </button>
+            </div>
             <div className="flex items-center gap-2 *:cursor-pointer">
               <button
                 onClick={handleToggleFavorite}
@@ -457,6 +583,70 @@ const Converter = ({
               </button>
             </div>
           </div>
+          <div className="w-full border border-neutral-500 border-dashed h-px"></div>
+          <div className="p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsFeeExpanded(!isFeeExpanded)}>
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-200 text-sm font-medium">Fee Simulator</span>
+                {feeDetails && feeValue && feeValue !== "0" && (
+                   <span className="text-[11px] bg-neutral-600 px-2 py-0.5 rounded text-neutral-300 border border-neutral-500">
+                     Active
+                   </span>
+                )}
+              </div>
+              <motion.span
+                animate={{ rotate: isFeeExpanded ? 180 : 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="flex items-center justify-center"
+              >
+                <IoMdArrowDropdown className="text-neutral-400" size={20} />
+              </motion.span>
+            </div>
+            
+            <AnimatePresence>
+              {isFeeExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-2">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="number"
+                        value={feeValue}
+                        onChange={(e) => updateFeeValue(e.target.value)}
+                        className="w-20 bg-neutral-600 border border-neutral-500 radius-sm px-3 py-1.5 text-sm text-neutral-50 outline-none focus:border-lime-500 transition-colors"
+                        placeholder="0"
+                      />
+                      <select
+                        value={feeType}
+                        onChange={(e) => updateFeeType(e.target.value as "percent" | "flat")}
+                        className="bg-neutral-600 border border-neutral-500 radius-sm px-2 py-1.5 text-sm text-neutral-50 outline-none focus:border-lime-500 appearance-none cursor-pointer transition-colors"
+                      >
+                        <option value="percent">%</option>
+                        <option value="flat">Flat</option>
+                      </select>
+                    </div>
+                    
+                    {feeDetails && feeValue && feeValue !== "0" && (
+                      <div className="text-left md:text-right bg-neutral-800/50 p-3 rounded-lg border border-neutral-600 w-full md:w-auto">
+                        <div className="text-sm text-neutral-50 font-medium">
+                          After fee: <span className="text-lime-500">{feeDetails.finalAmount} {feeDetails.currency}</span>
+                        </div>
+                        <div className="text-[11px] text-neutral-400 mt-0.5">
+                          Fee amount: {feeDetails.feeAmount} {feeDetails.currency}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+            </>
+          )}
         </div>
       </div>
     </SlideUp>
