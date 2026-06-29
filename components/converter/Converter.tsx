@@ -482,13 +482,13 @@ const Converter = ({
         <div className="flex bg-neutral-700 rounded-full p-1 max-w-[200px] mx-auto mb-6 border border-neutral-600">
           <button 
             onClick={() => setViewMode("standard")}
-            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all ${viewMode === "standard" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all cursor-pointer ${viewMode === "standard" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
           >
             Standard
           </button>
           <button 
             onClick={() => setViewMode("split")}
-            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all ${viewMode === "split" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all cursor-pointer ${viewMode === "split" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
           >
             Split Mode
           </button>
