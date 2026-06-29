@@ -9,6 +9,8 @@ import Favorites from "./Favorites";
 import Log from "./Log";
 import Alerts from "./Alerts";
 import Analytics from "./Analytics";
+import Invoice from "./Invoice";
+import UnitConverter from "../converter/UnitConverter";
 import { useAlertPoller } from "@/hooks/useAlertPoller";
 
 interface TabsContainerProps {
@@ -41,6 +43,10 @@ const TabsContainer = ({ base, quote, amount, setFromCurrency, setToCurrency }: 
         return <Alerts base={base} quote={quote} />;
       case "ANALYTICS":
         return <Analytics base={base} quote={quote} />;
+      case "UNITS":
+        return <UnitConverter />;
+      case "INVOICE":
+        return <Invoice />;
       default:
         return <History base={base} quote={quote} />;
     }

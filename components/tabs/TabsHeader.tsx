@@ -24,7 +24,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
   const { data: logs } = useConversionLogs();
   const logCount = logs?.length || 0;
 
-  const tabs = ["HISTORY", "COMPARE", "DASHBOARD", "FAVORITES", "LOGS", "ALERTS", "ANALYTICS"];
+  const tabs = ["HISTORY", "COMPARE", "DASHBOARD", "UNITS", "INVOICE", "FAVORITES", "LOGS", "ALERTS", "ANALYTICS"];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
