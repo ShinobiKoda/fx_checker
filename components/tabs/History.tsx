@@ -164,17 +164,6 @@ const History = ({ base, quote }: HistoryProps) => {
             </AnimatePresence>
           )}
 
-          {!isLoading && bestDayInsight && activeDate !== "1D" && activeDate !== "1W" && (
-            <SlideUp delay={0.15} distance={10}>
-              <div className="mt-2.5 bg-lime-500/10 border border-lime-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
-                <div className="text-xl">💡</div>
-                <div className="text-sm text-neutral-200">
-                  <span className="font-medium text-lime-500">Pro Tip: </span>
-                  Historically, <span className="font-semibold text-neutral-50">{bestDayInsight}</span> is the best day to convert {base} to {quote}.
-                </div>
-              </div>
-            </SlideUp>
-          )}
         </div>
 
         {/* Date Picker & View Toggle */}
@@ -214,6 +203,20 @@ const History = ({ base, quote }: HistoryProps) => {
           </div>
         </SlideUp>
       </div>
+
+      {!isLoading && bestDayInsight && activeDate !== "1D" && activeDate !== "1W" && (
+        <SlideUp delay={0.15} distance={10}>
+          <div className="px-4 mt-4">
+            <div className="bg-lime-500/10 border border-lime-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+              <div className="text-xl">💡</div>
+              <div className="text-sm text-neutral-200">
+                <span className="font-medium text-lime-500">Pro Tip: </span>
+                Historically, <span className="font-semibold text-neutral-50">{bestDayInsight}</span> is the best day to convert {base} to {quote}.
+              </div>
+            </div>
+          </div>
+        </SlideUp>
+      )}
 
       {/* Chart / Heatmap */}
       <SlideUp delay={0.3} distance={20}>

@@ -183,7 +183,7 @@ export const RateHeatmap = ({ data }: RateHeatmapProps) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="fixed z-[9999] -translate-x-1/2 -translate-y-full pointer-events-none bg-neutral-800 border border-neutral-600 rounded-lg p-2 shadow-xl whitespace-nowrap"
+              className="fixed z-9999 -translate-x-1/2 -translate-y-full pointer-events-none bg-neutral-800 border border-neutral-600 rounded-lg p-2 shadow-xl whitespace-nowrap"
               style={{ left: hoveredDay.x, top: hoveredDay.y }}
             >
               <div className="text-xs text-neutral-400 font-medium mb-1">
