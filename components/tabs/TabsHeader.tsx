@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { DropdownMenu, AnimatedTabItem, SlideUp } from "@/components/Motion";
 import { motion } from "framer-motion";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface TabsHeaderProps {
   currentTab: string;
@@ -16,6 +17,8 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { data: favorites } = useFavorites();
+  const favCount = favorites?.length || 0;
 
   const tabs = ["HISTORY", "COMPARE", "FAVORITES", "LOGS"];
 
@@ -46,8 +49,13 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
             whileTap={{ scale: 0.99 }}
             transition={{ duration: 0.15 }}
           >
-            <div className="text-neutral-50 font-normal text-base">
+            <div className="text-neutral-50 font-normal text-base flex items-center gap-2">
               {currentTab}
+              {currentTab === "FAVORITES" && favCount > 0 && (
+                <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                  {favCount}
+                </span>
+              )}
             </div>
             <motion.span
               animate={{ rotate: isOpen ? 180 : 0 }}
@@ -74,7 +82,14 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                   setIsOpen(false);
                 }}
               >
-                {tab}
+                <div className="flex items-center gap-2">
+                  {tab}
+                  {tab === "FAVORITES" && favCount > 0 && (
+                    <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                      {favCount}
+                    </span>
+                  )}
+                </div>
               </motion.div>
             ))}
           </DropdownMenu>
@@ -88,9 +103,11 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
                 onClick={() => setCurrentTab(tab)}
               >
                 <span>{tab}</span>
-                <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
-                  10
-                </span>
+                {tab === "FAVORITES" && favCount > 0 && (
+                  <span className="w-5 h-5 rounded-full dark:bg-lime-800 bg-lime-200 text-preset dark:text-lime-500 text-lime-700 text-center flex items-center justify-center">
+                    {favCount}
+                  </span>
+                )}
               </AnimatedTabItem>
             ))}
           </ul>
