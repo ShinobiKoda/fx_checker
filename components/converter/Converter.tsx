@@ -606,10 +606,10 @@ const Converter = ({
                 ⇄ REVERSE
               </button>
             </div>
-            <div className="flex items-center gap-2 *:cursor-pointer">
+            <div className="grid grid-cols-2 md:flex items-center gap-2 w-full md:w-auto *:cursor-pointer">
               <button
                 onClick={handleToggleFavorite}
-                className={`font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border hover:cursor-pointer ${
+                className={`font-medium text-[12px] px-3 py-2 radius-sm flex justify-center w-full md:w-auto items-center gap-2 transition-colors border hover:cursor-pointer ${
                   isFavorite 
                     ? "bg-lime-500 text-black border-lime-500" 
                     : "bg-neutral-600 text-neutral-200 border-neutral-300"
@@ -622,29 +622,29 @@ const Converter = ({
               </button>
               <button 
                 onClick={handleShareLink}
-                className="font-medium text-[12px] px-3 py-2 radius-sm flex items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
+                className="font-medium text-[12px] px-3 py-2 radius-sm flex justify-center w-full md:w-auto items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
                 title="Share this conversion"
               >
                 <IoMdShare size={14} />
                 SHARE
               </button>
               <button 
-                onClick={() => setIsEmbedModalOpen(true)}
-                className="font-medium text-[12px] px-3 py-2 radius-sm hidden md:flex items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
-                title="Embed this converter"
-              >
-                <IoMdCode size={16} />
-                EMBED
-              </button>
-              <button 
                 onClick={handleLogConversion}
-                className={`font-medium text-[12px] px-3 py-2 radius-sm border transition-colors ${
+                className={`font-medium text-[12px] px-3 py-2 radius-sm flex justify-center w-full md:w-auto items-center gap-2 border transition-colors ${
                   isLoggedFeedback 
                     ? "bg-lime-500 text-black border-lime-500" 
                     : "dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700 hover:bg-lime-600/10 dark:hover:bg-lime-500/10"
                 }`}
               >
-                {isLoggedFeedback ? "LOGGED!" : "LOG CONVERSION"}
+                {isLoggedFeedback ? "LOGGED!" : "LOG"}
+              </button>
+              <button 
+                onClick={() => setIsEmbedModalOpen(true)}
+                className="font-medium text-[12px] px-3 py-2 radius-sm flex justify-center w-full md:w-auto items-center gap-2 transition-colors border bg-neutral-600 text-neutral-200 border-neutral-300 hover:bg-neutral-500"
+                title="Embed this converter"
+              >
+                <IoMdCode size={16} />
+                EMBED
               </button>
             </div>
           </div>

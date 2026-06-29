@@ -66,7 +66,7 @@ export default function EmbedWidget({ initialFrom, initialTo, initialAmount }: E
 
   return (
     <div className="w-full h-full bg-neutral-900 text-neutral-50 p-4 font-sans flex flex-col justify-between" style={{ margin: 0, overflow: "hidden" }}>
-      <div className="bg-neutral-800 rounded-xl p-3 border border-neutral-700 flex flex-col gap-3">
+      <div className="bg-neutral-800 rounded-xl p-3 border border-neutral-700 flex flex-col gap-5 h-full">
         <div className="flex items-center justify-between gap-2 bg-neutral-700 p-2 rounded-lg border border-neutral-600">
           <input
             type="text"
@@ -96,7 +96,7 @@ export default function EmbedWidget({ initialFrom, initialTo, initialAmount }: E
         <div className="flex justify-center -my-3 relative z-10 pointer-events-none">
           <button 
             onClick={handleSwap}
-            className="bg-lime-500 text-black p-1.5 rounded-full border-2 border-neutral-800 pointer-events-auto hover:bg-lime-400 transition-colors"
+            className="bg-lime-500 text-black p-1.5 rounded-full border-2 border-neutral-800 pointer-events-auto hover:bg-lime-400 transition-colors cursor-pointer"
           >
             <IoMdSwap size={18} />
           </button>

@@ -15,7 +15,7 @@ interface EmbedModalProps {
 
 const EmbedModal = ({ isOpen, onClose, fromCurrency, toCurrency, amount }: EmbedModalProps) => {
   const [copied, setCopied] = useState(false);
-  const [origin, setOrigin] = useState("https://fxchecker.com");
+  const [origin, setOrigin] = useState("https://fx-checker-pied.vercel.app");
 
   useEffect(() => {
     if (typeof window !== "undefined") {

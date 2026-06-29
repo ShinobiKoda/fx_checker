@@ -15,10 +15,12 @@ function EmbedContent() {
 
 export default function EmbedPage() {
   return (
-    <div className="w-full h-screen overflow-hidden bg-transparent">
-      <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-neutral-500 text-sm">Loading...</div>}>
-        <EmbedContent />
-      </Suspense>
+    <div className="w-full min-h-screen bg-transparent flex items-center justify-center md:bg-black/50">
+      <div className="w-full h-screen md:max-w-[420px] md:h-[380px] md:rounded-xl md:shadow-2xl overflow-hidden md:border border-neutral-700">
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-neutral-900 text-neutral-500 text-sm">Loading...</div>}>
+          <EmbedContent />
+        </Suspense>
+      </div>
     </div>
   );
 }
