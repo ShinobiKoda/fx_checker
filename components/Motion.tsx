@@ -539,3 +539,9 @@ export const SlideInRow = ({
     {children}
   </motion.div>
 )
+export const PulseIndicator = ({ colorClass = 'bg-amber-500' }: { colorClass?: string }) => (
+  <span className="relative flex h-2 w-2">
+    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${colorClass}`}></span>
+    <span className={`relative inline-flex rounded-full h-2 w-2 ${colorClass}`}></span>
+  </span>
+);

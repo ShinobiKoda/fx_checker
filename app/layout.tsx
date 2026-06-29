@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "sonner";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -112,6 +113,7 @@ export default function RootLayout({
         />
         <Providers>{children}</Providers>
         <Analytics />
+        <Toaster position="top-right" theme="system" />
       </body>
     </html>
   );

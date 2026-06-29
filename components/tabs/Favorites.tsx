@@ -9,9 +9,10 @@ import { SlideInRow, StaggerContainer, ShimmerBlock, ErrorBanner, SpringPop } fr
 
 interface FavoritesProps {
   amount: string;
+  onLoadPair?: (from: string, to: string) => void;
 }
 
-const Favorites = ({ amount }: FavoritesProps) => {
+const Favorites = ({ amount, onLoadPair }: FavoritesProps) => {
   const { data: favorites, isLoading: favsLoading } = useFavorites();
   const { mutate: removeFavorite } = useRemoveFavorite();
 
@@ -74,7 +75,10 @@ const Favorites = ({ amount }: FavoritesProps) => {
 
             return (
               <SlideInRow key={`${base}-${quote}`}>
-                <div className="p-3 bg-neutral-600 border border-neutral-500 rounded-[10px] flex items-center justify-between">
+                <div 
+                  className="p-3 bg-neutral-600 border border-neutral-500 rounded-[10px] flex items-center justify-between cursor-pointer hover:bg-neutral-500/50 transition-colors"
+                  onClick={() => onLoadPair?.(base, quote)}
+                >
                   <p className="flex items-center gap-1 font-normal text-sm text-neutral-50">
                     <span>{base}</span>
                     <MdOutlineArrowRightAlt className="text-neutral-200"/>
@@ -103,7 +107,7 @@ const Favorites = ({ amount }: FavoritesProps) => {
                     </div>
                     <button 
                       className={`w-8 h-8 radius-sm border bg-neutral-600 p-2 flex items-center justify-center cursor-pointer hover:opacity-70 dark:border-lime-500 border-lime-600`} 
-                      onClick={() => removeFavorite({ from: base, to: quote })}
+                      onClick={(e) => { e.stopPropagation(); removeFavorite({ from: base, to: quote }); }}
                       title="Remove from favorites"
                     >
                       <SpringPop isActive={true}>

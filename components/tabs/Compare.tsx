@@ -130,9 +130,27 @@ const Compare = ({ base, amount }: CompareProps) => {
                               })
                             : "---"}
                         </span>
-                        <span className="text-preset text-neutral-200">
+                        <span className="text-[10px] text-neutral-400">
                           @ {rate > 0 ? rate.toFixed(4) : "---"}
                         </span>
+                        {rate > 0 && rateItem && (
+                          <div className="flex items-center justify-end gap-2 mt-1">
+                            <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-sm ${
+                              rateItem.direction === 'up' ? 'bg-green-500/10 text-green-500' : 
+                              rateItem.direction === 'down' ? 'bg-red-500/10 text-red-500' : 
+                              'bg-neutral-500/10 text-neutral-400'
+                            }`}>
+                              1D: {rateItem.direction === 'up' ? '+' : ''}{rateItem.change}%
+                            </span>
+                            <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-sm ${
+                              rateItem.direction30d === 'up' ? 'bg-green-500/10 text-green-500' : 
+                              rateItem.direction30d === 'down' ? 'bg-red-500/10 text-red-500' : 
+                              'bg-neutral-500/10 text-neutral-400'
+                            }`}>
+                              30D: {rateItem.direction30d === 'up' ? '+' : ''}{rateItem.change30d}%
+                            </span>
+                          </div>
+                        )}
                       </p>
                       <button
                         className={`p-2 h-10 w-10 radius-sm bg-neutral-700 border flex items-center justify-center transition-colors hover:bg-neutral-600 ${

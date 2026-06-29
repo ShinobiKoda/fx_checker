@@ -30,7 +30,7 @@ function Page() {
         onOpenAuth={handleOpenAuth}
       />
       <AuthBanner onOpenAuth={handleOpenAuth} />
-      <TabsContainer base={fromCurrency} quote={toCurrency} amount={amount} />
+      <TabsContainer base={fromCurrency} quote={toCurrency} amount={amount} setFromCurrency={setFromCurrency} setToCurrency={setToCurrency} />
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
