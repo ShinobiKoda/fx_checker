@@ -63,6 +63,24 @@ const History = ({ base, quote }: HistoryProps) => {
       ]
     : [];
 
+  const volatilityScore = (() => {
+    if (!history?.data || history.data.length < 2) return null;
+    
+    // Calculate Mean
+    const mean = history.data.reduce((acc, val) => acc + val.rate, 0) / history.data.length;
+    
+    // Calculate Standard Deviation
+    const variance = history.data.reduce((acc, val) => acc + Math.pow(val.rate - mean, 2), 0) / history.data.length;
+    const stdDev = Math.sqrt(variance);
+    
+    // Coefficient of Variation (CV) as a percentage
+    const cv = (stdDev / mean) * 100;
+    
+    if (cv > 3.5) return { label: "High Volatility", color: "text-red-400", bg: "bg-red-500/20", border: "border-red-500/30" };
+    if (cv > 1.5) return { label: "Medium Volatility", color: "text-orange-400", bg: "bg-orange-500/20", border: "border-orange-500/30" };
+    return { label: "Low Volatility", color: "text-green-400", bg: "bg-green-500/20", border: "border-green-500/30" };
+  })();
+
   const bestDayInsight = (() => {
     if (!history?.data || history.data.length === 0) return null;
     
@@ -223,9 +241,16 @@ const History = ({ base, quote }: HistoryProps) => {
         <div className={`px-4 mt-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
             <div className="w-full flex items-center justify-between mb-5">
-              <p className="text-neutral-50 font-medium text-base">
-                {base}/{quote}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-neutral-50 font-medium text-base">
+                  {base}/{quote}
+                </p>
+                {volatilityScore && (
+                  <div className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${volatilityScore.bg} ${volatilityScore.color} ${volatilityScore.border}`}>
+                    {volatilityScore.label}
+                  </div>
+                )}
+              </div>
               <div className="font-normal text-[12px] opacity-70">
                 {isLoading ? (
                   <ShimmerBlock width="120px" height="14px" rounded="4px" />
