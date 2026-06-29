@@ -488,6 +488,24 @@ const Converter = ({
                   {renderCurrencyDropdown("from")}
                 </div>
               </div>
+              
+              {!isReversed && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {[100, 500, 1000, 5000, 10000].map(val => (
+                    <button 
+                      key={val}
+                      onClick={() => {
+                        const strVal = val.toString();
+                        setDisplayAmount(formatWithCommas(strVal));
+                        setAmount(strVal);
+                      }}
+                      className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors"
+                    >
+                      {val.toLocaleString()}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {viewMode === "standard" ? (
@@ -522,6 +540,24 @@ const Converter = ({
                       {renderCurrencyDropdown("to")}
                     </div>
                   </div>
+
+                  {isReversed && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {[100, 500, 1000, 5000, 10000].map(val => (
+                        <button 
+                          key={val}
+                          onClick={() => {
+                            const strVal = val.toString();
+                            setDisplayAmount(formatWithCommas(strVal));
+                            setAmount(strVal);
+                          }}
+                          className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors"
+                        >
+                          {val.toLocaleString()}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </>
             ) : (
