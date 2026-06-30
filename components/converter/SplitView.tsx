@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoMdAdd, IoMdClose, IoMdArrowDropdown } from "react-icons/io";
-import { DropdownMenu } from "@/components/Motion";
-import { useCurrencies } from "@/hooks/useCurrencies";
+import { IoMdAdd, IoMdClose } from "react-icons/io";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
+import { getFlagEmoji } from "@/lib/utils";
 
 interface SplitTarget {
   id: string;
@@ -18,19 +18,7 @@ interface SplitViewProps {
   rates: any[];
 }
 
-const getFlagEmoji = (currencyCode: string) => {
-  if (currencyCode === "EUR") return "🇪🇺";
-  const countryCode = currencyCode.substring(0, 2);
-  const codePoints = countryCode
-    .toUpperCase()
-    .split("")
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-};
-
 export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
-  const { data: currencies } = useCurrencies();
-  
   // Default to 3 equal splits of common currencies
   const [targets, setTargets] = useState<SplitTarget[]>([
     { id: "1", currency: "USD", percentage: 33.33 },
@@ -38,8 +26,7 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
     { id: "3", currency: "EUR", percentage: 33.34 },
   ]);
   
-  const [isAdding, setIsAdding] = useState(false);
-  
+
   // Re-calculate equal splits
   const equalizeSplits = (currentTargets: SplitTarget[]) => {
     if (currentTargets.length === 0) return currentTargets;
@@ -59,7 +46,6 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
   const addTarget = (currency: string) => {
     const newTargets = [...targets, { id: Math.random().toString(), currency, percentage: 0 }];
     setTargets(equalizeSplits(newTargets));
-    setIsAdding(false);
   };
 
   const removeTarget = (id: string) => {
@@ -139,31 +125,21 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
         </AnimatePresence>
 
         {targets.length < 5 && (
-          <div className="relative">
-            <button
-              onClick={() => setIsAdding(!isAdding)}
-              className="w-full h-full min-h-[120px] bg-neutral-600/50 border border-neutral-500 border-dashed rounded-2xl flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-600 hover:text-neutral-200 transition-colors"
-            >
-              <IoMdAdd size={24} className="mb-2" />
-              <span className="text-sm font-medium">Add Currency</span>
-            </button>
-            
-            <DropdownMenu
-              isOpen={isAdding}
-              className="absolute top-full mt-2 w-full max-h-48 overflow-y-auto bg-neutral-700 border border-neutral-500 rounded-lg shadow-xl z-10"
-            >
-              {Object.entries(currencies || {}).map(([code, name]) => (
-                <div 
-                  key={code}
-                  className="px-3 py-2 text-sm text-neutral-200 dark:hover:bg-neutral-600 hover:bg-neutral-300 cursor-pointer flex items-center gap-2"
-                  onClick={() => addTarget(code)}
+          <div className="relative h-full">
+            <CurrencySelect
+              onChange={addTarget}
+              wrapperClassName="h-full"
+              trigger={(isOpen) => (
+                <button
+                  className={`w-full h-full min-h-[120px] p-4 bg-neutral-600/50 border border-neutral-500 border-dashed rounded-2xl flex flex-col items-center justify-center text-neutral-400 transition-colors cursor-pointer ${
+                    isOpen ? "bg-neutral-600 text-neutral-200" : "hover:bg-neutral-600 hover:text-neutral-200"
+                  }`}
                 >
-                  <span>{getFlagEmoji(code)}</span>
-                  <span>{code}</span>
-                  <span className="text-neutral-400 text-xs ml-auto truncate">{name}</span>
-                </div>
-              ))}
-            </DropdownMenu>
+                  <IoMdAdd size={24} className="mb-2" />
+                  <span className="text-sm font-medium">Add Currency</span>
+                </button>
+              )}
+            />
           </div>
         )}
       </div>

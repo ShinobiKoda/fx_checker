@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { SlideUp, ShimmerBlock, ErrorBanner } from "@/components/Motion";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { useRates } from "@/hooks/useRates";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -110,23 +111,20 @@ const Invoice = () => {
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div className="flex flex-col gap-1.5 w-full md:w-32">
                 <label className="text-xs text-neutral-400 font-medium">Home Currency</label>
-                <select 
-                  value={homeCurrency} 
-                  onChange={(e) => setHomeCurrency(e.target.value)}
-                  className="bg-neutral-600 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none focus:border-lime-500 cursor-pointer w-full"
-                >
-                  {currencyOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <CurrencySelect
+                  value={homeCurrency}
+                  onChange={setHomeCurrency}
+                  className="bg-neutral-800 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none cursor-pointer"
+                />
               </div>
               <div className="flex flex-col gap-1.5 w-full md:w-32">
                 <label className="text-xs text-neutral-400 font-medium">Client Currency</label>
-                <select 
-                  value={clientCurrency} 
-                  onChange={(e) => setClientCurrency(e.target.value)}
-                  className="bg-neutral-600 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none focus:border-lime-500 cursor-pointer w-full"
-                >
-                  {currencyOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <CurrencySelect
+                  value={clientCurrency}
+                  onChange={setClientCurrency}
+                  className="bg-neutral-800 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none cursor-pointer"
+                  align="right"
+                />
               </div>
             </div>
           </div>
@@ -166,13 +164,11 @@ const Invoice = () => {
                     />
                   </div>
 
-                  <select
+                  <CurrencySelect
                     value={item.currency}
-                    onChange={(e) => updateLineItem(item.id, "currency", e.target.value)}
-                    className="bg-neutral-700 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none focus:border-lime-500 cursor-pointer w-full"
-                  >
-                    {currencyOptions.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                    onChange={(val) => updateLineItem(item.id, "currency", val)}
+                    className="bg-neutral-700 border border-neutral-500 rounded-lg px-3 py-2 text-neutral-50 text-sm outline-none cursor-pointer w-full"
+                  />
 
                   <button 
                     onClick={() => removeLineItem(item.id)}

@@ -11,7 +11,7 @@ import {
 import { useRecurringConversion } from "@/hooks/useRecurringConversion";
 import { useCurrencies } from "@/hooks/useCurrencies";
 import { ShimmerBlock, SlideUp } from "@/components/Motion";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 const chartConfig = {
   convertedAmount: {
@@ -103,38 +103,23 @@ const RecurringTracker = () => {
 
         {/* From currency */}
         <div className="relative">
-          <select
+          <CurrencySelect
             value={fromCurrency}
-            onChange={(e) => setFromCurrency(e.target.value)}
-            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
-          >
-            {currencies &&
-              Object.entries(currencies).map(([code]) => (
-                <option key={code} value={code}>
-                  {code}
-                </option>
-              ))}
-          </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
+            onChange={setFromCurrency}
+            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors"
+          />
         </div>
 
         <span className="text-neutral-200 text-sm shrink-0">→ in</span>
 
         {/* To currency */}
         <div className="relative">
-          <select
+          <CurrencySelect
             value={toCurrency}
-            onChange={(e) => setToCurrency(e.target.value)}
-            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
-          >
-            {currencies &&
-              Object.entries(currencies).map(([code]) => (
-                <option key={code} value={code}>
-                  {code}
-                </option>
-              ))}
-          </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
+            onChange={setToCurrency}
+            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors"
+            align="right"
+          />
         </div>
 
         <span className="text-neutral-200 text-sm shrink-0">every month</span>

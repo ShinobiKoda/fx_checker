@@ -3,7 +3,7 @@ import { useRates } from "@/hooks/useRates";
 import { BIG_MAC_DATA, calculateBigMacValuation } from "@/lib/bigMacData";
 import { ShimmerBlock } from "@/components/Motion";
 import { motion } from "framer-motion";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 const BigMacIndex = () => {
   const [selectedCurrency, setSelectedCurrency] = useState("EUR");
@@ -37,16 +37,12 @@ const BigMacIndex = () => {
           <h3 className="text-lg font-medium text-neutral-50">Big Mac Index</h3>
           
           <div className="relative">
-            <select
+            <CurrencySelect
               value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
-            >
-              {Object.keys(BIG_MAC_DATA).map(code => (
-                <option key={code} value={code}>{code}</option>
-              ))}
-            </select>
-            <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
+              onChange={setSelectedCurrency}
+              className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors"
+              align="right"
+            />
           </div>
         </div>
 

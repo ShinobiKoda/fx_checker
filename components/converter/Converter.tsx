@@ -11,6 +11,7 @@ import { useIsFavorite, useAddFavorite, useRemoveFavorite } from "@/hooks/useFav
 import { useAddConversionLog } from "@/hooks/useConversionLog";
 import { useRecentCurrencies } from "@/hooks/useRecentCurrencies";
 import { getCurrencyNote } from "@/lib/currencyNotes";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa6";
 import {
@@ -26,16 +27,8 @@ import {
 import { SplitView } from "./SplitView";
 import { ConversionInsight } from "./ConversionInsight";
 import EmbedModal from "@/components/ui/EmbedModal";
-
-const getFlagEmoji = (currencyCode: string) => {
-  if (currencyCode === "EUR") return "🇪🇺";
-  const countryCode = currencyCode.substring(0, 2);
-  const codePoints = countryCode
-    .toUpperCase()
-    .split("")
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-};
+import { POPULAR_CURRENCIES } from "@/constants/currencies";
+import { getFlagEmoji } from "@/lib/utils";
 
 const formatWithCommas = (value: string) => {
   const parts = value.split(".");
@@ -44,8 +37,6 @@ const formatWithCommas = (value: string) => {
 };
 
 const parseCommas = (value: string) => value.replace(/,/g, "");
-
-const POPULAR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD"];
 
 interface ConverterProps {
   fromCurrency: string;
@@ -73,8 +64,6 @@ const Converter = ({
   setIsReversed,
 }: ConverterProps) => {
   const [displayAmount, setDisplayAmount] = useState<string>("1,000");
-  const [dropdownOpen, setDropdownOpen] = useState<"from" | "to" | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [showFullAmount, setShowFullAmount] = useState(false);
   const [isLoggedFeedback, setIsLoggedFeedback] = useState(false);
   const [viewMode, setViewMode] = useState<"standard" | "split">("standard");
@@ -262,111 +251,7 @@ const Converter = ({
     return `1 ${fromCurrency} = ${rateItem.rate.toFixed(4)} ${toCurrency}`;
   };
 
-  const renderCurrencyDropdown = (type: "from" | "to") => {
-    if (dropdownOpen !== type || !currencies) return null;
 
-    const filteredCurrencies = Object.entries(currencies).filter(
-      ([code, name]) =>
-        code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-
-    const recentCurrenciesList = filteredCurrencies
-      .filter(([code]) => recents.includes(code))
-      .sort((a, b) => recents.indexOf(a[0]) - recents.indexOf(b[0]));
-
-    const popularCurrenciesList = filteredCurrencies.filter(([code]) =>
-      POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
-    );
-    const otherCurrenciesList = filteredCurrencies.filter(
-      ([code]) => !POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
-    );
-
-    const renderCurrencyItem = ([code, name]: [string, string]) => {
-      const isSelected = (type === "from" ? fromCurrency : toCurrency) === code;
-      return (
-        <StaggerItem key={code}>
-          <div className="flex items-center justify-between dark:hover:bg-neutral-500 hover:bg-neutral-300 transition-colors px-2 py-3 rounded-lg">
-            <button
-              onClick={() => {
-                if (type === "from") setFromCurrency(code);
-                else setToCurrency(code);
-                addRecent(code);
-                setDropdownOpen(null);
-                setSearchQuery("");
-              }}
-              className={`flex items-center gap-3 text-left w-[90%] overflow-hidden cursor-pointer`}
-            >
-              <span className="text-xl leading-none shrink-0">{getFlagEmoji(code)}</span>
-              <span className="font-normal text-neutral-50 text-sm shrink-0">{code}</span>
-              <span className="text-[12px] text-neutral-400 truncate w-full" title={getCurrencyNote(code, name)}>{getCurrencyNote(code, name)}</span>
-            </button>
-            {isSelected && <FaCheck className="dark:text-lime-500 text-lime-700 shrink-0" />}
-          </div>
-        </StaggerItem>
-      );
-    };
-
-    return (
-      <>
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => {
-            setDropdownOpen(null);
-            setSearchQuery("");
-          }}
-        />
-        <div
-          className="absolute top-full right-0 mt-2 w-full max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 radius-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="w-full p-3 border border-neutral-200 rounded-[6px] flex items-center gap-2 mb-2.5">
-            <IoIosSearch size={20} className="text-neutral-50" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-none bg-transparent outline-none w-full placeholder:text-neutral-200 text-neutral-50"
-              placeholder="Search currencies..."
-            />
-          </div>
-
-          {recentCurrenciesList.length > 0 && (
-            <>
-              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
-                <span>RECENTLY USED</span>
-              </p>
-              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
-                {recentCurrenciesList.map(renderCurrencyItem)}
-              </StaggerContainer>
-            </>
-          )}
-
-          {popularCurrenciesList.length > 0 && (
-            <>
-              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
-                <span>POPULAR</span>
-              </p>
-              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
-                {popularCurrenciesList.map(renderCurrencyItem)}
-              </StaggerContainer>
-            </>
-          )}
-
-          {otherCurrenciesList.length > 0 && (
-            <>
-              <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
-                <span>OTHER CURRENCIES</span>
-              </p>
-              <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
-                {otherCurrenciesList.map(renderCurrencyItem)}
-              </StaggerContainer>
-            </>
-          )}
-        </div>
-      </>
-    );
-  };
 
   // ── Skeleton State ──────────────────────────────────────────────────────
 
@@ -511,27 +396,28 @@ const Converter = ({
               <div className="flex items-start justify-between gap-2">
                 {renderAmountBlock(!isReversed)}
                 <div className="">
-                  <button
-                    onClick={() =>
-                      setDropdownOpen(dropdownOpen === "from" ? null : "from")
-                    }
-                    className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
-                  >
-                    <div className="text-xl leading-none">
-                      {getFlagEmoji(fromCurrency)}
-                    </div>
-                    <span className="font-normal text-sm text-neutral-50">
-                      {fromCurrency}
-                    </span>
-                    <motion.span
-                      animate={{ rotate: dropdownOpen === 'from' ? 180 : 0 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                      style={{ display: 'flex' }}
-                    >
-                      <IoMdArrowDropdown className="text-neutral-50" />
-                    </motion.span>
-                  </button>
-                  {renderCurrencyDropdown("from")}
+                  <CurrencySelect
+                    value={fromCurrency}
+                    onChange={setFromCurrency}
+                    align="right"
+                    trigger={(isOpen) => (
+                      <button className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer">
+                        <div className="text-xl leading-none">
+                          {getFlagEmoji(fromCurrency)}
+                        </div>
+                        <span className="font-normal text-sm text-neutral-50">
+                          {fromCurrency}
+                        </span>
+                        <motion.span
+                          animate={{ rotate: isOpen ? 180 : 0 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                          style={{ display: 'flex' }}
+                        >
+                          <IoMdArrowDropdown className="text-neutral-50" />
+                        </motion.span>
+                      </button>
+                    )}
+                  />
                 </div>
               </div>
               
@@ -563,27 +449,28 @@ const Converter = ({
                   <div className="flex items-start justify-between gap-2">
                     {renderAmountBlock(isReversed)}
                     <div className="shrink-0">
-                      <button
-                        onClick={() =>
-                          setDropdownOpen(dropdownOpen === "to" ? null : "to")
-                        }
-                        className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer"
-                      >
-                        <div className="text-xl leading-none">
-                          {getFlagEmoji(toCurrency)}
-                        </div>
-                        <span className="font-normal text-sm text-neutral-50">
-                          {toCurrency}
-                        </span>
-                        <motion.span
-                          animate={{ rotate: dropdownOpen === 'to' ? 180 : 0 }}
-                          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                          style={{ display: 'flex' }}
-                        >
-                          <IoMdArrowDropdown className="text-neutral-50" />
-                        </motion.span>
-                      </button>
-                      {renderCurrencyDropdown("to")}
+                      <CurrencySelect
+                        value={toCurrency}
+                        onChange={setToCurrency}
+                        align="right"
+                        trigger={(isOpen) => (
+                          <button className="p-[10px] radius-sm bg-neutral-500 border border-neutral-400 flex items-center gap-2 hover:bg-neutral-400 transition-colors cursor-pointer">
+                            <div className="text-xl leading-none">
+                              {getFlagEmoji(toCurrency)}
+                            </div>
+                            <span className="font-normal text-sm text-neutral-50">
+                              {toCurrency}
+                            </span>
+                            <motion.span
+                              animate={{ rotate: isOpen ? 180 : 0 }}
+                              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                              style={{ display: 'flex' }}
+                            >
+                              <IoMdArrowDropdown className="text-neutral-50" />
+                            </motion.span>
+                          </button>
+                        )}
+                      />
                     </div>
                   </div>
 

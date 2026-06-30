@@ -19,3 +19,15 @@ export const getShortRelativeTime = (dateString: string) => {
   if (months < 12) return `${months}Mo`;
   return `${Math.floor(months / 12)}Y`;
 };
+
+export const getFlagEmoji = (currencyCode: string) => {
+  if (!currencyCode) return "";
+  if (currencyCode === "EUR") return "🇪🇺";
+  const countryCode = currencyCode.substring(0, 2);
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+};
+

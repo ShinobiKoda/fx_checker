@@ -6,7 +6,7 @@ import { LuTrash, LuBellRing } from "react-icons/lu";
 import { useRateAlerts, useAddRateAlert, useRemoveRateAlert } from "@/hooks/useRateAlerts";
 import { SlideInRow, StaggerContainer, ShimmerBlock, ErrorBanner, PulseIndicator } from "@/components/Motion";
 import { getShortRelativeTime } from "@/lib/utils";
-import { POPULAR_CURRENCIES } from "@/constants/currencies";
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 interface AlertsProps {
   base: string;
@@ -68,21 +68,17 @@ const Alerts = ({ base, quote }: AlertsProps) => {
           
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="flex items-center gap-2 w-full md:w-auto">
-              <select 
+              <CurrencySelect
                 value={fromCurrency}
-                onChange={(e) => setFromCurrency(e.target.value)}
+                onChange={setFromCurrency}
                 className="bg-neutral-700 border dark:border-neutral-500 border-neutral-400 text-neutral-50 text-sm rounded-md px-3 py-2 outline-none w-full md:w-auto cursor-pointer"
-              >
-                {POPULAR_CURRENCIES.map(c => <option key={`from-${c}`} value={c}>{c}</option>)}
-              </select>
+              />
               <MdOutlineArrowRightAlt className="text-neutral-400 shrink-0" />
-              <select 
+              <CurrencySelect
                 value={toCurrency}
-                onChange={(e) => setToCurrency(e.target.value)}
+                onChange={setToCurrency}
                 className="bg-neutral-700 border dark:border-neutral-500 border-neutral-400 text-neutral-50 text-sm rounded-md px-3 py-2 outline-none w-full md:w-auto cursor-pointer"
-              >
-                {POPULAR_CURRENCIES.map(c => <option key={`to-${c}`} value={c}>{c}</option>)}
-              </select>
+              />
             </div>
 
             <div className="flex items-center bg-neutral-700 border dark:border-neutral-500 border-neutral-400 rounded-md p-1 w-full md:w-auto">

@@ -3,7 +3,7 @@ import { useCurrencyStrength } from "@/hooks/useCurrencyStrength";
 import { ShimmerBlock } from "@/components/Motion";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-const POPULAR_BASES = ["USD", "EUR", "GBP", "JPY", "CHF", "CAD", "AUD"];
+import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 const StrengthIndex = () => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
@@ -32,16 +32,12 @@ const StrengthIndex = () => {
         <h3 className="text-lg font-medium text-neutral-50">Currency Strength</h3>
         
         <div className="relative">
-          <select
+          <CurrencySelect
             value={baseCurrency}
-            onChange={(e) => setBaseCurrency(e.target.value)}
-            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 pl-3 pr-8 rounded-lg outline-none focus:border-lime-500 transition-colors"
-          >
-            {POPULAR_BASES.map(code => (
-              <option key={code} value={code}>{code}</option>
-            ))}
-          </select>
-          <IoMdArrowDropdown className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-200 pointer-events-none" />
+            onChange={setBaseCurrency}
+            className="appearance-none bg-neutral-600 border border-neutral-500 text-neutral-50 text-sm py-1.5 px-3 rounded-lg outline-none focus:border-lime-500 transition-colors"
+            align="right"
+          />
         </div>
       </div>
 
