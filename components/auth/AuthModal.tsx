@@ -35,6 +35,13 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           },
         })
         if (signUpError) throw signUpError
+        
+        // Send welcome email asynchronously
+        fetch('/api/send-welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, firstName: username })
+        }).catch(console.error)
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
