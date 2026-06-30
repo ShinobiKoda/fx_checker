@@ -38,7 +38,7 @@ const AuthBanner = ({ onOpenAuth }: AuthBannerProps) => {
       <div className="bg-neutral-700 border border-neutral-500 radius-sm p-4 flex flex-col md:flex-row items-center justify-between gap-4 relative">
         <button
           onClick={handleDismiss}
-          className="absolute top-2 right-2 text-neutral-400 hover:text-neutral-50 p-1 md:hidden"
+          className="absolute top-2 right-2 text-neutral-400 hover:text-neutral-50 p-1 md:hidden cursor-pointer"
         >
           <IoClose size={18} />
         </button>
@@ -53,13 +53,13 @@ const AuthBanner = ({ onOpenAuth }: AuthBannerProps) => {
         <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
           <button
             onClick={onOpenAuth}
-            className="w-full md:w-auto bg-lime-500 text-black font-medium text-sm px-5 py-2.5 radius-sm hover:bg-lime-400 transition-colors"
+            className="w-full md:w-auto bg-lime-500 text-black font-medium text-sm px-5 py-2.5 radius-sm hover:bg-lime-400 transition-colors cursor-pointer"
           >
             Log In or Sign Up
           </button>
           <button
             onClick={handleDismiss}
-            className="hidden md:flex text-neutral-400 hover:text-neutral-50 transition-colors p-2"
+            className="hidden md:flex text-neutral-400 hover:text-neutral-50 transition-colors p-2 cursor-pointer"
             title="Dismiss"
           >
             <IoClose size={20} />

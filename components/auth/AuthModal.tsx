@@ -76,7 +76,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             >
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-50 transition-colors"
+                className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-50 transition-colors cursor-pointer"
               >
                 <IoClose size={24} />
               </button>
@@ -95,7 +95,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                         setTab(t as 'login' | 'signup')
                         setError('')
                       }}
-                      className={`relative flex-1 py-2 text-sm font-medium transition-colors z-10 ${
+                      className={`relative flex-1 py-2 text-sm font-medium transition-colors z-10 cursor-pointer ${
                         isActive ? 'text-neutral-50' : 'text-neutral-400 hover:text-neutral-200'
                       }`}
                     >
@@ -176,7 +176,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-lime-500 text-black font-medium py-3 radius-sm hover:bg-lime-400 transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70"
+                  className="w-full bg-lime-500 text-black font-medium py-3 radius-sm hover:bg-lime-400 transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70 cursor-pointer"
                 >
                   {isLoading && <Spinner size={16} color="text-black" />}
                   {tab === 'login' ? 'Log In' : 'Sign Up'}

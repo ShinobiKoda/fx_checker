@@ -48,7 +48,7 @@ const UserMenu = ({ onOpenAuth }: UserMenuProps) => {
         )}
         <button
           onClick={onOpenAuth}
-          className="text-xs md:text-sm font-medium text-black bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0"
+          className="text-xs md:text-sm font-medium text-black bg-lime-500 px-3 py-1.5 radius-sm hover:bg-lime-400 transition-colors shrink-0 cursor-pointer"
         >
           Log In
         </button>

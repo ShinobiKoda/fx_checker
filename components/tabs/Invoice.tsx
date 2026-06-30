@@ -176,7 +176,7 @@ const Invoice = () => {
 
                   <button 
                     onClick={() => removeLineItem(item.id)}
-                    className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-red-400 bg-neutral-700 hover:bg-neutral-800 rounded-lg border border-neutral-500 transition-colors"
+                    className="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-red-400 bg-neutral-700 hover:bg-neutral-800 rounded-lg border border-neutral-500 transition-colors cursor-pointer"
                   >
                     <FiTrash2 />
                   </button>

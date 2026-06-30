@@ -409,7 +409,7 @@ export const ActivePill = ({
 }) => (
   <motion.div
     layoutId={layoutId}
-    className={`absolute inset-0 bg-neutral-500 ${className}`}
+    className={`absolute inset-0 dark:bg-neutral-500 bg-neutral-300 ${className}`}
     style={{ borderRadius: 8 }}
     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
   />

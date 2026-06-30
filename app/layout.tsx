@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     siteName: "FX Checker",
     images: [
       {
-        url: "/og-image.png",
+        url: "/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "FX Checker - Live Exchange Rates",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FX Checker - Live Exchange Rates & Currency Converter",
     description: "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
-    images: ["/og-image.png"],
+    images: ["/images/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
