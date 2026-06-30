@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { useRecurringConversion } from "@/hooks/useRecurringConversion";
 import { useCurrencies } from "@/hooks/useCurrencies";
-import { ShimmerBlock, SlideUp } from "@/components/Motion";
+import { ShimmerBlock, SlideUp, ErrorBanner } from "@/components/Motion";
 import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 const chartConfig = {
@@ -31,7 +31,7 @@ const RecurringTracker = () => {
   const effectiveAmount = customAmount ? parseFloat(customAmount) || 0 : amount;
 
   const { data: currencies } = useCurrencies();
-  const { data: monthlyData, isLoading } = useRecurringConversion(
+  const { data: monthlyData, isLoading, isError } = useRecurringConversion(
     fromCurrency,
     toCurrency,
     effectiveAmount
@@ -136,6 +136,11 @@ const RecurringTracker = () => {
             <ShimmerBlock width="100%" height="60px" rounded="8px" />
           </div>
         </div>
+      )}
+
+      {/* Error State */}
+      {isError && !isLoading && (
+        <ErrorBanner message="Failed to load historical data. Please try again." className="mt-4" />
       )}
 
       {/* Chart + Stats */}

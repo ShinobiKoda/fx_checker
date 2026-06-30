@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useCorrelationData } from "@/hooks/useCorrelationData";
 import { calculatePearsonCorrelation } from "@/lib/correlation";
-import { ShimmerBlock } from "@/components/Motion";
+import { ShimmerBlock, ErrorBanner } from "@/components/Motion";
 import { CurrencySelect } from "@/components/ui/CurrencySelect";
 
 interface CorrelationPair {
@@ -11,7 +11,7 @@ interface CorrelationPair {
 
 const CorrelationTracker = () => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
-  const { data: timeseriesData, isLoading } = useCorrelationData(baseCurrency);
+  const { data: timeseriesData, isLoading, isError } = useCorrelationData(baseCurrency);
 
   const correlationResults = useMemo(() => {
     if (!timeseriesData) return { highPos: [], highNeg: [] };
@@ -28,7 +28,8 @@ const CorrelationTracker = () => {
 
         const correlation = calculatePearsonCorrelation(seriesA, seriesB);
         
-        if (!isNaN(correlation)) {
+        // Prevent division by zero or NaN issues by ensuring valid numbers
+        if (!isNaN(correlation) && isFinite(correlation)) {
           results.push({
             pair: `${keyA} & ${keyB}`,
             correlation
@@ -44,7 +45,7 @@ const CorrelationTracker = () => {
     return { highPos, highNeg };
   }, [timeseriesData]);
 
-  if (isLoading || !timeseriesData) {
+  if (isLoading) {
     return (
       <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
         <ShimmerBlock width="200px" height="24px" rounded="4px" />
@@ -82,7 +83,12 @@ const CorrelationTracker = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+      {isError && !isLoading && (
+        <ErrorBanner message="Failed to load correlation data. Please try again." className="mt-4" />
+      )}
+
+      {!isError && timeseriesData && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
         {/* Positive Correlation */}
         <div>
           <h4 className="text-xs font-bold dark:text-green-400 text-green-600 mb-3 uppercase tracking-wider flex items-center gap-2">
@@ -133,6 +139,7 @@ const CorrelationTracker = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

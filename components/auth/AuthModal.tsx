@@ -23,6 +23,21 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    
+    // Client-side validation
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address.')
+      return
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.')
+      return
+    }
+    if (tab === 'signup' && username.trim().length < 3) {
+      setError('Username must be at least 3 characters.')
+      return
+    }
+
     setIsLoading(true)
 
     try {

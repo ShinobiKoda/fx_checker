@@ -1,16 +1,42 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
+import { z } from "zod";
+import { welcomeEmailRatelimit } from "@/lib/rateLimit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const payloadSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  firstName: z.string().optional(),
+});
+
 export async function POST(req: Request) {
   try {
-    const { email, firstName } = await req.json();
-
-    if (!email) {
-      return NextResponse.json({ success: false, error: "Email is required" }, { status: 400 });
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    
+    // Only apply rate limiting if Redis URL is configured (prevents crash in local dev without Upstash)
+    if (process.env.UPSTASH_REDIS_REST_URL) {
+      const { success: rateLimitSuccess } = await welcomeEmailRatelimit.limit(ip);
+      if (!rateLimitSuccess) {
+        return NextResponse.json({ 
+          success: false, 
+          error: "Too many requests. Please try again later." 
+        }, { status: 429 });
+      }
     }
+
+    const body = await req.json();
+    const validatedData = payloadSchema.safeParse(body);
+
+    if (!validatedData.success) {
+      return NextResponse.json({ 
+        success: false, 
+        error: validatedData.error.issues[0].message 
+      }, { status: 400 });
+    }
+
+    const { email, firstName } = validatedData.data;
 
     const { data, error } = await resend.emails.send({
       from: "FX Checker <welcome@sir-p.tech>", // Make sure to use your verified domain
