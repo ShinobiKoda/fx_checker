@@ -64,7 +64,7 @@ const CorrelationTracker = () => {
 
   return (
     <div className="bg-neutral-700 border border-neutral-600 rounded-2xl p-5 min-h-[300px] lg:col-span-2">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between mb-4">
         <div>
           <h3 className="text-lg font-medium text-neutral-50">90-Day Correlation Tracker</h3>
           <p className="text-neutral-200 text-[13px] leading-relaxed mt-1">
@@ -72,7 +72,7 @@ const CorrelationTracker = () => {
           </p>
         </div>
         
-        <div className="relative shrink-0 ml-4">
+        <div className="relative shrink-0 md:ml-4">
           <CurrencySelect
             value={baseCurrency}
             onChange={setBaseCurrency}
