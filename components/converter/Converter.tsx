@@ -286,7 +286,7 @@ const Converter = ({
       const isSelected = (type === "from" ? fromCurrency : toCurrency) === code;
       return (
         <StaggerItem key={code}>
-          <div className="flex items-center justify-between hover:bg-neutral-500 transition-colors px-2 py-3 rounded-lg">
+          <div className="flex items-center justify-between dark:hover:bg-neutral-500 hover:bg-neutral-300 transition-colors px-2 py-3 rounded-lg">
             <button
               onClick={() => {
                 if (type === "from") setFromCurrency(code);
@@ -295,7 +295,7 @@ const Converter = ({
                 setDropdownOpen(null);
                 setSearchQuery("");
               }}
-              className={`flex items-center gap-3 text-left w-[90%] overflow-hidden`}
+              className={`flex items-center gap-3 text-left w-[90%] overflow-hidden cursor-pointer`}
             >
               <span className="text-xl leading-none shrink-0">{getFlagEmoji(code)}</span>
               <span className="font-normal text-neutral-50 text-sm shrink-0">{code}</span>
@@ -488,7 +488,7 @@ const Converter = ({
           </button>
           <button 
             onClick={() => setViewMode("split")}
-            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all cursor-pointer ${viewMode === "split" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+            className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all cursor-pointer text-nowrap ${viewMode === "split" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
           >
             Split Mode
           </button>
@@ -597,7 +597,7 @@ const Converter = ({
                             setDisplayAmount(formatWithCommas(strVal));
                             setAmount(strVal);
                           }}
-                          className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors"
+                          className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors hover:cursor-pointer"
                         >
                           {val.toLocaleString()}
                         </button>
@@ -624,7 +624,7 @@ const Converter = ({
                 className={`text-[11px] font-medium px-2 py-1 radius-sm transition-colors border ${
                   isReversed 
                     ? "bg-lime-500 text-black border-lime-500" 
-                    : "bg-neutral-600 text-neutral-300 border-neutral-500 hover:text-neutral-50"
+                    : "bg-neutral-600 text-neutral-300 border-neutral-500 hover:text-neutral-50 cursor-pointer"
                 }`}
                 title="Toggle Reverse Mode (R)"
               >

@@ -129,7 +129,7 @@ const History = ({ base, quote }: HistoryProps) => {
             <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <SlideUp key={`skeleton-${i}`} delay={i * 0.05} distance={20}>
-                  <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-5 py-3 flex flex-col gap-2">
+                  <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-2 py-3 flex flex-col gap-2">
                     <ShimmerBlock width="60px" height="14px" rounded="4px" />
                     <ShimmerBlock width="100px" height="24px" rounded="4px" />
                   </div>
@@ -184,13 +184,13 @@ const History = ({ base, quote }: HistoryProps) => {
 
         </div>
 
-        {/* Date Picker & View Toggle */}
+        {/* Date Picker */}
         <SlideUp delay={0.2} distance={15}>
-          <div className="px-4 mt-5.5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="bg-neutral-700 radius-sm flex items-center w-fit relative">
+          <div className="px-4 mt-5.5 flex justify-start">
+            <div className="bg-neutral-700 radius-sm flex items-center w-fit relative overflow-x-auto max-w-full custom-scrollbar">
               {datePicker.map((date) => (
                 <button
-                  className="radius-sm px-4 py-3 relative z-10"
+                  className="radius-sm px-4 py-3 relative z-10 cursor-pointer"
                   onClick={() => {
                     setActiveDate(date);
                   }}
@@ -200,23 +200,6 @@ const History = ({ base, quote }: HistoryProps) => {
                   <span className="relative z-10">{date}</span>
                 </button>
               ))}
-            </div>
-
-            <div className="flex bg-neutral-700 rounded-full p-1 max-w-[220px] border border-neutral-600">
-              <button 
-                onClick={() => setViewMode("chart")}
-                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
-              >
-                Line Chart
-              </button>
-              <button 
-                onClick={() => {
-                  setViewMode("heatmap");
-                }}
-                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer ${viewMode === "heatmap" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
-              >
-                Heatmap
-              </button>
             </div>
           </div>
         </SlideUp>
@@ -238,7 +221,25 @@ const History = ({ base, quote }: HistoryProps) => {
 
       {/* Chart / Heatmap */}
       <SlideUp delay={0.3} distance={20}>
-        <div className={`px-4 mt-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
+        <div className="px-4 mt-4 mb-4 flex justify-center">
+          <div className="flex bg-neutral-700 rounded-full p-1 max-w-[220px] w-full border border-neutral-600">
+            <button 
+              onClick={() => setViewMode("chart")}
+              className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer text-nowrap ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+            >
+              Line Chart
+            </button>
+            <button 
+              onClick={() => {
+                setViewMode("heatmap");
+              }}
+              className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer text-nowrap ${viewMode === "heatmap" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+            >
+              Heatmap
+            </button>
+          </div>
+        </div>
+        <div className={`px-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
             <div className="w-full flex items-start justify-between mb-5">
               <div className="flex flex-col md:flex-row md:items-center items-start gap-1 md:gap-3">

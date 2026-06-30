@@ -44,26 +44,26 @@ export const ConversionInsight = ({ base, quote, currentRate }: ConversionInsigh
   if (Math.abs(currentRate - ninetyDayHigh) < threshold) {
     insightText = `This rate is near a 90-day high. Great time to convert!`;
     icon = "🔥";
-    color = "text-green-400";
+    color = "dark:text-green-400 text-green-600";
   } else if (Math.abs(currentRate - ninetyDayLow) < threshold) {
     insightText = `This rate is near a 90-day low.`;
     icon = "⚠️";
-    color = "text-red-400";
+    color = "dark:text-red-400 text-red-600";
   } else {
     // Compare against 30-day average
     const diffPercent = ((currentRate - thirtyDayAvg) / thirtyDayAvg) * 100;
     if (diffPercent > 1) {
       insightText = `You're getting ${diffPercent.toFixed(1)}% more ${quote} than the 30-day average.`;
       icon = "📈";
-      color = "text-green-400";
+      color = "dark:text-green-400 text-green-600";
     } else if (diffPercent < -1) {
       insightText = `You're getting ${Math.abs(diffPercent).toFixed(1)}% less ${quote} than the 30-day average.`;
       icon = "📉";
-      color = "text-red-400";
+      color = "dark:text-red-400 text-red-600";
     } else {
       insightText = `This rate is hovering right around the 30-day average.`;
       icon = "⚖️";
-      color = "text-neutral-400";
+      color = "dark:text-neutral-400 text-neutral-600";
     }
   }
 

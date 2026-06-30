@@ -80,7 +80,7 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
         <h3 className="text-neutral-50 font-medium">Split Distribution</h3>
         <button 
           onClick={handleEqualize}
-          className="text-xs font-medium text-lime-500 hover:text-lime-400 bg-lime-500/10 px-2 py-1 rounded"
+          className="text-xs font-medium dark:text-lime-500 text-lime-700 dark:hover:text-lime-400 hover:text-lime-800 bg-lime-500/10 px-2 py-1 rounded"
         >
           Equalize %
         </button>
@@ -115,7 +115,7 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
                   <span className="font-medium text-neutral-50">{target.currency}</span>
                 </div>
                 
-                <div className="text-2xl font-bold text-lime-500 mb-1 truncate" title={convertedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>
+                <div className="text-2xl font-bold dark:text-lime-500 text-lime-700 mb-1 truncate" title={convertedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>
                   {convertedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
                 
@@ -155,7 +155,7 @@ export const SplitView = ({ amount, fromCurrency, rates }: SplitViewProps) => {
               {Object.entries(currencies || {}).map(([code, name]) => (
                 <div 
                   key={code}
-                  className="px-3 py-2 text-sm text-neutral-200 hover:bg-neutral-600 cursor-pointer flex items-center gap-2"
+                  className="px-3 py-2 text-sm text-neutral-200 dark:hover:bg-neutral-600 hover:bg-neutral-300 cursor-pointer flex items-center gap-2"
                   onClick={() => addTarget(code)}
                 >
                   <span>{getFlagEmoji(code)}</span>

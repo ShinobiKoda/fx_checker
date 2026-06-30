@@ -29,14 +29,15 @@ function PageContent() {
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount to set initial home currency, not on every fromCurrency change
   useEffect(() => {
     if (!searchParams.get("from")) {
       const saved = localStorage.getItem("fx_home_currency");
-      if (saved && saved !== fromCurrency) {
+      if (saved) {
         setFromCurrency(saved);
       }
     }
-  }, [searchParams, fromCurrency]);
+  }, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
 

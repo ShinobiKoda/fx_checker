@@ -137,9 +137,9 @@ const Compare = ({ base, amount }: CompareProps) => {
                         {rate > 0 && rateItem && (
                           <div className="hidden md:flex items-center justify-end gap-2 mt-1">
                             <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-sm ${
-                              rateItem.direction === 'up' ? 'bg-green-500/10 text-green-500' : 
-                              rateItem.direction === 'down' ? 'bg-red-500/10 text-red-500' : 
-                              'bg-neutral-500/10 text-neutral-400'
+                              rateItem.direction === 'up' ? 'bg-green-500/10 dark:text-green-500 text-green-700' : 
+                              rateItem.direction === 'down' ? 'bg-red-500/10 dark:text-red-500 text-red-700' : 
+                              'bg-neutral-500/10 dark:text-neutral-400 text-neutral-600'
                             }`}>
                               1D: 
                               {rateItem.direction === 'up' && <IoMdArrowDropup className="text-[12px] ml-0.5" />}
@@ -148,9 +148,9 @@ const Compare = ({ base, amount }: CompareProps) => {
                               {rateItem.direction === 'up' ? '+' : ''}{rateItem.change}%
                             </span>
                             <span className={`flex items-center text-[10px] px-1.5 py-0.5 rounded-sm ${
-                              rateItem.direction30d === 'up' ? 'bg-green-500/10 text-green-500' : 
-                              rateItem.direction30d === 'down' ? 'bg-red-500/10 text-red-500' : 
-                              'bg-neutral-500/10 text-neutral-400'
+                              rateItem.direction30d === 'up' ? 'bg-green-500/10 dark:text-green-500 text-green-700' : 
+                              rateItem.direction30d === 'down' ? 'bg-red-500/10 dark:text-red-500 text-red-700' : 
+                              'bg-neutral-500/10 dark:text-neutral-400 text-neutral-600'
                             }`}>
                               30D: 
                               {rateItem.direction30d === 'up' && <IoMdArrowDropup className="text-[12px] ml-0.5" />}
@@ -162,7 +162,7 @@ const Compare = ({ base, amount }: CompareProps) => {
                         )}
                       </div>
                       <button
-                        className={`p-2 h-10 w-10 radius-sm bg-neutral-700 border flex items-center justify-center transition-colors hover:bg-neutral-600 ${
+                        className={`p-2 h-10 w-10 radius-sm bg-neutral-700 border flex items-center justify-center transition-colors hover:bg-neutral-600 cursor-pointer ${
                           isFav
                             ? "dark:border-lime-500 dark:text-lime-500 border-lime-600 text-lime-700"
                             : "border-neutral-500 text-neutral-400 hover:text-neutral-200"

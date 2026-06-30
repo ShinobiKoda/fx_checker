@@ -101,7 +101,7 @@ const UnitConverter = () => {
               const isSelected = (type === "from" ? fromUnit : toUnit) === unit.id;
               return (
                 <StaggerItem key={unit.id}>
-                  <div className="flex items-center justify-between hover:bg-neutral-500 transition-colors px-2 py-3 rounded-lg">
+                  <div className="flex items-center justify-between dark:hover:bg-neutral-500 hover:bg-neutral-300 transition-colors px-2 py-3 rounded-lg">
                     <button
                       onClick={() => {
                         if (type === "from") setFromUnit(unit.id);
