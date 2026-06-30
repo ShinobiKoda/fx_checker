@@ -98,7 +98,7 @@ const Invoice = () => {
 
   return (
     <SlideUp delay={0.1} duration={0.6}>
-      <div className="max-w-[1036px] mx-auto px-4 mt-8">
+      <div className="max-w-[1036px] mx-auto px-4 mt-8 pb-8 md:pb-[48px]">
         <div className="bg-neutral-700 rounded-[20px] p-6 space-y-8">
           
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-neutral-600 pb-6">

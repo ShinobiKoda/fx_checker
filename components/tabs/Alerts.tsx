@@ -56,7 +56,7 @@ const Alerts = ({ base, quote }: AlertsProps) => {
   }
 
   return (
-    <div className="w-full max-w-[1036px] mx-auto pb-8 md:pb-[48px] px-4">
+    <div className="w-full max-w-[1036px] mx-auto pb-8 md:pb-[48px] px-4 ">
       <div className="px-4 py-5 rounded-[16px] bg-neutral-700 border border-neutral-600">
         
         {/* Create Alert Form */}

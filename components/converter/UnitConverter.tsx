@@ -168,13 +168,13 @@ const UnitConverter = () => {
 
   return (
     <SlideUp delay={0.1} duration={0.6}>
-      <div className="max-w-[1036px] mx-auto px-4 mt-8">
+      <div className="max-w-[1036px] mx-auto px-4 mt-8 pb-8 md:pb-[48px]">
         <div className="flex bg-neutral-700 rounded-full p-1 max-w-[300px] mb-6 border border-neutral-600">
           {getUnitCategories().map(cat => (
             <button 
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all capitalize ${category === cat ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+              className={`flex-1 py-1.5 px-4 text-xs font-medium rounded-full transition-all capitalize cursor-pointer ${category === cat ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
             >
               {cat}
             </button>

@@ -12,7 +12,7 @@ interface AnalyticsProps {
 
 const Analytics = ({ base, quote }: AnalyticsProps) => {
   return (
-    <div className="w-full max-w-[1036px] mx-auto px-4 mt-6 pb-20">
+    <div className="w-full max-w-[1036px] mx-auto px-4 mt-6 pb-8 md:pb-[48px]">
       <SlideUp delay={0.1} distance={20}>
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-neutral-50 mb-2">Market Analytics</h2>

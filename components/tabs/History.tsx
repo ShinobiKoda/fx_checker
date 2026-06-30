@@ -205,7 +205,7 @@ const History = ({ base, quote }: HistoryProps) => {
             <div className="flex bg-neutral-700 rounded-full p-1 max-w-[220px] border border-neutral-600">
               <button 
                 onClick={() => setViewMode("chart")}
-                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
               >
                 Line Chart
               </button>
@@ -213,7 +213,7 @@ const History = ({ base, quote }: HistoryProps) => {
                 onClick={() => {
                   setViewMode("heatmap");
                 }}
-                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all ${viewMode === "heatmap" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
+                className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer ${viewMode === "heatmap" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
               >
                 Heatmap
               </button>
