@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const { email, firstName } = await req.json();
 
     if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Email is required" }, { status: 400 });
     }
 
     const { data, error } = await resend.emails.send({
@@ -20,11 +20,25 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      return NextResponse.json({ error }, { status: 500 });
+      console.error("Resend API error:", error);
+      return NextResponse.json({ 
+        success: false, 
+        error: error.message || "Failed to send email" 
+      }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json({ success: true, data });
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error("Server catch error:", error);
+    
+    // Extract meaningful error message
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : typeof error === 'string' ? error : "An unexpected error occurred";
+      
+    return NextResponse.json({ 
+      success: false, 
+      error: errorMessage 
+    }, { status: 500 });
   }
 }
