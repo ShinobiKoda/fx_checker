@@ -431,7 +431,7 @@ const Converter = ({
                         setDisplayAmount(formatWithCommas(strVal));
                         setAmount(strVal);
                       }}
-                      className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors"
+                      className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-200 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors"
                     >
                       {val.toLocaleString()}
                     </button>
@@ -484,7 +484,7 @@ const Converter = ({
                             setDisplayAmount(formatWithCommas(strVal));
                             setAmount(strVal);
                           }}
-                          className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-300 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors hover:cursor-pointer"
+                          className="px-2 py-1 text-[10px] font-medium bg-neutral-700 text-neutral-200 hover:text-neutral-50 rounded-md border border-neutral-500 hover:border-lime-500 hover:bg-neutral-600 transition-colors hover:cursor-pointer"
                         >
                           {val.toLocaleString()}
                         </button>
@@ -511,7 +511,7 @@ const Converter = ({
                 className={`text-[11px] font-medium px-2 py-1 radius-sm transition-colors border ${
                   isReversed 
                     ? "bg-lime-500 text-black border-lime-500" 
-                    : "bg-neutral-600 text-neutral-300 border-neutral-500 hover:text-neutral-50 cursor-pointer"
+                    : "bg-neutral-600 text-neutral-100 border-neutral-500 hover:text-neutral-50 cursor-pointer"
                 }`}
                 title="Toggle Reverse Mode (R)"
               >

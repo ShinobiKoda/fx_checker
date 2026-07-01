@@ -236,3 +236,8 @@
 button {
   cursor: pointer;
 }
+
+/* Remove default focus outline from recharts wrapper */
+.recharts-wrapper {
+  outline: none !important;
+}

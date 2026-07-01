@@ -49,7 +49,7 @@ const EmbedModal = ({ isOpen, onClose, fromCurrency, toCurrency, amount }: Embed
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-neutral-800 border border-neutral-700 p-6 radius-sm w-full max-w-md shadow-2xl pointer-events-auto relative"
+              className="bg-neutral-700 border border-neutral-500 p-6 radius-sm w-full max-w-md shadow-2xl pointer-events-auto relative"
             >
               <button
                 onClick={onClose}
@@ -59,14 +59,14 @@ const EmbedModal = ({ isOpen, onClose, fromCurrency, toCurrency, amount }: Embed
               </button>
 
               <h2 className="text-xl font-medium text-neutral-50 mb-2">Embed Widget</h2>
-              <p className="text-sm text-neutral-400 mb-6">
+              <p className="text-sm text-neutral-200 mb-6">
                 Add this currency converter to your website. It's free and always up-to-date.
               </p>
 
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium text-neutral-300">Widget Preview</label>
-                  <div className="border border-neutral-700 rounded-xl overflow-hidden bg-neutral-900 w-[300px] h-[240px] mx-auto shadow-inner flex items-center justify-center">
+                  <label className="text-xs font-medium text-neutral-100">Widget Preview</label>
+                  <div className="border border-neutral-500 rounded-xl overflow-hidden bg-neutral-900 w-[300px] h-[240px] mx-auto shadow-inner flex items-center justify-center">
                     <iframe 
                       src={embedUrl} 
                       width="300" 
@@ -76,13 +76,13 @@ const EmbedModal = ({ isOpen, onClose, fromCurrency, toCurrency, amount }: Embed
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2 pt-4 border-t border-neutral-700">
-                  <label className="text-xs font-medium text-neutral-300">Embed Code</label>
+                <div className="flex flex-col gap-2 pt-4 border-t border-neutral-500">
+                  <label className="text-xs font-medium text-neutral-100">Embed Code</label>
                   <div className="relative">
                     <textarea
                       readOnly
                       value={embedCode}
-                      className="w-full h-24 bg-neutral-900 border border-neutral-700 rounded-lg p-3 text-xs text-neutral-300 font-mono resize-none outline-none focus:border-lime-500 transition-colors"
+                      className="w-full h-24 bg-neutral-900 border border-neutral-500 rounded-lg p-3 text-xs text-neutral-100 font-mono resize-none outline-none focus:border-lime-500 transition-colors"
                     />
                     <button
                       onClick={handleCopy}
