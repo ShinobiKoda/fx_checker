@@ -19,17 +19,18 @@ export const metadata: Metadata = {
     default: "FX Checker - Live Exchange Rates & Currency Converter",
     template: "%s | FX Checker",
   },
-  description: "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly with FX Checker.",
+  description:
+    "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly with FX Checker.",
   keywords: [
-    "currency converter", 
-    "exchange rates", 
-    "fx checker", 
-    "foreign exchange", 
-    "live rates", 
-    "forex", 
-    "money transfer", 
+    "currency converter",
+    "exchange rates",
+    "fx checker",
+    "foreign exchange",
+    "live rates",
+    "forex",
+    "money transfer",
     "currency exchange",
-    "historical exchange rates"
+    "historical exchange rates",
   ],
   authors: [{ name: "FX Checker" }],
   creator: "FX Checker",
@@ -51,9 +52,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://fxchecker.com",
+    url: "https://fx-checker-pied.vercel.app/",
     title: "FX Checker - Live Exchange Rates & Currency Converter",
-    description: "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
+    description:
+      "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
     siteName: "FX Checker",
     images: [
       {
@@ -67,27 +69,31 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "FX Checker - Live Exchange Rates & Currency Converter",
-    description: "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
+    description:
+      "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
     images: ["/images/og-image.png"],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/images/favicon.png",
+    apple: "/images/favicon.png",
+    shortcut: "/images/favicon.png",
   },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "FX Checker",
-  "description": "Live exchange rates, currency conversion, and historical data tracking.",
-  "url": "https://fx-checker-pied.vercel.app",
-  "applicationCategory": "FinanceApplication",
-  "operatingSystem": "All",
-  "offers": {
+  name: "FX Checker",
+  description:
+    "Live exchange rates, currency conversion, and historical data tracking.",
+  url: "https://fx-checker-pied.vercel.app",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "All",
+  offers: {
     "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
+    price: "0",
+    priceCurrency: "USD",
+  },
 };
 
 export default function RootLayout({

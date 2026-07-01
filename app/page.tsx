@@ -10,13 +10,14 @@ import AuthModal from "@/components/auth/AuthModal";
 import AuthBanner from "@/components/auth/AuthBanner";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import ShortcutsModal from "@/components/ui/ShortcutsModal";
+import Loading from "@/components/ui/Loading";
 import { useRates } from "@/hooks/useRates";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useRef } from "react";
 
 function PageContent() {
   const searchParams = useSearchParams();
-  
+
   const initialFrom = searchParams.get("from") || "USD";
   const initialTo = searchParams.get("to") || "EUR";
   const initialAmount = searchParams.get("amount") || "1000";
@@ -64,9 +65,9 @@ function PageContent() {
   useEffect(() => {
     const goOffline = () => setIsOffline(true);
     const goOnline = () => setIsOffline(false);
-    
+
     setIsOffline(!navigator.onLine);
-    
+
     window.addEventListener("offline", goOffline);
     window.addEventListener("online", goOnline);
     return () => {
@@ -83,7 +84,11 @@ function PageContent() {
     if (typeof window !== "undefined") {
       const cached = localStorage.getItem(`fx_rates_cache_${fromCurrency}`);
       if (cached) {
-        try { return JSON.parse(cached).timestamp; } catch { return undefined; }
+        try {
+          return JSON.parse(cached).timestamp;
+        } catch {
+          return undefined;
+        }
       }
     }
     return undefined;
@@ -96,7 +101,7 @@ function PageContent() {
       <Header onOpenAuth={handleOpenAuth} />
       <LiveMarkets />
       {(cachedAt || offlineCacheTimestamp) && (
-        <div className="max-w-[1036px] mx-auto px-4 pt-[104px] mb-[-88px]">
+        <div className="max-w-259 mx-auto px-4 pt-26 -mb-22">
           <OfflineBanner cachedAt={(cachedAt || offlineCacheTimestamp)!} />
         </div>
       )}
@@ -113,20 +118,38 @@ function PageContent() {
         setIsReversed={setIsReversed}
       />
       <AuthBanner onOpenAuth={handleOpenAuth} />
-      <TabsContainer base={fromCurrency} quote={toCurrency} amount={amount} setFromCurrency={setFromCurrency} setToCurrency={setToCurrency} />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-      <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
+      <TabsContainer
+        base={fromCurrency}
+        quote={toCurrency}
+        amount={amount}
+        setFromCurrency={setFromCurrency}
+        setToCurrency={setToCurrency}
+      />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+      <ShortcutsModal
+        isOpen={isShortcutsOpen}
+        onClose={() => setIsShortcutsOpen(false)}
+      />
     </div>
   );
 }
 
 export default function Page() {
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const MIN_MS = 700; // show initial loader for at least this long so animation is visible
+    const t = setTimeout(() => setInitialLoading(false), MIN_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (initialLoading) return <Loading />;
+
   return (
-    <Suspense fallback={
-      <div className="bg-neutral-900 min-h-screen flex items-center justify-center text-neutral-500">
-        Loading...
-      </div>
-    }>
+    <Suspense fallback={<Loading />}>
       <PageContent />
     </Suspense>
   );

@@ -79,7 +79,7 @@ export const WelcomeEmail = ({
               <Button
                 className="button"
                 style={button}
-                href="https://fxchecker.com"
+                href="https://fx-checker-pied.vercel.app/"
               >
                 Go to Dashboard
               </Button>
