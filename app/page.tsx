@@ -29,6 +29,7 @@ function PageContent() {
   const [isOffline, setIsOffline] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [isReversed, setIsReversed] = useState(false);
+  const [chartRange, setChartRange] = useState("1M");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount to set initial home currency, not on every fromCurrency change
   useEffect(() => {
@@ -39,6 +40,22 @@ function PageContent() {
       }
     }
   }, []);
+
+  // ── Live URL sync ────────────────────────────────────────────────────
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("from", fromCurrency);
+      url.searchParams.set("to", toCurrency);
+      if (amount) {
+        url.searchParams.set("amount", amount);
+      } else {
+        url.searchParams.delete("amount");
+      }
+      window.history.replaceState(null, "", url.toString());
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [fromCurrency, toCurrency, amount]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -56,6 +73,7 @@ function PageContent() {
     },
     onToggleReverse: () => setIsReversed((v) => !v),
     onToggleShortcuts: () => setIsShortcutsOpen((v) => !v),
+    onSetChartRange: setChartRange,
   });
 
   const { data: rates } = useRates([fromCurrency]);
@@ -124,6 +142,8 @@ function PageContent() {
         amount={amount}
         setFromCurrency={setFromCurrency}
         setToCurrency={setToCurrency}
+        chartRange={chartRange}
+        setChartRange={setChartRange}
       />
       <AuthModal
         isOpen={isAuthModalOpen}

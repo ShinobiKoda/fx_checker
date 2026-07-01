@@ -90,15 +90,24 @@ const HistoryChart = ({ data }: HistoryChartProps) => {
         />
 
         <ChartTooltip
-          cursor={false}
+          cursor={{
+            stroke: "var(--chart-rate)",
+            strokeWidth: 1,
+            strokeDasharray: "4 4",
+            strokeOpacity: 0.5,
+          }}
           content={
             <ChartTooltipContent
               labelFormatter={(value) => {
                 return new Date(value).toLocaleDateString("en-US", {
+                  weekday: "short",
                   month: "short",
                   day: "numeric",
                   year: "numeric",
                 });
+              }}
+              formatter={(value) => {
+                return [Number(value).toFixed(4), "Rate"];
               }}
               indicator="dot"
             />

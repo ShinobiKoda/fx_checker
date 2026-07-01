@@ -14,6 +14,7 @@ const shortcuts = [
   { key: "S", label: "Swap currencies" },
   { key: "X", label: "Clear amount" },
   { key: "R", label: "Toggle reverse mode" },
+  { key: "1-6", label: "Switch chart range (1D-5Y)" },
   { key: "?", label: "Toggle this modal" },
 ];
 

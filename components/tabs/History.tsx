@@ -18,10 +18,11 @@ import {
 interface HistoryProps {
   base: string;
   quote: string;
+  activeDate: string;
+  setActiveDate: (date: string) => void;
 }
 
-const History = ({ base, quote }: HistoryProps) => {
-  const [activeDate, setActiveDate] = useState("1M");
+const History = ({ base, quote, activeDate, setActiveDate }: HistoryProps) => {
   const [viewMode, setViewMode] = useState<"chart" | "heatmap">("chart");
 
   const {

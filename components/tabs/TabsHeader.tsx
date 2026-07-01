@@ -48,7 +48,17 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           {/* ── Mobile trigger ───────────────────────────────── */}
           <motion.div
             onClick={() => setIsOpen(!isOpen)}
-            className="bg-neutral-700 border border-neutral-400 px-3 py-2 radius-sm w-full cursor-pointer flex items-center justify-between md:hidden"
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsOpen(!isOpen);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-expanded={isOpen}
+            aria-haspopup="menu"
+            className="bg-neutral-700 border border-neutral-400 px-3 py-2 radius-sm w-full cursor-pointer flex items-center justify-between md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500"
             whileHover={{ backgroundColor: "rgba(82,82,82,0.9)" }}
             whileTap={{ scale: 0.99 }}
             transition={{ duration: 0.15 }}
@@ -82,13 +92,22 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
             {tabs.map((tab, index) => (
               <motion.div
                 key={index}
-                className={`text-neutral-50 font-normal text-base px-3 py-2 cursor-pointer transition-colors ${
+                role="menuitem"
+                tabIndex={0}
+                className={`text-neutral-50 font-normal text-base px-3 py-2 cursor-pointer transition-colors focus:outline-none focus-visible:bg-neutral-500 ${
                   currentTab === tab ? "bg-neutral-600" : ""
                 }`}
                 whileHover={{ backgroundColor: "rgba(82,82,82,1)" }}
                 onClick={() => {
                   setCurrentTab(tab);
                   setIsOpen(false);
+                }}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setCurrentTab(tab);
+                    setIsOpen(false);
+                  }
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -109,7 +128,7 @@ const TabsHeader: React.FC<TabsHeaderProps> = ({
           </DropdownMenu>
 
           {/* ── Desktop tab bar ──────────────────────────────── */}
-          <ul className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600 overflow-x-auto scrollbar-hide">
+          <ul role="tablist" className="md:flex md:items-center gap-2 hidden border-b border-b-neutral-600 overflow-x-auto scrollbar-hide">
             {tabs.map((tab, index) => (
               <AnimatedTabItem
                 key={index}

@@ -480,7 +480,16 @@ export const AnimatedTabItem = ({
 }) => (
   <motion.li
     onClick={onClick}
-    className={`relative px-4 py-[10.5px] flex items-center gap-1 cursor-pointer font-normal text-base select-none ${className}`}
+    onKeyDown={(e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onClick();
+      }
+    }}
+    tabIndex={0}
+    role="tab"
+    aria-selected={isActive}
+    className={`relative px-4 py-[10.5px] flex items-center gap-1 cursor-pointer font-normal text-base select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:rounded-md ${className}`}
     animate={{ color: isActive ? 'var(--foreground)' : 'var(--neutral-400)' }}
     whileHover={{ color: isActive ? 'var(--foreground)' : 'var(--neutral-300)' }}
     transition={{ duration: 0.2 }}

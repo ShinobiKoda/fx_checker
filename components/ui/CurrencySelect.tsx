@@ -84,11 +84,21 @@ export const CurrencySelect = ({
       <StaggerItem key={code}>
         <div className="flex items-center justify-between dark:hover:bg-neutral-500 hover:bg-neutral-300 transition-colors px-2 py-3 rounded-lg">
           <button
+            type="button"
+            role="option"
+            aria-selected={isSelected}
+            tabIndex={0}
             onClick={(e) => {
               e.stopPropagation();
               handleSelect(code);
             }}
-            className="flex items-center gap-3 text-left w-[90%] overflow-hidden cursor-pointer"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleSelect(code);
+              }
+            }}
+            className="flex items-center gap-3 text-left w-[90%] overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:rounded-md"
           >
             <span className="text-xl leading-none shrink-0">{getFlagEmoji(code)}</span>
             <span className="font-normal text-neutral-50 text-sm shrink-0">{code}</span>
@@ -121,8 +131,12 @@ export const CurrencySelect = ({
         ) : (
           <button
             type="button"
+            role="combobox"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            aria-controls="currency-listbox"
             disabled={disabled}
-            className={`flex items-center justify-between gap-2 cursor-pointer w-full disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+            className={`flex items-center justify-between gap-2 cursor-pointer w-full disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 ${className}`}
           >
             <div className="flex items-center gap-2">
               {value ? (
@@ -162,13 +176,16 @@ export const CurrencySelect = ({
                 autoFocus
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                role="searchbox"
+                aria-autocomplete="list"
+                aria-controls="currency-listbox"
                 className="border-none bg-transparent outline-none w-full placeholder:text-neutral-200 text-neutral-50"
                 placeholder="Search currencies..."
               />
             </div>
 
             {currencies ? (
-              <>
+              <div role="listbox" id="currency-listbox" className="flex flex-col">
                 {recentCurrenciesList.length > 0 && (
                   <>
                     <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
@@ -201,7 +218,7 @@ export const CurrencySelect = ({
                     </StaggerContainer>
                   </>
                 )}
-              </>
+              </div>
             ) : (
               <div className="p-4 text-center text-neutral-400 text-sm">
                 Loading currencies...

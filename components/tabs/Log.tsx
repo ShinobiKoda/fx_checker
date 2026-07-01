@@ -2,11 +2,37 @@
 
 import React from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { LuTrash } from "react-icons/lu";
+import { LuTrash, LuDownload } from "react-icons/lu";
 import { useConversionLogs, useClearConversionLogs, useRemoveConversionLog } from "@/hooks/useConversionLog";
 import { SlideInRow, StaggerContainer, ShimmerBlock, ErrorBanner } from "@/components/Motion";
+import { ConversionLog } from "@/types";
 
 import { getShortRelativeTime } from "@/lib/utils";
+
+function exportLogsAsCsv(logs: ConversionLog[]) {
+  const headers = ["Date", "From", "To", "Amount", "Converted Amount"];
+  const rows = logs.map((log) => [
+    new Date(log.created_at).toISOString(),
+    log.from_currency,
+    log.to_currency,
+    log.amount.toString(),
+    log.converted_amount.toString(),
+  ]);
+
+  const csvContent = [headers, ...rows]
+    .map((row) => row.map((cell) => `"${cell}"`).join(","))
+    .join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `fx-checker-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 const Log = () => {
   const { data: logs, isLoading, isError, refetch } = useConversionLogs();
@@ -62,13 +88,23 @@ const Log = () => {
             <h5 className="font-normal text-[12px] text-neutral-50 opacity-70">
               {logs.length} LOGGED
             </h5>
-            <button 
-              onClick={() => clearLogs()}
-              disabled={isClearing}
-              className="px-3 py-2 radius-sm bg-neutral-600 border dark:border-neutral-400 border-neutral-300 font-normal text-[12px] text-neutral-200 hover:bg-neutral-500 transition-colors disabled:opacity-50"
-            >
-              CLEAR ALL
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => exportLogsAsCsv(logs)}
+                className="px-3 py-2 radius-sm bg-neutral-600 border dark:border-neutral-400 border-neutral-300 font-normal text-[12px] text-neutral-200 hover:bg-neutral-500 transition-colors flex items-center gap-1.5 cursor-pointer"
+                title="Export conversion log as CSV"
+              >
+                <LuDownload size={12} />
+                EXPORT CSV
+              </button>
+              <button 
+                onClick={() => clearLogs()}
+                disabled={isClearing}
+                className="px-3 py-2 radius-sm bg-neutral-600 border dark:border-neutral-400 border-neutral-300 font-normal text-[12px] text-neutral-200 hover:bg-neutral-500 transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                CLEAR ALL
+              </button>
+            </div>
           </div>
         </div>
         

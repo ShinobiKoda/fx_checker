@@ -19,9 +19,11 @@ interface TabsContainerProps {
   amount: string;
   setFromCurrency: (c: string) => void;
   setToCurrency: (c: string) => void;
+  chartRange: string;
+  setChartRange: (r: string) => void;
 }
 
-const TabsContainer = ({ base, quote, amount, setFromCurrency, setToCurrency }: TabsContainerProps) => {
+const TabsContainer = ({ base, quote, amount, setFromCurrency, setToCurrency, chartRange, setChartRange }: TabsContainerProps) => {
   const [currentTab, setCurrentTab] = useState("HISTORY");
 
   // Start polling for alerts globally when the app is open
@@ -30,7 +32,7 @@ const TabsContainer = ({ base, quote, amount, setFromCurrency, setToCurrency }: 
   const renderTabContent = () => {
     switch (currentTab) {
       case "HISTORY":
-        return <History base={base} quote={quote} />;
+        return <History base={base} quote={quote} activeDate={chartRange} setActiveDate={setChartRange} />;
       case "COMPARE":
         return <Compare base={base} amount={amount} />;
       case "DASHBOARD":
@@ -48,7 +50,7 @@ const TabsContainer = ({ base, quote, amount, setFromCurrency, setToCurrency }: 
       case "INVOICE":
         return <Invoice />;
       default:
-        return <History base={base} quote={quote} />;
+        return <History base={base} quote={quote} activeDate={chartRange} setActiveDate={setChartRange} />;
     }
   };
 

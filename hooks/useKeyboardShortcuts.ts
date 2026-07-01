@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 
+const CHART_RANGES = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
+
 interface KeyboardActions {
   onSwap: () => void;
   onFocusInput: () => void;
   onClear: () => void;
   onToggleReverse: () => void;
   onToggleShortcuts: () => void;
+  onSetChartRange?: (range: string) => void;
 }
 
 export function useKeyboardShortcuts({
@@ -14,6 +17,7 @@ export function useKeyboardShortcuts({
   onClear,
   onToggleReverse,
   onToggleShortcuts,
+  onSetChartRange,
 }: KeyboardActions) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -24,6 +28,13 @@ export function useKeyboardShortcuts({
         if (e.key === "Escape") {
           (e.target as HTMLElement).blur();
         }
+        return;
+      }
+
+      // Chart range shortcuts: keys 1-6
+      if (onSetChartRange && e.key >= "1" && e.key <= "6") {
+        e.preventDefault();
+        onSetChartRange(CHART_RANGES[parseInt(e.key) - 1]);
         return;
       }
 
@@ -53,5 +64,5 @@ export function useKeyboardShortcuts({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onSwap, onFocusInput, onClear, onToggleReverse, onToggleShortcuts]);
+  }, [onSwap, onFocusInput, onClear, onToggleReverse, onToggleShortcuts, onSetChartRange]);
 }
