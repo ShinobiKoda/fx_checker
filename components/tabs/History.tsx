@@ -122,9 +122,9 @@ const History = ({ base, quote }: HistoryProps) => {
     : "";
 
   return (
-    <div className="w-full max-w-[1036px] mx-auto pb-8 md:pb-[48px]">
+    <div className="w-full max-w-259 mx-auto pb-8 md:pb-12">
       <div className="w-full lg:flex lg:items-center lg:justify-between">
-        <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-[600px]">
+        <div className="w-full gap-2.5 mt-4 px-4 lg:max-w-150">
           {isLoading ? (
             <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -222,7 +222,7 @@ const History = ({ base, quote }: HistoryProps) => {
       {/* Chart / Heatmap */}
       <SlideUp delay={0.3} distance={20}>
         <div className="px-4 mt-4 mb-4 flex justify-center">
-          <div className="flex bg-neutral-700 rounded-full p-1 max-w-[220px] w-full border border-neutral-600">
+          <div className="flex bg-neutral-700 rounded-full p-1 max-w-55 w-full border border-neutral-600">
             <button 
               onClick={() => setViewMode("chart")}
               className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer text-nowrap ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
@@ -239,7 +239,7 @@ const History = ({ base, quote }: HistoryProps) => {
             </button>
           </div>
         </div>
-        <div className={`px-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-[369px] md:h-[377px]' : 'min-h-[300px]'}`}>
+        <div className={`px-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-92.25 md:h-94.25' : 'min-h-75'}`}>
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
             <div className="w-full flex items-start justify-between mb-5">
               <div className="flex flex-col md:flex-row md:items-center items-start gap-1 md:gap-3">
