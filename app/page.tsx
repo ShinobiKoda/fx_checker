@@ -10,6 +10,7 @@ import AuthModal from "@/components/auth/AuthModal";
 import AuthBanner from "@/components/auth/AuthBanner";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import ShortcutsModal from "@/components/ui/ShortcutsModal";
+import { FiAlertCircle } from "react-icons/fi";
 import Loading from "@/components/ui/Loading";
 import { useRates } from "@/hooks/useRates";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -153,6 +154,20 @@ function PageContent() {
         isOpen={isShortcutsOpen}
         onClose={() => setIsShortcutsOpen(false)}
       />
+      <button
+        type="button"
+        onClick={() => setIsShortcutsOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsShortcutsOpen(true);
+          }
+        }}
+        aria-label="Show keyboard shortcuts"
+        className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 bg-neutral-800 hover:bg-neutral-700 text-neutral-100 p-2 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 hidden lg:block"
+      >
+        <FiAlertCircle size={20} />
+      </button>
     </div>
   );
 }

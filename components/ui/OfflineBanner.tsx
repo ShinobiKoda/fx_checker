@@ -8,7 +8,7 @@ interface OfflineBannerProps {
 
 const OfflineBanner = ({ cachedAt }: OfflineBannerProps) => {
   return (
-    <div className="w-full mb-4">
+    <div className="w-full my-4">
       <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 flex items-center gap-3 text-amber-500 text-sm">
         <MdOutlineWifiOff size={18} className="shrink-0" />
         <p>
