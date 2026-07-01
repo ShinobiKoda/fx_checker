@@ -65,29 +65,50 @@ const History = ({ base, quote }: HistoryProps) => {
 
   const volatilityScore = (() => {
     if (!history?.data || history.data.length < 2) return null;
-    
+
     // Calculate Mean
-    const mean = history.data.reduce((acc, val) => acc + val.rate, 0) / history.data.length;
-    
+    const mean =
+      history.data.reduce((acc, val) => acc + val.rate, 0) /
+      history.data.length;
+
     // Calculate Standard Deviation
-    const variance = history.data.reduce((acc, val) => acc + Math.pow(val.rate - mean, 2), 0) / history.data.length;
+    const variance =
+      history.data.reduce((acc, val) => acc + Math.pow(val.rate - mean, 2), 0) /
+      history.data.length;
     const stdDev = Math.sqrt(variance);
-    
+
     // Coefficient of Variation (CV) as a percentage
     const cv = (stdDev / mean) * 100;
-    
-    if (cv > 3.5) return { label: "High Volatility", color: "text-red-400", bg: "bg-red-500/20", border: "border-red-500/30" };
-    if (cv > 1.5) return { label: "Medium Volatility", color: "text-orange-400", bg: "bg-orange-500/20", border: "border-orange-500/30" };
-    return { label: "Low Volatility", color: "text-green-400", bg: "bg-green-500/20", border: "border-green-500/30" };
+
+    if (cv > 3.5)
+      return {
+        label: "High Volatility",
+        color: "text-red-400",
+        bg: "bg-red-500/20",
+        border: "border-red-500/30",
+      };
+    if (cv > 1.5)
+      return {
+        label: "Medium Volatility",
+        color: "text-orange-400",
+        bg: "bg-orange-500/20",
+        border: "border-orange-500/30",
+      };
+    return {
+      label: "Low Volatility",
+      color: "text-green-400",
+      bg: "bg-green-500/20",
+      border: "border-green-500/30",
+    };
   })();
 
   const bestDayInsight = (() => {
     if (!history?.data || history.data.length === 0) return null;
-    
+
     // Group by day of week (0 = Sunday, 1 = Monday, etc.)
-    const dayStats: Record<number, { sum: number, count: number }> = {};
-    
-    history.data.forEach(d => {
+    const dayStats: Record<number, { sum: number; count: number }> = {};
+
+    history.data.forEach((d) => {
       const dayOfWeek = new Date(d.date).getDay();
       if (!dayStats[dayOfWeek]) {
         dayStats[dayOfWeek] = { sum: 0, count: 0 };
@@ -95,10 +116,10 @@ const History = ({ base, quote }: HistoryProps) => {
       dayStats[dayOfWeek].sum += d.rate;
       dayStats[dayOfWeek].count += 1;
     });
-    
+
     let bestDay = -1;
     let maxAvg = -1;
-    
+
     Object.entries(dayStats).forEach(([day, stats]) => {
       const avg = stats.sum / stats.count;
       if (avg > maxAvg) {
@@ -106,8 +127,16 @@ const History = ({ base, quote }: HistoryProps) => {
         bestDay = parseInt(day);
       }
     });
-    
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     return bestDay >= 0 ? days[bestDay] : null;
   })();
 
@@ -181,7 +210,6 @@ const History = ({ base, quote }: HistoryProps) => {
               </StaggerContainer>
             </AnimatePresence>
           )}
-
         </div>
 
         {/* Date Picker */}
@@ -205,31 +233,38 @@ const History = ({ base, quote }: HistoryProps) => {
         </SlideUp>
       </div>
 
-      {!isLoading && bestDayInsight && activeDate !== "1D" && activeDate !== "1W" && (
-        <SlideUp delay={0.15} distance={10}>
-          <div className="px-4 mt-4">
-            <div className="bg-lime-500/10 border border-lime-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
-              <div className="text-xl">💡</div>
-              <div className="text-sm text-neutral-200">
-                <span className="font-medium text-lime-500">Pro Tip: </span>
-                Historically, <span className="font-semibold text-neutral-50">{bestDayInsight}</span> is the best day to convert {base} to {quote}.
+      {!isLoading &&
+        bestDayInsight &&
+        activeDate !== "1D" &&
+        activeDate !== "1W" && (
+          <SlideUp delay={0.15} distance={10}>
+            <div className="px-4 mt-4">
+              <div className="bg-lime-500/10 border border-lime-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+                <div className="text-xl">💡</div>
+                <div className="text-sm text-neutral-200">
+                  <span className="font-medium text-lime-500">Pro Tip: </span>
+                  Historically,{" "}
+                  <span className="font-semibold text-neutral-50">
+                    {bestDayInsight}
+                  </span>{" "}
+                  is the best day to convert {base} to {quote}.
+                </div>
               </div>
             </div>
-          </div>
-        </SlideUp>
-      )}
+          </SlideUp>
+        )}
 
       {/* Chart / Heatmap */}
       <SlideUp delay={0.3} distance={20}>
         <div className="px-4 mt-4 mb-4 flex justify-center">
           <div className="flex bg-neutral-700 rounded-full p-1 max-w-55 w-full border border-neutral-600">
-            <button 
+            <button
               onClick={() => setViewMode("chart")}
               className={`flex-1 py-1.5 px-4 text-[11px] font-medium rounded-full transition-all cursor-pointer text-nowrap ${viewMode === "chart" ? "bg-lime-500 text-black shadow-sm" : "text-neutral-300 hover:text-neutral-100"}`}
             >
               Line Chart
             </button>
-            <button 
+            <button
               onClick={() => {
                 setViewMode("heatmap");
               }}
@@ -239,7 +274,9 @@ const History = ({ base, quote }: HistoryProps) => {
             </button>
           </div>
         </div>
-        <div className={`px-4 pb-8 transition-all ${viewMode === 'chart' ? 'h-92.25 md:h-94.25' : 'min-h-75'}`}>
+        <div
+          className={`px-4 pb-8 transition-all ${viewMode === "chart" ? "h-92.25 md:h-94.25" : "min-h-75"}`}
+        >
           <div className="bg-neutral-700 border border-neutral-600 rounded-2xl px-3 py-4">
             <div className="w-full flex items-start justify-between mb-5">
               <div className="flex flex-col md:flex-row md:items-center items-start gap-1 md:gap-3">
@@ -247,7 +284,9 @@ const History = ({ base, quote }: HistoryProps) => {
                   {base}/{quote}
                 </p>
                 {volatilityScore && (
-                  <div className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border leading-none ${volatilityScore.bg} ${volatilityScore.color} ${volatilityScore.border}`}>
+                  <div
+                    className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border leading-none ${volatilityScore.bg} ${volatilityScore.color} ${volatilityScore.border}`}
+                  >
                     {volatilityScore.label}
                   </div>
                 )}
