@@ -6,6 +6,7 @@ import {
   IoIosSearch,
   IoMdShare,
   IoMdCode,
+  IoMdClose,
 } from "react-icons/io";
 import { FaStar, FaRegStar } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -83,6 +84,10 @@ const Converter = ({
   const [isFeeExpanded, setIsFeeExpanded] = useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const [homeCurrency, setHomeCurrency] = useState<string | null>(null);
+  const [showRateSourceBanner, setShowRateSourceBanner] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("fx_hide_rate_source_banner") !== "1";
+  });
 
   const { recents, addRecent } = useRecentCurrencies();
 
@@ -157,6 +162,20 @@ const Converter = ({
       localStorage.setItem("fx_home_currency", fromCurrency);
       setHomeCurrency(fromCurrency);
       toast.success(`${fromCurrency} set as default Home Currency!`);
+    }
+  };
+
+  const handleDismissRateSourceBanner = () => {
+    setShowRateSourceBanner(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("fx_hide_rate_source_banner", "1");
+    }
+  };
+
+  const handleShowRateSourceBanner = () => {
+    setShowRateSourceBanner(true);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("fx_hide_rate_source_banner");
     }
   };
 
@@ -430,6 +449,33 @@ const Converter = ({
             Split Mode
           </button>
         </div>
+
+        {showRateSourceBanner ? (
+          <div className="rounded-xl border border-lime-300/40 dark:border-lime-400/30 bg-lime-50 text-lime-900 dark:bg-neutral-800 dark:text-neutral-100 px-3 py-2.5 flex items-start justify-between gap-3">
+            <p className="text-[11px] md:text-xs leading-relaxed">
+              Rates shown here come from Frankfurter, which uses European
+              Central Bank (ECB) reference rates. Broker quotes may differ due
+              to spreads, fees, execution timing, liquidity, and market
+              volatility.
+            </p>
+            <button
+              onClick={handleDismissRateSourceBanner}
+              aria-label="Dismiss rate source message"
+              className="shrink-0 mt-0.5 p-1 rounded hover:bg-lime-100 dark:hover:bg-neutral-700 text-lime-900 dark:text-neutral-200 transition-colors cursor-pointer"
+            >
+              <IoMdClose size={16} />
+            </button>
+          </div>
+        ) : (
+          <div className="flex justify-end">
+            <button
+              onClick={handleShowRateSourceBanner}
+              className="text-[11px] md:text-xs px-2.5 py-1.5 rounded-md border border-lime-300 bg-lime-100 text-lime-900 hover:bg-lime-200 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+            >
+              Show rate source info
+            </button>
+          </div>
+        )}
 
         <div className="bg-neutral-700 rounded-[20px]">
           <div
