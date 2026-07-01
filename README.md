@@ -12,15 +12,11 @@ Add your project images here to give judges a fast visual overview of the experi
 
 ### Main Converter
 
-![Main Converter](./public/images/screenshot-converter.png)
-
-### Analytics View
-
-![Analytics View](./public/images/screenshot-analytics.png)
+![Desktop View](./public/images/desktop-screenshot.png)
 
 ### Mobile View
 
-![Mobile View](./public/images/screenshot-mobile.png)
+![Mobile View](./public/images/mobile-screenshot.png)
 
 ## Why It Stands Out
 
