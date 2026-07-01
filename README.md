@@ -8,26 +8,13 @@ FX Checker is a hackathon ready foreign exchange platform built to impress judge
 
 ## Screenshots
 
-Add your project images here to give judges a fast visual overview of the experience.
-
-### Main Converter
+### Desktop View
 
 ![Desktop View](./public/images/desktop-screenshot.png)
 
 ### Mobile View
 
 ![Mobile View](./public/images/mobile-screenshot.png)
-
-## Why It Stands Out
-
-FX Checker was designed to feel like a product that ships, not just a prototype. It gives judges clear signals of depth, polish, and technical ambition.
-
-- Real financial utility with live exchange rates and historical data
-- Strong visual presentation with motion, theming, and responsive layouts
-- Meaningful feature breadth, including compare mode, alerts, logs, favorites, and analytics
-- Offline caching so the app remains useful even when connectivity drops
-- Authentication and persistence through Supabase
-- An embeddable widget that turns the project into a reusable product
 
 ## Feature Overview
 
