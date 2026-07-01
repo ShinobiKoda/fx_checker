@@ -39,7 +39,10 @@ export const CurrencySelect = ({
   // Close when clicking outside (fallback for trigger clicks)
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -62,7 +65,7 @@ export const CurrencySelect = ({
     ? Object.entries(currencies).filter(
         ([code, name]) =>
           code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          name.toLowerCase().includes(searchQuery.toLowerCase())
+          name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : [];
 
@@ -71,11 +74,11 @@ export const CurrencySelect = ({
     .sort((a, b) => recents.indexOf(a[0]) - recents.indexOf(b[0]));
 
   const popularCurrenciesList = filteredCurrencies.filter(
-    ([code]) => POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
+    ([code]) => POPULAR_CURRENCIES.includes(code) && !recents.includes(code),
   );
-  
+
   const otherCurrenciesList = filteredCurrencies.filter(
-    ([code]) => !POPULAR_CURRENCIES.includes(code) && !recents.includes(code)
+    ([code]) => !POPULAR_CURRENCIES.includes(code) && !recents.includes(code),
   );
 
   const renderCurrencyItem = ([code, name]: [string, string]) => {
@@ -100,8 +103,12 @@ export const CurrencySelect = ({
             }}
             className="flex items-center gap-3 text-left w-[90%] overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:rounded-md"
           >
-            <span className="text-xl leading-none shrink-0">{getFlagEmoji(code)}</span>
-            <span className="font-normal text-neutral-50 text-sm shrink-0">{code}</span>
+            <span className="text-xl leading-none shrink-0">
+              {getFlagEmoji(code)}
+            </span>
+            <span className="font-normal text-neutral-50 text-sm shrink-0">
+              {code}
+            </span>
             <span
               className="text-[12px] text-neutral-400 truncate w-full"
               title={getCurrencyNote(code, name)}
@@ -109,14 +116,19 @@ export const CurrencySelect = ({
               {getCurrencyNote(code, name)}
             </span>
           </button>
-          {isSelected && <FaCheck className="dark:text-lime-500 text-lime-700 shrink-0" />}
+          {isSelected && (
+            <FaCheck className="dark:text-lime-500 text-lime-700 shrink-0" />
+          )}
         </div>
       </StaggerItem>
     );
   };
 
   return (
-    <div className={`relative inline-block w-full md:w-auto ${wrapperClassName}`} ref={dropdownRef}>
+    <div
+      className={`relative inline-block w-full md:w-auto ${wrapperClassName}`}
+      ref={dropdownRef}
+    >
       <div
         onClick={() => {
           if (!disabled) {
@@ -124,10 +136,27 @@ export const CurrencySelect = ({
             setSearchQuery("");
           }
         }}
+        onKeyDown={(e) => {
+          if (trigger && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            if (!disabled) {
+              setIsOpen(!isOpen);
+              setSearchQuery("");
+            }
+          }
+        }}
+        role={trigger ? "button" : undefined}
+        tabIndex={trigger ? 0 : undefined}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
         className={`w-full h-full ${trigger ? "cursor-pointer" : ""}`}
       >
         {trigger ? (
-          typeof trigger === "function" ? trigger(isOpen) : trigger
+          typeof trigger === "function" ? (
+            trigger(isOpen)
+          ) : (
+            trigger
+          )
         ) : (
           <button
             type="button"
@@ -141,7 +170,9 @@ export const CurrencySelect = ({
             <div className="flex items-center gap-2">
               {value ? (
                 <>
-                  <span className="text-base leading-none">{getFlagEmoji(value)}</span>
+                  <span className="text-base leading-none">
+                    {getFlagEmoji(value)}
+                  </span>
                   <span>{value}</span>
                 </>
               ) : (
@@ -164,7 +195,7 @@ export const CurrencySelect = ({
             }}
           />
           <div
-            className={`absolute top-full mt-2 w-full min-w-[280px] max-w-[311px] max-h-[458px] overflow-y-auto bg-neutral-600 border border-neutral-400 radius-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar ${
+            className={`absolute top-full mt-2 w-full min-w-70 max-w-77.75 max-h-114.5 overflow-y-auto bg-neutral-600 border border-neutral-400 radius-sm z-50 shadow-2xl flex flex-col p-2 gap-1 custom-scrollbar ${
               align === "right" ? "right-0" : "left-0"
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -185,13 +216,20 @@ export const CurrencySelect = ({
             </div>
 
             {currencies ? (
-              <div role="listbox" id="currency-listbox" className="flex flex-col">
+              <div
+                role="listbox"
+                id="currency-listbox"
+                className="flex flex-col"
+              >
                 {recentCurrenciesList.length > 0 && (
                   <>
                     <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
                       <span>RECENTLY USED</span>
                     </p>
-                    <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
+                    <StaggerContainer
+                      staggerDelay={0.02}
+                      className="flex flex-col gap-1 mb-2"
+                    >
                       {recentCurrenciesList.map(renderCurrencyItem)}
                     </StaggerContainer>
                   </>
@@ -202,7 +240,10 @@ export const CurrencySelect = ({
                     <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
                       <span>POPULAR</span>
                     </p>
-                    <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1 mb-2">
+                    <StaggerContainer
+                      staggerDelay={0.02}
+                      className="flex flex-col gap-1 mb-2"
+                    >
                       {popularCurrenciesList.map(renderCurrencyItem)}
                     </StaggerContainer>
                   </>
@@ -213,7 +254,10 @@ export const CurrencySelect = ({
                     <p className="w-full flex items-center justify-between p-2 border-b border-b-neutral-500 font-normal text-[12px] text-neutral-400">
                       <span>OTHER CURRENCIES</span>
                     </p>
-                    <StaggerContainer staggerDelay={0.02} className="flex flex-col gap-1">
+                    <StaggerContainer
+                      staggerDelay={0.02}
+                      className="flex flex-col gap-1"
+                    >
                       {otherCurrenciesList.map(renderCurrencyItem)}
                     </StaggerContainer>
                   </>

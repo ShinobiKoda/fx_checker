@@ -1,10 +1,14 @@
 # FX Checker
 
-FX Checker is a hackathon ready foreign exchange platform built to impress judges in the first demo pass. It combines live currency conversion, market intelligence, analytics, user accounts, offline resilience, and a polished UI into one fast experience.
+FX Checker is a modern foreign-exchange reference app built with Next.js and TypeScript. It focuses on fast conversions, clear UX, and educational transparency about where rates come from.
 
 ## Live Demo
 
 [Open the live app](https://fx-checker-pied.vercel.app)
+
+## Frontend Mentor
+
+Frontend Mentor challenge: https://www.frontendmentor.io/challenges/foreign-exchange-currency-converter
 
 ## Screenshots
 
@@ -16,133 +20,125 @@ FX Checker is a hackathon ready foreign exchange platform built to impress judge
 
 ![Mobile View](./public/images/mobile-screenshot.png)
 
-## Feature Overview
+## Built With
 
-### Conversion Experience
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- Supabase (auth + data)
+- Resend (email)
 
-- Live exchange rates powered by Frankfurter data
-- Searchable currency pickers with grouped currency lists
-- Swap, reverse, and quick keyboard controls for fast input
-- URL synced state for shareable conversion links
-- Offline fallback using cached rate data
+## Feature Status
 
-### Market Intelligence
+Implemented
 
-- Live markets ticker for major pairs and performance context
-- Historical charts with selectable ranges from short term to long term
-- Compare mode for multi currency benchmarking
-- Analytics views for strength, correlation, recurring conversion trends, and Big Mac Index context
+- Live exchange rates (Frankfurter / ECB reference data)
+- Searchable currency pickers and flag display
+- Swap / Reverse / Keyboard shortcuts
+- URL-synced conversions (shareable links)
+- Offline fallback with cached rates
+- Shortcuts modal and floating help icon
+- Web Share API with clipboard fallback (share button)
+- Dismissible rate-source banner + restore control
+- Favorites, basic auth, and conversion logs
+- Embed modal and tabbed views
 
-### User Features
+Partial / Planned
 
-- Supabase authentication with email and password sign in
-- Favorites for frequently used pairs
-- Conversion logs and alert tracking
-- CSV export support for stored data
-- Welcome email flow powered by Resend
+- CSV export (partial)
+- Advanced alerts and live broker feeds (planned)
+- More robust multi-provider broker switching (planned)
 
-### Product Extras
-
-- Embeddable widget for external sites
-- Mobile friendly tab navigation
-- Light and dark themes with a consistent design system
-- Smooth transitions and micro interactions powered by Framer Motion
+If you want to test specific features, check the implemented list above — anything not listed there may be incomplete or planned.
 
 ## Keyboard Shortcuts
 
-Press ? in the app to open the shortcuts modal.
+Press `?` in the app to open the shortcuts modal.
 
-- / focuses the amount input
-- S swaps the currencies
-- X clears the amount
-- R toggles reverse mode
-- 1 through 6 switch chart ranges from 1D to 5Y
-
-## App Sections
-
-- History for historical performance and chart exploration
-- Compare for side by side currency benchmarking
-- Dashboard for a high level overview
-- Units for conversion utilities
-- Invoice for invoice oriented conversion workflows
-- Favorites for saved currency pairs
-- Logs for conversion history
-- Alerts for rate monitoring
-- Analytics for deeper market context
-
-## Tech Stack
-
-- Next.js App Router
-- TypeScript
-- Tailwind CSS and CSS variables
-- Framer Motion
-- Recharts
-- Supabase
-- Resend
-- Vercel Analytics
-- React Icons and Lucide Icons
+- `/` focuses the amount input
+- `S` swaps the currencies
+- `X` clears the amount
+- `R` toggles reverse mode
+- `1` through `6` switch chart ranges
 
 ## Local Setup
 
 1. Clone the repository.
 
-   ```bash
-   git clone https://github.com/yourusername/fx-checker.git
-   cd fx-checker
-   ```
+```bash
+git clone https://github.com/yourusername/fx-checker.git
+cd fx-checker
+```
 
 2. Install dependencies.
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. Create a `.env.local` file in the project root.
+3. Create a `.env.local` file in the project root with the required keys.
 
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   RESEND_API_KEY=your_resend_api_key
-   ```
+Example `.env.local`:
 
-   If you use the welcome email rate limiting path in production, configure Upstash as well.
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+RESEND_API_KEY=your_resend_api_key
+```
 
-   ```env
-   UPSTASH_REDIS_REST_URL=your_upstash_url
-   UPSTASH_REDIS_REST_TOKEN=your_upstash_token
-   ```
+Optional (welcome email rate limiting):
+
+```env
+UPSTASH_REDIS_REST_URL=your_upstash_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_token
+```
 
 4. Start the development server.
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
 5. Open the app at http://localhost:3000.
 
 ## Available Scripts
 
-- `npm run dev` starts the local development server
-- `npm run build` creates a production build
-- `npm run start` runs the production server
-- `npm run lint` checks the code with ESLint
+- `npm run dev` — starts the local development server
+- `npm run build` — creates a production build
+- `npm run start` — runs the production server
+- `npm run lint` — runs ESLint
 
-## Environment Notes
+## Notes on Data & Deployment
 
-- The app pulls rates from Frankfurter endpoints.
-- Supabase is used for authentication and user specific data.
-- Resend powers the welcome email flow.
-- Upstash is used for optional rate limiting in the welcome email route.
+- Rates are pulled from Frankfurter (ECB reference rates). This is a reference data source; broker quotes may differ due to spreads, fees, execution timing, liquidity, and market volatility.
+- The project is deployed on Vercel; ensure required environment variables are added in your deployment target.
 
-## Deployment
+## Learning Journal — Frontend Mentor scope
 
-This project is optimized for Vercel deployment. Make sure the environment variables above are set in your deployment target, then build and deploy normally.
+What I implemented for the Frontend Mentor requirements
 
-## Design Choices
+- Core conversion UI with keyboard shortcuts, swap/reverse, and URL-synced state.
+- Rate display and offline fallback using cached Frankfurter rates.
+- A compact, dismissible banner that explains the rate source and why broker quotes may differ.
+- Share flow using the Web Share API with a clipboard fallback for safety.
 
-- State is lifted at the page level so the converter, URL, and tabs stay synchronized.
-- CSS variables drive theming, which keeps dark mode and light mode consistent without duplicated styling.
-- The UI favors fast feedback, with optimistic interactions and cached data wherever possible.
+What I learned while building this
+
+- UX matters: small touches (dismissible info, accessible buttons, keyboard shortcuts) significantly improve perceived polish.
+- Progressive enhancement: using `navigator.share()` with a clipboard fallback keeps the share feature robust across devices.
+- Theming and contrast need iteration — ensuring buttons and banners are accessible in both light and dark modes required a couple of styling passes.
+
+What I would change next / continued development
+
+- Extract common UI bits (info banner, small utility buttons) into shared components to avoid duplication and speed future styling changes.
+- Add a small visual test or storybook to validate light/dark contrasts automatically.
+- Implement a provider abstraction so the app can swap between Frankfurter, other public APIs, and broker feeds with clear fallbacks and feature flags.
+
+## Contributing
+
+PRs and issues are welcome. If you make visual or theme changes, please include screenshots for both light and dark mode.
 
 ## License
 

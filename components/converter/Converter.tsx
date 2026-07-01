@@ -680,9 +680,11 @@ const Converter = ({
               </div>
               <div className="w-full border border-neutral-500 border-dashed h-px"></div>
               <div className="p-4 flex flex-col gap-3">
-                <div
-                  className="flex items-center justify-between cursor-pointer"
+                <button
+                  type="button"
                   onClick={() => setIsFeeExpanded(!isFeeExpanded)}
+                  aria-expanded={isFeeExpanded}
+                  className="flex items-center justify-between w-full"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-neutral-200 text-sm font-medium">
@@ -701,7 +703,7 @@ const Converter = ({
                   >
                     <IoMdArrowDropdown className="text-neutral-400" size={20} />
                   </motion.span>
-                </div>
+                </button>
 
                 <AnimatePresence>
                   {isFeeExpanded && (

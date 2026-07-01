@@ -1,81 +1,123 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { IoClose } from 'react-icons/io5'
-import { useAuth } from '@/hooks/useAuth'
-import { Spinner, ErrorBanner, ActivePill } from '@/components/Motion'
+import React, { useState, useRef, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import { useAuth } from "@/hooks/useAuth";
+import { Spinner, ErrorBanner, ActivePill } from "@/components/Motion";
 
 interface AuthModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
-  const [tab, setTab] = useState<'login' | 'signup'>('login')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const { supabase } = useAuth()
+  const [tab, setTab] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { supabase } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    
+    e.preventDefault();
+    setError("");
+
     // Client-side validation
-    if (!email || !email.includes('@')) {
-      setError('Please enter a valid email address.')
-      return
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
-      return
+      setError("Password must be at least 6 characters.");
+      return;
     }
-    if (tab === 'signup' && username.trim().length < 3) {
-      setError('Username must be at least 3 characters.')
-      return
+    if (tab === "signup" && username.trim().length < 3) {
+      setError("Username must be at least 3 characters.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      if (tab === 'signup') {
+      if (tab === "signup") {
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { username },
           },
-        })
-        if (signUpError) throw signUpError
-        
+        });
+        if (signUpError) throw signUpError;
+
         // Send welcome email asynchronously
-        fetch('/api/send-welcome', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, firstName: username })
-        }).catch(console.error)
+        fetch("/api/send-welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, firstName: username }),
+        }).catch(console.error);
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
-        })
-        if (signInError) throw signInError
+        });
+        if (signInError) throw signInError;
       }
-      
-      // If successful, reset and close
-      setEmail('')
-      setPassword('')
-      setUsername('')
-      onClose()
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during authentication')
+
+      setEmail("");
+      setPassword("");
+      setUsername("");
+      onClose();
+    } catch (err: unknown) {
+      const msg =
+        err && typeof err === "object" && "message" in err
+          ? (err as any).message
+          : String(err);
+      setError(msg || "An error occurred during authentication");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+
+    const node = modalRef.current;
+    const focusableSelector =
+      'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusable = node
+      ? Array.from(node.querySelectorAll<HTMLElement>(focusableSelector))
+      : [];
+    focusable[0]?.focus();
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && focusable.length) {
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      previous?.focus();
+    };
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
@@ -92,41 +134,57 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              ref={modalRef}
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="auth-modal-title"
               className="bg-neutral-700 border border-neutral-500 radius-sm p-6 w-full max-w-md shadow-2xl relative"
             >
               <button
                 onClick={onClose}
+                aria-label="Close authentication dialog"
+                type="button"
                 className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-50 transition-colors cursor-pointer"
               >
                 <IoClose size={24} />
               </button>
 
-              <h2 className="text-xl font-medium text-neutral-50 mb-6">
+              <h2
+                id="auth-modal-title"
+                className="text-xl font-medium text-neutral-50 mb-6"
+              >
                 Welcome to FX Checker
               </h2>
 
               <div className="flex items-center gap-2 mb-6 p-1 bg-neutral-600 rounded-[10px] w-full">
-                {['login', 'signup'].map((t) => {
-                  const isActive = tab === t
+                {["login", "signup"].map((t) => {
+                  const isActive = tab === t;
                   return (
                     <button
                       key={t}
                       onClick={() => {
-                        setTab(t as 'login' | 'signup')
-                        setError('')
+                        setTab(t as "login" | "signup");
+                        setError("");
                       }}
                       className={`relative flex-1 py-2 text-sm font-medium transition-colors z-10 cursor-pointer ${
-                        isActive ? 'text-neutral-50' : 'text-neutral-400 hover:text-neutral-200'
+                        isActive
+                          ? "text-neutral-50"
+                          : "text-neutral-400 hover:text-neutral-200"
                       }`}
                     >
-                      {isActive && <ActivePill layoutId="auth-tabs" className="rounded-md" />}
+                      {isActive && (
+                        <ActivePill
+                          layoutId="auth-tabs"
+                          className="rounded-md"
+                        />
+                      )}
                       <span className="relative z-10">
-                        {t === 'login' ? 'Log In' : 'Sign Up'}
+                        {t === "login" ? "Log In" : "Sign Up"}
                       </span>
                     </button>
-                  )
+                  );
                 })}
               </div>
 
@@ -135,7 +193,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <motion.div
                     key="error"
                     initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
                     exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                   >
                     <ErrorBanner message={error} />
@@ -145,11 +203,11 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <AnimatePresence mode="sync">
-                  {tab === 'signup' && (
+                  {tab === "signup" && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                      initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0, overflow: "hidden" }}
                     >
                       <label className="block text-sm text-neutral-200 mb-1">
                         Username
@@ -201,7 +259,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   className="w-full bg-lime-500 text-black font-medium py-3 radius-sm hover:bg-lime-400 transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70 cursor-pointer"
                 >
                   {isLoading && <Spinner size={16} color="text-black" />}
-                  {tab === 'login' ? 'Log In' : 'Sign Up'}
+                  {tab === "login" ? "Log In" : "Sign Up"}
                 </button>
               </form>
             </motion.div>
@@ -209,7 +267,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         </>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default AuthModal
+export default AuthModal;
