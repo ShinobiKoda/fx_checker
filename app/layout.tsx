@@ -59,10 +59,11 @@ export const metadata: Metadata = {
     siteName: "FX Checker",
     images: [
       {
-        url: "/images/og-image.png",
-        width: 1200,
-        height: 630,
+        url: "https://fx-checker-pied.vercel.app/images/og-image.png",
+        width: 1918,
+        height: 887,
         alt: "FX Checker - Live Exchange Rates",
+        type: "image/png",
       },
     ],
   },
@@ -71,7 +72,7 @@ export const metadata: Metadata = {
     title: "FX Checker - Live Exchange Rates & Currency Converter",
     description:
       "Check live exchange rates, compare currencies, track historical data, and monitor your conversion logs seamlessly.",
-    images: ["/images/og-image.png"],
+    images: ["https://fx-checker-pied.vercel.app/images/og-image.png"],
   },
   icons: {
     icon: "/images/favicon.png",
