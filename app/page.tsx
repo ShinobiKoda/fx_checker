@@ -141,7 +141,7 @@ export default function Page() {
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    const MIN_MS = 700; // show initial loader for at least this long so animation is visible
+    const MIN_MS = 700;
     const t = setTimeout(() => setInitialLoading(false), MIN_MS);
     return () => clearTimeout(t);
   }, []);
