@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import LiveMarkets from "@/components/LiveMarkets";
@@ -173,19 +174,29 @@ function PageContent() {
 }
 
 export default function Page() {
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    const MIN_MS = 700;
-    const t = setTimeout(() => setInitialLoading(false), MIN_MS);
+    const t = setTimeout(() => setShowIntro(false), 1400);
     return () => clearTimeout(t);
   }, []);
 
-  if (initialLoading) return <Loading />;
-
   return (
-    <Suspense fallback={<Loading />}>
+    <>
+      <AnimatePresence>
+        {showIntro && (
+          <motion.div
+            key="intro"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed inset-0 z-9999"
+          >
+            <Loading />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <PageContent />
-    </Suspense>
+    </>
   );
 }
