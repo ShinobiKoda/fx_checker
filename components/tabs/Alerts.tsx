@@ -135,8 +135,8 @@ const Alerts = ({ base, quote }: AlertsProps) => {
           <StaggerContainer staggerDelay={0.05} className="space-y-3">
             {alerts.map((alert) => (
               <SlideInRow key={alert.id}>
-                <div className="p-3 rounded-[10px] bg-neutral-600 border dark:border-neutral-500 border-neutral-300 flex items-center justify-between group hover:bg-neutral-500/50 transition-colors">
-                  <div className="flex flex-col md:flex-row md:gap-5 md:items-center">
+                <div className="p-3 rounded-[10px] bg-neutral-600 border dark:border-neutral-500 border-neutral-300 flex flex-wrap items-center justify-between gap-3 group hover:bg-neutral-500/50 transition-colors">
+                  <div className="flex flex-col md:flex-row md:gap-5 md:items-center min-w-0">
                     <p className="text-[12px] font-normal text-neutral-400 w-[40px]">
                       {getShortRelativeTime(alert.created_at)}
                     </p>
@@ -155,15 +155,15 @@ const Alerts = ({ base, quote }: AlertsProps) => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4">
-                    <div className={`flex items-center gap-1.5 text-[10px] uppercase font-medium px-2 py-1 rounded-full border ${alert.triggered ? 'border-green-500/30 text-green-500 bg-green-500/10' : 'dark:border-neutral-500 border-neutral-400 text-neutral-300 bg-neutral-700'}`}>
+                  <div className="flex items-center gap-2 md:gap-4 shrink-0 ml-auto">
+                    <div className={`flex items-center gap-1 text-[10px] uppercase font-medium px-1.5 py-0.5 md:px-2 md:py-1 rounded-full border whitespace-nowrap ${alert.triggered ? 'border-green-500/30 text-green-500 bg-green-500/10' : 'dark:border-neutral-500 border-neutral-400 text-neutral-300 bg-neutral-700'}`}>
                       {!alert.triggered && <PulseIndicator colorClass="bg-amber-500" />}
                       {alert.triggered ? 'TRIGGERED' : 'WATCHING'}
                     </div>
                     
                     <button 
                       onClick={() => removeAlert(alert.id)}
-                      className="flex items-center justify-center h-8 w-8 bg-neutral-700 border dark:border-neutral-500 border-neutral-400 cursor-pointer radius-sm text-neutral-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors"
+                      className="flex items-center justify-center h-7 w-7 md:h-8 md:w-8 shrink-0 bg-neutral-700 border dark:border-neutral-500 border-neutral-400 cursor-pointer radius-sm text-neutral-400 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-colors"
                       title="Delete alert"
                     >
                       <LuTrash />
