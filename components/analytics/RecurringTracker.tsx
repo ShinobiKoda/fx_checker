@@ -213,10 +213,17 @@ const RecurringTracker = () => {
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
-                  tickMargin={10}
+                  tickMargin={8}
                   className="fill-neutral-200 text-xs"
-                  interval={0}
-                  tick={{ fontSize: 11 }}
+                  interval="preserveStartEnd"
+                  tick={{ fontSize: 10 }}
+                  tickFormatter={(value: string, index: number) => {
+                    const parts = value.split(" ");
+                    const mon = parts[0];
+                    const year = parts[1] ? `'${parts[1].slice(-2)}` : "";
+                    if (index === 0 || mon === "Jan") return `${mon} ${year}`;
+                    return mon;
+                  }}
                 />
                 <YAxis
                   tickLine={false}
