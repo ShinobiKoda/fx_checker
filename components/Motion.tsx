@@ -225,30 +225,52 @@ export const ShimmerBlock = ({
 
 export const Spinner = ({
   size = 20,
-  color = 'text-neutral-50',
+  color = '',
   className = '',
 }: {
   size?: number
   color?: string
   className?: string
-}) => (
-  <motion.div
-    className={`${color} ${className}`}
-    animate={{ rotate: 360 }}
-    transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-    style={{ width: size, height: size }}
-  >
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" opacity="0.25" />
-      <path
-        d="M12 2a10 10 0 0 1 10 10"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
+}) => {
+  const isNeutral = !color || color.includes('neutral') || color.includes('white');
+  const primaryColor = isNeutral ? 'text-cyan-400' : color;
+  const secondaryColor = isNeutral ? 'text-fuchsia-500' : color;
+  
+  return (
+    <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
+      <motion.svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        className={`absolute ${primaryColor}`}
+        style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
+      >
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeDasharray="16 16" strokeLinecap="round" />
+      </motion.svg>
+      <motion.svg
+        width={size * 0.6}
+        height={size * 0.6}
+        viewBox="0 0 24 24"
+        fill="none"
+        className={`absolute ${secondaryColor}`}
+        style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
+        animate={{ rotate: -360 }}
+        transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+      >
+        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="10 21" strokeLinecap="round" />
+      </motion.svg>
+      <motion.div
+        className={`absolute rounded-full bg-current ${primaryColor}`}
+        style={{ width: size * 0.25, height: size * 0.25, filter: 'drop-shadow(0 0 4px currentColor)' }}
+        animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
       />
-    </svg>
-  </motion.div>
-)
+    </div>
+  );
+}
 
 // ─── Swap Button Animated ───────────────────────────────────────────────────
 
