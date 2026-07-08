@@ -133,9 +133,9 @@ export const RateHeatmap = ({ data }: RateHeatmapProps) => {
   return (
     <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
       <div className="flex flex-col min-w-max">
-        {/* Days of week labels */}
-        <div className="flex gap-1 mb-2">
-          <div className="w-8 flex flex-col justify-between text-[10px] text-neutral-400 font-medium py-1">
+        {/* Day labels + Heatmap grid */}
+        <div className="flex gap-1">
+          <div className="w-8 shrink-0 flex flex-col justify-between text-[10px] text-neutral-400 font-medium py-1">
             <span>Mon</span>
             <span>Wed</span>
             <span>Fri</span>
@@ -187,7 +187,7 @@ export const RateHeatmap = ({ data }: RateHeatmapProps) => {
               style={{ left: hoveredDay.x, top: hoveredDay.y }}
             >
               <div className="text-xs text-neutral-400 font-medium mb-1">
-                {new Date(hoveredDay.day.date).toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' })}
+                {new Date(hoveredDay.day.date).toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
               </div>
               <div className="text-sm font-bold text-neutral-50">
                 Rate: <span className="text-lime-500">{hoveredDay.day.rate.toLocaleString(undefined, { minimumFractionDigits: 4 })}</span>
