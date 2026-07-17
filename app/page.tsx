@@ -177,7 +177,7 @@ export default function Page() {
   const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowIntro(false), 1400);
+    const t = setTimeout(() => setShowIntro(false), 2200);
     return () => clearTimeout(t);
   }, []);
 
